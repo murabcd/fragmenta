@@ -10,9 +10,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="h-full ">
       <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col md:border-r md:pb-4 md:pt-5">
         <SidebarLogo />
-        <div className="flex mt-5 items-center justify-center">
-          <UserButton />
-        </div>
+
         <SearchCommand />
         <Sidebar />
       </div>
