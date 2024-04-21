@@ -39,7 +39,7 @@ const Sidebar = () => {
           {routes.map((route) => (
             <div
               key={route.href}
-              className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-primary/10 rounded-lg transition"
+              className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-secondary rounded-lg transition"
             >
               <div className="flex items-center justify-center">
                 <route.icon className="mr-2 h-5 w-5" />
@@ -52,7 +52,7 @@ const Sidebar = () => {
       <div className="mt-8">
         <SidebarOrg />
       </div>
-      <div className="mt-auto p-3">
+      <div className="hidden mt-auto p-3 md:block">
         <UpgradePro />
       </div>
     </div>

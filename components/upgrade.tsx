@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Zap } from "lucide-react";
 
 const UpgradePro = () => {
   return (
@@ -17,7 +18,8 @@ const UpgradePro = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-        <Button size="sm" className="w-full">
+        <Button variant="premium" size="sm" className="w-full">
+          <Zap className="mr-2 h-4 w-4" />
           Upgrade
         </Button>
       </CardContent>

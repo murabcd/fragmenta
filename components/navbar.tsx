@@ -11,7 +11,7 @@ import { UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   return (
-    <div className="w-full flex items-center justify-between py-2 px-4 border-b h-16">
+    <div className="w-full flex items-center justify-between py-2 px-4 border-b shadow-sm h-16">
       <div className="flex items-center">
         <MobileSidebar />
       </div>

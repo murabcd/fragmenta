@@ -5,8 +5,10 @@ import { PanelLeftOpen } from "lucide-react";
 import Sidebar from "./sidebar";
 import SidebarLogo from "./sidebar-logo";
 import SidebarOrg from "./sidebar-org";
+import OrgSwitcher from "./org";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 import { Button } from "@/components/ui/button";
 
 export const MobileSidebar = () => {
@@ -19,6 +21,7 @@ export const MobileSidebar = () => {
       </SheetTrigger>
       <SheetContent side="left" className="p-0 pt-10 w-64">
         <SidebarLogo />
+        <OrgSwitcher />
         <Sidebar />
         <SidebarOrg />
       </SheetContent>
