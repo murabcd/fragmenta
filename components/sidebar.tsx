@@ -2,6 +2,8 @@ import SidebarOrg from "./sidebar-org";
 
 import { Home, Workflow, History, Settings } from "lucide-react";
 
+import UpgradePro from "@/components/upgrade";
+
 const routes = [
   {
     label: "Home",
@@ -49,6 +51,9 @@ const Sidebar = () => {
       </div>
       <div className="mt-8">
         <SidebarOrg />
+      </div>
+      <div className="mt-auto p-3">
+        <UpgradePro />
       </div>
     </div>
   );
