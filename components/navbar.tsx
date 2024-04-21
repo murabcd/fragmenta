@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { MobileSidebar } from "./mobile-sidebar";
 
 import { Button } from "./ui/button";
+import { ModeToggle } from "./theme-toggle-mode";
 
 const Navbar = () => {
   return (
@@ -13,6 +14,7 @@ const Navbar = () => {
         <MobileSidebar />
       </div>
       <div className="flex items-center gap-x-3">
+        <ModeToggle />
         <Button>
           <Plus className="mr-2 h-4 w-4" />
           Create form
