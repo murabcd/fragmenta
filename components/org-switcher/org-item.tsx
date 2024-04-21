@@ -34,7 +34,7 @@ export const OrgItem = ({ id, name, imageUrl }: OrgItemProps) => {
         height={20}
         className="mr-2 rounded-sm"
       />
-      <span className="text-sm font-basic">{name}</span>
+      <span className="text-sm font-basic text-muted-foreground">{name}</span>
       {isActive && <Check className="ml-auto h-3 w-3 opacity-50" />}
     </li>
   );

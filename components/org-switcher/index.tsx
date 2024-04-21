@@ -1,16 +1,21 @@
 "use client";
 
 import { useState } from "react";
+
 import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { ChevronDown } from "lucide-react";
-import { OrgList } from "./org-list";
+
 import { NewOrgButton } from "./new-org-button";
+
+import { OrgList } from "./org-list";
 import { useOrganization } from "@clerk/nextjs";
 
 interface OrgSwitcherProps {
@@ -32,7 +37,7 @@ const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
           aria-expanded={open}
           aria-label="Select an organization"
           className={cn(
-            "mx-auto w-[230px] mt-5 p-3 justify-between shadow-sm",
+            "mx-auto w-[230px] mt-5 p-3 justify-between shadow-sm text-muted-foreground bg-primary-foreground hover:bg-primary/10 ",
             className
           )}
         >

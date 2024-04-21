@@ -3,9 +3,6 @@
 import { PanelLeftOpen } from "lucide-react";
 
 import Sidebar from "./sidebar";
-import SidebarLogo from "./sidebar-logo";
-import SidebarOrg from "./sidebar-org";
-import OrgSwitcher from "./org";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -15,15 +12,12 @@ export const MobileSidebar = () => {
   return (
     <Sheet>
       <SheetTrigger asChild className="md:hidden">
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" className="bg-secondary">
           <PanelLeftOpen className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="p-0 pt-10 w-64">
-        <SidebarLogo />
-        <OrgSwitcher />
+      <SheetContent side="left" className="p-0 w-64">
         <Sidebar />
-        <SidebarOrg />
       </SheetContent>
     </Sheet>
   );

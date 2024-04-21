@@ -1,4 +1,8 @@
-import SidebarOrg from "./sidebar-org";
+"use client";
+
+import SidebarLogo from "@/components/sidebar-logo";
+import SearchCommand from "@/components/search-command";
+import OrgSwitcher from "@/components/org-switcher";
 
 import { Home, Workflow, History, Settings } from "lucide-react";
 
@@ -33,26 +37,24 @@ const routes = [
 
 const Sidebar = () => {
   return (
-    <div className="w-64 flex flex-col h-full text-primary">
-      <div className="p-3 justify-center">
-        <div className="space-y-2">
-          {routes.map((route) => (
-            <div
-              key={route.href}
-              className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-secondary rounded-lg transition"
-            >
-              <div className="flex items-center justify-center">
-                <route.icon className="mr-2 h-5 w-5" />
-                {route.label}
-              </div>
+    <div className="w-64 flex flex-col h-full bg-secondary">
+      <SidebarLogo />
+      <OrgSwitcher />
+      <SearchCommand />
+      <nav className="mt-5 grid items-start px-2 text-sm font-medium text-muted-foreground">
+        {routes.map((route) => (
+          <div
+            key={route.href}
+            className="text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-primary/10 rounded-lg transition"
+          >
+            <div className="flex items-center justify-center">
+              <route.icon className="mr-2 h-5 w-5" />
+              {route.label}
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="mt-8">
-        <SidebarOrg />
-      </div>
-      <div className="hidden mt-auto p-3 md:block">
+          </div>
+        ))}
+      </nav>
+      <div className="mt-auto p-3">
         <UpgradePro />
       </div>
     </div>
