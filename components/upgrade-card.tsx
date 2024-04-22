@@ -20,7 +20,7 @@ const UpgradePro = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button variant="premium" size="sm" className="w-full">
+        <Button variant="premium" className="w-full">
           <Zap className="mr-2 h-4 w-4" />
           Upgrade
         </Button>

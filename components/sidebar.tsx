@@ -6,7 +6,7 @@ import OrgSwitcher from "@/components/org-switcher";
 
 import { Home, Workflow, History, Settings } from "lucide-react";
 
-import UpgradePro from "@/components/upgrade";
+import UpgradePro from "@/components/upgrade-card";
 
 const routes = [
   {
