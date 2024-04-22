@@ -3,10 +3,15 @@
 import { Plus } from "lucide-react";
 
 import { CreateOrganization } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+
+import { useTheme } from "next-themes";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export const NewOrgButton = () => {
+  const { theme } = useTheme();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -15,8 +20,13 @@ export const NewOrgButton = () => {
           New organization
         </div>
       </DialogTrigger>
-      <DialogContent className="p-0 bg-transparent border-none max-w-[470px]">
-        <CreateOrganization routing="hash" />
+      <DialogContent className="p-0 bg-transparent border-none max-w-[450px]">
+        <CreateOrganization
+          routing="virtual"
+          appearance={{
+            baseTheme: theme === "dark" ? dark : undefined,
+          }}
+        />
       </DialogContent>
     </Dialog>
   );
