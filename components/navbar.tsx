@@ -1,5 +1,7 @@
 "use client";
 
+import { useSelectedLayoutSegment } from "next/navigation";
+
 import { Plus } from "lucide-react";
 
 import { MobileSidebar } from "./mobile-sidebar";
@@ -9,22 +11,24 @@ import { useTheme } from "next-themes";
 
 import { Button } from "./ui/button";
 import { ModeToggle } from "./theme-toggle-mode";
+import { InviteButton } from "./invite-button";
 
 import { UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   const { theme } = useTheme();
+  const segment = useSelectedLayoutSegment();
 
   return (
-    <div className="w-full flex items-center justify-between py-2 px-4 border-b shadow-sm h-16">
+    <div className="w-full flex items-center justify-between py-2 px-4 h-16">
       <div className="flex items-center">
         <MobileSidebar />
+        <div className="text-xl font-basic capitalize ml-4 md:ml-0">
+          {segment}
+        </div>
       </div>
       <div className="flex items-center gap-x-3">
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Create form
-        </Button>
+        <InviteButton />
         <ModeToggle />
         <UserButton
           appearance={{
