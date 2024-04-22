@@ -20,7 +20,7 @@ export const NewOrgButton = () => {
           New organization
         </div>
       </DialogTrigger>
-      <DialogContent className="p-0 bg-transparent border-none max-w-[450px]">
+      <DialogContent className="p-0 bg-transparent border-none max-w-[350px] md:max-w-[430px]">
         <CreateOrganization
           routing="virtual"
           appearance={{
