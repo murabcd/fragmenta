@@ -46,7 +46,7 @@ export const EmptyHomeState = () => {
           ) : (
             <Plus className="w-4 h-4 mr-2" />
           )}
-          Create board
+          Create form
         </Button>
       </div>
     </div>
