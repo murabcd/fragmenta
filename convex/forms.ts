@@ -22,3 +22,23 @@ export const get = query({
     return forms;
   },
 });
+
+export const search = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const authorId = identity.subject;
+
+    const forms = await ctx.db
+      .query("forms")
+      .withIndex("by_author", (query) => query.eq("authorId", authorId))
+      .order("desc")
+      .collect();
+
+    return forms;
+  },
+});

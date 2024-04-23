@@ -8,5 +8,7 @@ export default defineSchema({
     authorName: v.string(),
     orgId: v.string(),
     isPublished: v.boolean(),
-  }).index("by_org", ["orgId"]),
+  })
+    .index("by_org", ["orgId"])
+    .index("by_author", ["authorId"]),
 });

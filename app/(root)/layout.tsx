@@ -1,5 +1,6 @@
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
+import { SearchCommand } from "@/components/search-command";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -9,6 +10,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
       <main className="md:pl-64 h-full">
         <Navbar />
+        <SearchCommand />
         {children}
       </main>
     </div>

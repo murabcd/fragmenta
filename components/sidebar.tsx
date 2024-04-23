@@ -1,7 +1,7 @@
 "use client";
 
 import SidebarLogo from "@/components/sidebar-logo";
-import SearchCommand from "@/components/search-command";
+import SearchToggleCommand from "@/components/search-toggle-command";
 import OrgSwitcher from "@/components/org-switcher";
 
 import { Home, Workflow, History, Settings } from "lucide-react";
@@ -40,7 +40,7 @@ const Sidebar = () => {
     <div className="w-64 flex flex-col h-full bg-secondary">
       <SidebarLogo />
       <OrgSwitcher />
-      <SearchCommand />
+      <SearchToggleCommand />
       <nav className="mt-5 grid items-start px-2 text-sm font-medium text-muted-foreground">
         {routes.map((route) => (
           <div
