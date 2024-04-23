@@ -1,5 +1,7 @@
 "use client";
 
+import { FormList } from "./_components/form-list";
+
 import { EmptyOrgState } from "@/components/empty-org-state";
 
 import { useOrganization } from "@clerk/nextjs";
@@ -9,7 +11,7 @@ const HomePage = () => {
 
   return (
     <div className="flex-1 h-[calc(100%-80px)] p-6">
-      {!organization ? <EmptyOrgState /> : <p>Home page</p>}
+      {!organization ? <EmptyOrgState /> : <FormList orgId={organization.id} />}
     </div>
   );
 };
