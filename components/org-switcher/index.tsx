@@ -13,7 +13,7 @@ import {
 
 import { ChevronDown } from "lucide-react";
 
-import { NewOrgButton } from "./new-org-button";
+import { NewOrgButton } from "@/components/new-org-button";
 
 import { OrgList } from "./org-list";
 import { useOrganization } from "@clerk/nextjs";

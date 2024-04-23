@@ -12,7 +12,7 @@ export const MobileSidebar = () => {
   return (
     <Sheet>
       <SheetTrigger asChild className="md:hidden">
-        <Button variant="outline" size="icon" className="bg-secondary">
+        <Button variant="outline" size="icon">
           <PanelLeftOpen className="h-4 w-4" />
         </Button>
       </SheetTrigger>

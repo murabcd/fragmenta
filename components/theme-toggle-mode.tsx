@@ -14,12 +14,7 @@ export function ModeToggle() {
   };
 
   return (
-    <Button
-      size="icon"
-      variant="outline"
-      onClick={toggleTheme}
-      className="bg-secondary"
-    >
+    <Button size="icon" variant="outline" onClick={toggleTheme}>
       {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
     </Button>
   );
