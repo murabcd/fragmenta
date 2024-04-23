@@ -15,6 +15,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as form from "../form.js";
+import type * as forms from "../forms.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -26,6 +27,7 @@ import type * as form from "../form.js";
  */
 declare const fullApi: ApiFromModules<{
   form: typeof form;
+  forms: typeof forms;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
