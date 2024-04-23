@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 import { FormCardOverlay } from "./overlay";
 import { FormCardFooter } from "./footer";
 
 import { formatDistanceToNow } from "date-fns";
+
 import { useAuth } from "@clerk/nextjs";
 
 interface FormCardProps {
@@ -47,5 +50,13 @@ export const FormCard = ({
         />
       </div>
     </Link>
+  );
+};
+
+FormCard.Skeleton = function FormCardSkeleton() {
+  return (
+    <div className="aspect-[100/127] rounded-lg overflow-hidden">
+      <Skeleton className="h-full w-full" />
+    </div>
   );
 };

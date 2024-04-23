@@ -10,14 +10,27 @@ import { EmptyHomeState } from "./empty-home-state";
 
 import { NewFormButton } from "@/components/new-form-button";
 
-interface FormListProps {
+interface FormGridProps {
   orgId: string;
 }
 
-export const FormList = ({ orgId }: FormListProps) => {
+export const FormGrid = ({ orgId }: FormGridProps) => {
   const data = useQuery(api.forms.get, { orgId });
 
-  if (data === undefined) return <div>Loading...</div>;
+  if (data === undefined) {
+    return (
+      <div>
+        <NewFormButton orgId={orgId} disabled />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
+          <FormCard.Skeleton />
+          <FormCard.Skeleton />
+          <FormCard.Skeleton />
+          <FormCard.Skeleton />
+          <FormCard.Skeleton />
+        </div>
+      </div>
+    );
+  }
 
   if (!data?.length) {
     return <EmptyHomeState />;
@@ -25,7 +38,7 @@ export const FormList = ({ orgId }: FormListProps) => {
 
   return (
     <div>
-      <NewFormButton orgId={orgId} />
+      <NewFormButton orgId={orgId} disabled />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
         {data?.map((form) => (
           <FormCard
