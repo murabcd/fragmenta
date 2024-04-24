@@ -4,7 +4,9 @@ import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+
 import { ConvexClientProvider } from "@/providers/convex-client-provider";
+import { ModalProvider } from "@/providers/modal-provider";
 
 export const metadata: Metadata = {
   title: "Fragmenta",
@@ -25,7 +27,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <ConvexClientProvider>
+            {children}
+            <ModalProvider />
+          </ConvexClientProvider>
           <Toaster />
         </ThemeProvider>
       </body>

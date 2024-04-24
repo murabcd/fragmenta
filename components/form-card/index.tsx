@@ -3,9 +3,14 @@
 import Link from "next/link";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "../ui/button";
+
+import { MoreHorizontal } from "lucide-react";
 
 import { FormCardOverlay } from "./overlay";
 import { FormCardFooter } from "./footer";
+
+import { FormActions } from "@/components/form-actions";
 
 import { formatDistanceToNow } from "date-fns";
 
@@ -39,8 +44,17 @@ export const FormCard = ({
     <Link href={`/form/${id}`}>
       <div className="group aspect-[100/127] border rounded-lg flex flex-col justify-between overflow-hidden relative">
         <div className="relative flex-1 bg-secondary">
-          {/* Try to add images to the overlay */}
+          {/* TODO: Try to add images to the overlay */}
           <FormCardOverlay />
+          <FormActions id={id} title={title}>
+            <Button
+              variant="ghost"
+              className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-2 outline-none"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </FormActions>
         </div>
         <FormCardFooter
           title={title}
