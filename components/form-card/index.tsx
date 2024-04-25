@@ -46,7 +46,7 @@ export const FormCard = ({
         <div className="relative flex-1 bg-secondary">
           {/* TODO: Try to add images to the overlay */}
           <FormCardOverlay />
-          <FormActions id={id} title={title}>
+          <FormActions id={id} title={title} align="end" side="right">
             <Button
               variant="ghost"
               className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-2 outline-none"
