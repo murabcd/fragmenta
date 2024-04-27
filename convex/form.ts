@@ -69,8 +69,8 @@ export const update = mutation({
 export const get = query({
   args: { id: v.id("forms") },
   handler: async (ctx, args) => {
-    const board = ctx.db.get(args.id);
+    const form = ctx.db.get(args.id);
 
-    return board;
+    return form;
   },
 });
