@@ -31,13 +31,13 @@ export const Info = ({ formId }: InfoProps) => {
     id: formId as Id<"forms">,
   });
 
-  if (!data) return <div>Loading...</div>;
+  if (!data) return <InfoSkeleton />;
 
   return (
-    <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
+    <div className="flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16">
       <Hint label="Back to forms" side="bottom" sideOffset={10}>
         <Link href="/home">
-          <Button variant="outline" size="icon">
+          <Button variant="secondary" size="icon">
             <ChevronLeft className="h-4 w-4" />
           </Button>
         </Link>
@@ -61,7 +61,7 @@ export const Info = ({ formId }: InfoProps) => {
       >
         <div>
           <Hint label="Main menu" align="end" side="bottom" sideOffset={10}>
-            <Button variant="ghost" size="icon">
+            <Button variant="outline" size="icon">
               <Menu className="h-4 w-4" />
             </Button>
           </Hint>
@@ -74,5 +74,11 @@ export const Info = ({ formId }: InfoProps) => {
         <Button>Publish</Button>
       </div>
     </div>
+  );
+};
+
+export const InfoSkeleton = () => {
+  return (
+    <div className="container flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16 rounded-md shadow-md" />
   );
 };
