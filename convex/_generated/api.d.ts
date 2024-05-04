@@ -16,6 +16,8 @@ import type {
 } from "convex/server";
 import type * as form from "../form.js";
 import type * as forms from "../forms.js";
+import type * as question from "../question.js";
+import type * as questions from "../questions.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,6 +30,8 @@ import type * as forms from "../forms.js";
 declare const fullApi: ApiFromModules<{
   form: typeof form;
   forms: typeof forms;
+  question: typeof question;
+  questions: typeof questions;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
