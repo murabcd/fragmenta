@@ -68,10 +68,14 @@ export const Info = ({ formId }: InfoProps) => {
         </div>
       </FormActions>
       <div className="ml-auto flex w-full space-x-2 sm:justify-end">
-        <Button variant="outline" size="icon">
-          <Eye className="h-4 w-4" />
-        </Button>
-        <Button>Publish</Button>
+        <Hint label="Preview" side="bottom" sideOffset={10}>
+          <Button variant="outline" size="icon">
+            <Eye className="h-4 w-4" />
+          </Button>
+        </Hint>
+        <Hint label="Make publicly accessible" side="bottom" sideOffset={10}>
+          <Button>Publish</Button>
+        </Hint>
       </div>
     </div>
   );
