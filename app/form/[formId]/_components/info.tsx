@@ -31,7 +31,7 @@ export const Info = ({ formId }: InfoProps) => {
     id: formId as Id<"forms">,
   });
 
-  if (!data) return <InfoSkeleton />;
+  if (!data) return;
 
   return (
     <div className="flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16">
@@ -78,11 +78,5 @@ export const Info = ({ formId }: InfoProps) => {
         </Hint>
       </div>
     </div>
-  );
-};
-
-export const InfoSkeleton = () => {
-  return (
-    <div className="container flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16 rounded-md shadow-md" />
   );
 };
