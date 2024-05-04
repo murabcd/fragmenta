@@ -15,7 +15,7 @@ export const NewOrgButton = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="flex items-center p-2 cursor-pointer text-sm text-muted-foreground font-basic hover:bg-secondary ">
+        <div className="flex items-center p-2 cursor-pointer text-sm text-muted-foreground font-basic hover:bg-secondary">
           <Plus className="mr-2 w-4 h-4" />
           New organization
         </div>
