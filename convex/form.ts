@@ -35,6 +35,15 @@ export const remove = mutation({
       throw new Error("Unauthorized");
     }
 
+    const relatedQuestions = await ctx.db
+      .query("questions")
+      .withIndex("by_form", (query) => query.eq("formId", args.id))
+      .collect();
+
+    for (const question of relatedQuestions) {
+      await ctx.db.delete(question._id);
+    }
+
     await ctx.db.delete(args.id);
   },
 });
