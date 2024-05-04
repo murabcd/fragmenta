@@ -1,9 +1,21 @@
 "use client";
 
-export const Content = () => {
+import { Question } from "@/types/canvas";
+
+import { QuestionContent } from "./question-card/question-content";
+
+interface ContentProps {
+  selectedQuestion: Question | null;
+}
+
+export const Content = ({ selectedQuestion }: ContentProps) => {
   return (
-    <div className="flex flex-1 items-center justify-center h-full">
-      Content
+    <div className="flex flex-1 flex-col items-center justify-center h-full p-4">
+      {selectedQuestion ? (
+        <QuestionContent question={selectedQuestion} />
+      ) : (
+        <p>Select a question</p>
+      )}
     </div>
   );
 };
