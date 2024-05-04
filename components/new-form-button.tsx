@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
@@ -15,6 +17,7 @@ interface NewFormButtonProps {
 }
 
 export const NewFormButton = ({ orgId, disabled }: NewFormButtonProps) => {
+  const router = useRouter();
   const { mutate, pending } = useApiMutation(api.form.create);
 
   const onClick = () => {
@@ -23,8 +26,8 @@ export const NewFormButton = ({ orgId, disabled }: NewFormButtonProps) => {
       title: "Untitled",
     })
       .then((id) => {
+        router.push(`/form/${id}`);
         toast.success("Form created");
-        // TODO: Redirect to form
       })
       .catch(() => toast.error("Failed to create form"));
   };
