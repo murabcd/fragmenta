@@ -1,0 +1,87 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { ChevronDown, Check } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+import { QuestionType } from "@/types/canvas";
+
+interface TypeSelectorProps {
+  type: QuestionType;
+  onTypeChange: (newType: QuestionType) => void;
+  className?: string;
+}
+
+export const TypeSelector = ({
+  type,
+  onTypeChange,
+  className,
+}: TypeSelectorProps) => {
+  const handleTypeSelect = (type: QuestionType) => {
+    onTypeChange(type);
+  };
+
+  return (
+    <div className="grid gap-2">
+      <Label className="px-3 mt-5" htmlFor="type">
+        Type
+      </Label>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-label="Select a type"
+            className={cn(
+              "mx-auto w-[230px] p-3 justify-between shadow-sm text-muted-foreground bg-primary-foreground hover:bg-primary/10 ",
+              className
+            )}
+          >
+            {type}
+            <ChevronDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent align="end" className="w-[230px] p-0">
+          <Command loop>
+            <CommandList className="max-h-[400px]">
+              <CommandInput placeholder="Search by type..." />
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup>
+                {Object.values(QuestionType).map((typeItem) => (
+                  <CommandItem
+                    key={typeItem}
+                    onSelect={() => handleTypeSelect(typeItem)}
+                    className="cursor-pointer text-sm text-muted-foreground font-basic"
+                  >
+                    {typeItem}
+                    {typeItem === type && (
+                      <Check className="ml-auto h-3 w-3 opacity-50" />
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+};
