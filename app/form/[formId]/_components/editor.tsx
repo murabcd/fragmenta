@@ -1,6 +1,6 @@
 "use client";
 
-import { NewQuestionButton } from "./new-question-buttom";
+import { NewQuestionButton } from "./new-question-button";
 
 import { QuestionItem } from "./question-card/question-item";
 

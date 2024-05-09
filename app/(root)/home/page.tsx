@@ -17,6 +17,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-// TODO: Remove this later
-// <div className="h-full p-4 space-y-2">
