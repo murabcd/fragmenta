@@ -15,9 +15,9 @@ interface QuestionItemProps {
 
 export const QuestionItem = ({ question, onClick }: QuestionItemProps) => {
   return (
-    <div
+    <ul
       onClick={onClick}
-      className="flex items-center justify-between m-2 p-3 font-medium cursor-pointer hover:text-primary hover:bg-primary/10 rounded-lg transition"
+      className="flex items-center justify-between m-2 p-3 font-medium cursor-pointer border hover:text-primary hover:bg-primary/10 rounded-lg transition"
     >
       {question.title}
 
@@ -32,6 +32,6 @@ export const QuestionItem = ({ question, onClick }: QuestionItemProps) => {
           <span className="sr-only">Open menu</span>
         </Button>
       </QuestionActions>
-    </div>
+    </ul>
   );
 };
