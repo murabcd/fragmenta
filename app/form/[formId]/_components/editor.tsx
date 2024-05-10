@@ -23,7 +23,7 @@ export const Editor = ({
         <div className="text-basic font-medium">Questions</div>
         <NewQuestionButton formId={formId} />
       </div>
-      <div className="flex flex-col text-sm font-medium text-muted-foreground">
+      <div className="flex flex-col text-sm font-medium text-muted-foreground overflow-y-auto">
         {questions?.map((question) => (
           <QuestionItem
             key={question._id}
