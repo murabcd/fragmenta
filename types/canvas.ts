@@ -3,13 +3,14 @@ export interface Question {
   title: string;
   description?: string;
   type: QuestionType;
+  position: number;
   formId: string;
 }
 
 export enum QuestionType {
-  ShortText = "Short text",
-  LongText = "Long text",
-  YesNoChoice = "Yes/No choice",
-  MultipleChoice = "Multiple choice",
+  Short = "Short text",
+  Long = "Long text",
+  YesNo = "Yes/no choice",
+  Multiple = "Multiple choice",
   Rating = "Rating",
 }

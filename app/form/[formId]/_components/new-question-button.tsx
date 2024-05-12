@@ -7,6 +7,8 @@ import { Hint } from "@/components/hint";
 
 import { Plus, LoaderCircle } from "lucide-react";
 
+import { useQuery } from "convex/react";
+
 import { useApiMutation } from "@/hooks/use-api-mutation";
 
 import { api } from "@/convex/_generated/api";
@@ -16,14 +18,18 @@ interface NewQuestionButtonProps {
 }
 
 export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
+  const data = useQuery(api.questions.count, { formId });
   const { mutate, pending } = useApiMutation(api.question.create);
 
   const onClick = () => {
+    const position = data ?? 0;
+
     mutate({
       formId,
       title: "Untitled",
       description: "Description (optional)",
       type: "Type your answer here...",
+      position,
     })
       .then(() => {
         toast.success("Question created");
@@ -34,12 +40,7 @@ export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
   return (
     <div>
       <Hint label="Add question" side="bottom" sideOffset={10}>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={onClick}
-          disabled={pending}
-        >
+        <Button variant="outline" size="icon" onClick={onClick} disabled={pending}>
           {pending ? (
             <LoaderCircle className="animate-spin w-4 h-4" />
           ) : (

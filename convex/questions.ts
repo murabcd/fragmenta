@@ -16,9 +16,23 @@ export const get = query({
     const questions = await ctx.db
       .query("questions")
       .withIndex("by_form", (query) => query.eq("formId", args.formId))
-      .order("desc")
+      .order("asc")
       .collect();
 
     return questions;
+  },
+});
+
+export const count = query({
+  args: {
+    formId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const questions = await ctx.db
+      .query("questions")
+      .withIndex("by_form", (query) => query.eq("formId", args.formId))
+      .collect();
+
+    return questions.length;
   },
 });

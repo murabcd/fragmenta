@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { toast } from "sonner";
 
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
@@ -9,6 +11,11 @@ import { NewQuestionButton } from "./new-question-button";
 import { QuestionItem } from "./question-card/question-item";
 
 import { Question } from "@/types/canvas";
+
+import { useMutation } from "convex/react";
+
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 interface EditorProps {
   formId: string;
@@ -24,27 +31,55 @@ function reorder<T>(questions: T[], startIndex: number, endIndex: number) {
   return result;
 }
 
-export const Editor = ({
-  formId,
-  questions,
-  onQuestionSelect,
-}: EditorProps) => {
+export const Editor = ({ formId, questions, onQuestionSelect }: EditorProps) => {
   const [orderQuestion, setOrderQuestion] = useState(questions);
 
-  const onDragEnd = (result: any) => {
+  const reorderQuestion = useMutation(api.question.position).withOptimisticUpdate(
+    (localStore, { id, position }) => {
+      const currentQuestions = localStore.getQuery(api.questions.get, { formId });
+
+      if (currentQuestions) {
+        const reorderedQuestions = reorder(
+          currentQuestions,
+          currentQuestions.findIndex((q) => q._id === id),
+          position
+        );
+
+        localStore.setQuery(api.questions.get, { formId }, reorderedQuestions);
+      }
+    }
+  );
+
+  useEffect(() => {
+    setOrderQuestion(questions);
+  }, [questions]);
+
+  const onDragEnd = async (result: any) => {
     const { destination, source } = result;
 
     if (!destination) {
       return;
     }
 
-    const newOrderedQuestion = reorder(
-      orderQuestion,
-      source.index,
-      destination.index
-    );
+    const newOrderedQuestion = reorder(orderQuestion, source.index, destination.index);
 
     setOrderQuestion(newOrderedQuestion);
+
+    try {
+      await Promise.all(
+        newOrderedQuestion.map((question, index) =>
+          reorderQuestion({
+            id: question._id as Id<"questions">,
+            position: index,
+          })
+        )
+      );
+      toast.success("Question reordered");
+    } catch (error) {
+      toast.error("Failed to reorder question");
+
+      setOrderQuestion(questions);
+    }
   };
 
   return (
@@ -58,12 +93,8 @@ export const Editor = ({
           <Droppable droppableId="questionsDroppable">
             {(provided) => (
               <ol {...provided.droppableProps} ref={provided.innerRef}>
-                {questions.map((question, index) => (
-                  <Draggable
-                    key={question._id}
-                    draggableId={question._id}
-                    index={index}
-                  >
+                {orderQuestion.map((question, index) => (
+                  <Draggable key={question._id} draggableId={question._id} index={index}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}

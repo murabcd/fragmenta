@@ -7,6 +7,7 @@ export const create = mutation({
     title: v.string(),
     description: v.optional(v.string()),
     type: v.string(),
+    position: v.number(),
     formId: v.string(),
   },
   handler: async (ctx, args) => {
@@ -16,10 +17,19 @@ export const create = mutation({
       throw new Error("Unauthorized");
     }
 
+    const questions = await ctx.db
+      .query("questions")
+      .withIndex("by_form", (query) => query.eq("formId", args.formId))
+      .order("desc")
+      .first();
+
+    const newPosition = questions ? questions.position + 1 : 0;
+
     const question = await ctx.db.insert("questions", {
       title: args.title,
       description: args.description,
       type: args.type,
+      position: newPosition,
       formId: args.formId,
     });
 
@@ -58,10 +68,11 @@ export const duplicate = mutation({
       title: `${question.title} (copy)`,
       description: question.description,
       type: question.type,
+      position: question.position,
       formId: question.formId,
     });
 
-    return duplicate;
+    return question;
   },
 });
 
@@ -93,6 +104,26 @@ export const update = mutation({
       title: args.title,
       description: args.description,
       type: args.type,
+    });
+
+    return question;
+  },
+});
+
+export const position = mutation({
+  args: {
+    id: v.id("questions"),
+    position: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const question = await ctx.db.patch(args.id, {
+      position: args.position,
     });
 
     return question;

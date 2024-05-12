@@ -20,13 +20,7 @@ export const QuestionItem = ({ question, onClick }: QuestionItemProps) => {
       className="flex items-center justify-between m-2 p-3 font-medium cursor-pointer border hover:text-primary hover:bg-primary/10 rounded-lg transition"
     >
       {question.title}
-
-      <QuestionActions
-        id={question._id}
-        title={question.title}
-        align="end"
-        side="right"
-      >
+      <QuestionActions id={question._id} title={question.title} align="end" side="right">
         <Button variant="ghost" size="icon">
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Open menu</span>

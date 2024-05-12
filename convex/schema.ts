@@ -16,6 +16,7 @@ export default defineSchema({
     title: v.string(),
     description: v.optional(v.string()),
     type: v.string(),
+    position: v.number(),
     formId: v.string(),
-  }).index("by_form", ["formId"]),
+  }).index("by_form", ["formId", "position"]),
 });

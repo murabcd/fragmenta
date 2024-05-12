@@ -19,19 +19,15 @@ interface CanvasProps {
 
 export const Canvas = ({ formId }: CanvasProps) => {
   const questions = useQuery(api.questions.get, { formId }) as Question[];
-  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(
-    null
-  );
-  const [currentType, setCurrentType] = useState<QuestionType>(
-    QuestionType.ShortText
-  );
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+  const [selectedQuestionType, setSelectedQuestionType] = useState(QuestionType.Short);
 
   const handleQuestionSelect = (question: Question) => {
     setSelectedQuestion(question);
   };
 
   const handleTypeChange = (newType: QuestionType) => {
-    setCurrentType(newType);
+    setSelectedQuestionType(newType);
   };
 
   if (!questions) return null;
@@ -46,7 +42,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
           onQuestionSelect={handleQuestionSelect}
         />
         <Content selectedQuestion={selectedQuestion} />
-        <Settings type={currentType} onTypeChange={handleTypeChange} />
+        <Settings type={selectedQuestionType} onTypeChange={handleTypeChange} />
       </div>
     </main>
   );
