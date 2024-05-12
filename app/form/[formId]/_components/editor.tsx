@@ -12,6 +12,8 @@ import { QuestionItem } from "./question-card/question-item";
 
 import { Question } from "@/types/canvas";
 
+import { cn } from "@/lib/utils";
+
 import { useMutation } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
@@ -21,6 +23,7 @@ interface EditorProps {
   formId: string;
   questions: Question[];
   onQuestionSelect: (question: Question) => void;
+  selectedQuestion: Question | null;
 }
 
 function reorder<T>(questions: T[], startIndex: number, endIndex: number) {
@@ -31,7 +34,12 @@ function reorder<T>(questions: T[], startIndex: number, endIndex: number) {
   return result;
 }
 
-export const Editor = ({ formId, questions, onQuestionSelect }: EditorProps) => {
+export const Editor = ({
+  formId,
+  questions,
+  onQuestionSelect,
+  selectedQuestion,
+}: EditorProps) => {
   const [orderQuestion, setOrderQuestion] = useState(questions);
 
   const reorderQuestion = useMutation(api.question.position).withOptimisticUpdate(
@@ -105,6 +113,10 @@ export const Editor = ({ formId, questions, onQuestionSelect }: EditorProps) => 
                         <QuestionItem
                           question={question}
                           onClick={() => onQuestionSelect(question)}
+                          className={cn({
+                            "text-primary bg-primary/10":
+                              selectedQuestion && question._id === selectedQuestion._id,
+                          })}
                         />
                       </div>
                     )}

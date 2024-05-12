@@ -10,14 +10,15 @@ import { Question } from "@/types/canvas";
 
 interface QuestionItemProps {
   question: Question;
+  className?: string;
   onClick: () => void;
 }
 
-export const QuestionItem = ({ question, onClick }: QuestionItemProps) => {
+export const QuestionItem = ({ question, className, onClick }: QuestionItemProps) => {
   return (
     <ul
       onClick={onClick}
-      className="flex items-center justify-between m-2 p-3 font-medium cursor-pointer border hover:text-primary hover:bg-primary/10 rounded-lg transition"
+      className={`flex items-center justify-between m-2 p-3 font-medium cursor-pointer border hover:text-primary hover:bg-primary/10 rounded-lg transition ${className}`}
     >
       {question.title}
       <QuestionActions id={question._id} title={question.title} align="end" side="right">
