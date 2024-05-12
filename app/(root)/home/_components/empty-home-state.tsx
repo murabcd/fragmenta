@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
@@ -11,6 +13,7 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 import { api } from "@/convex/_generated/api";
 
 export const EmptyHomeState = () => {
+  const router = useRouter();
   const { organization } = useOrganization();
   const { mutate, pending } = useApiMutation(api.form.create);
 
@@ -22,8 +25,8 @@ export const EmptyHomeState = () => {
       title: "Untitled",
     })
       .then((id) => {
+        router.push(`/form/${id}`);
         toast.success("Form created");
-        // TODO: Redirect to the form
       })
       .catch(() => {
         toast.error("Failed to create form");
