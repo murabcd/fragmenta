@@ -72,7 +72,7 @@ export const duplicate = mutation({
       formId: question.formId,
     });
 
-    return question;
+    return duplicate;
   },
 });
 

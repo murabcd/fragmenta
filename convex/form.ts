@@ -78,7 +78,13 @@ export const update = mutation({
 export const get = query({
   args: { id: v.id("forms") },
   handler: async (ctx, args) => {
-    const form = ctx.db.get(args.id);
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const form = await ctx.db.get(args.id);
 
     return form;
   },
