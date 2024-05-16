@@ -8,7 +8,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 import { NewQuestionButton } from "./new-question-button";
 
-import { QuestionItem } from "./question-card/question-item";
+import { QuestionItem } from "./question-item";
 
 import { Question } from "@/types/canvas";
 

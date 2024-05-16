@@ -2,7 +2,7 @@
 
 import { Question } from "@/types/canvas";
 
-import { QuestionContent } from "./question-card/question-content";
+import { QuestionContent } from "./question-content";
 
 interface ContentProps {
   selectedQuestion: Question | null;

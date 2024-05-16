@@ -25,6 +25,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
   const handleQuestionSelect = (question: Question) => {
     setSelectedQuestion(question);
+    setSelectedQuestionType(question.type);
   };
 
   const handleTypeChange = (newType: QuestionType) => {
