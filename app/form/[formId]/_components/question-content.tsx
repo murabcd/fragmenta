@@ -9,6 +9,7 @@ import { ShortText } from "./form-elements/short-text";
 import { LongText } from "./form-elements/long-text";
 import { YesNoChoice } from "./form-elements/yes-no-choice";
 import { MultipleChoice } from "./form-elements/multiple-choice";
+import { RatingScore } from "./form-elements/rating-score";
 
 import { Question, QuestionType } from "@/types/canvas";
 
@@ -21,6 +22,7 @@ export const QuestionContent = ({ question }: QuestionContentProps) => {
   const [longTextResponse, setLongTextResponse] = useState<string>("");
   const [yesNoResponse, setYesNoResponse] = useState<string>("");
   const [multipleChoiceResponse, setMultipleChoiceResponse] = useState<string[]>([]);
+  const [ratingScoreResponse, setRatingScoreResponse] = useState<string>("");
 
   console.log("Question received in QuestionContent:", question);
 
@@ -38,6 +40,10 @@ export const QuestionContent = ({ question }: QuestionContentProps) => {
 
   const handleMultipleChoiceChange = (newResponse: string[]) => {
     setMultipleChoiceResponse(newResponse);
+  };
+
+  const handleRatingScoreChange = (newResponse: string) => {
+    setRatingScoreResponse(newResponse);
   };
 
   const renderQuestionContent = () => {
@@ -60,6 +66,10 @@ export const QuestionContent = ({ question }: QuestionContentProps) => {
               { label: "Option 3", value: "option3" },
             ]}
           />
+        );
+      case QuestionType.Rating:
+        return (
+          <RatingScore value={ratingScoreResponse} onChange={handleRatingScoreChange} />
         );
       default:
         // console.warn(`Unsupported question type: ${question.type}`);
