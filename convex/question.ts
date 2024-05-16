@@ -131,3 +131,23 @@ export const position = mutation({
     return question;
   },
 });
+
+export const type = mutation({
+  args: {
+    id: v.id("questions"),
+    type: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const question = await ctx.db.patch(args.id, {
+      type: args.type,
+    });
+
+    return question;
+  },
+});

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { toast } from "sonner";
+
 import { Info } from "./info";
 import { Editor } from "./editor";
 import { Content } from "./content";
@@ -11,6 +13,8 @@ import { Question, QuestionType } from "@/types/canvas";
 
 import { useQuery } from "convex/react";
 
+import { useApiMutation } from "@/hooks/use-api-mutation";
+
 import { api } from "@/convex/_generated/api";
 
 interface CanvasProps {
@@ -19,6 +23,7 @@ interface CanvasProps {
 
 export const Canvas = ({ formId }: CanvasProps) => {
   const questions = useQuery(api.questions.get, { formId }) as Question[];
+  const { mutate } = useApiMutation(api.question.type);
 
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
   const [selectedQuestionType, setSelectedQuestionType] = useState(QuestionType.Short);
@@ -28,8 +33,17 @@ export const Canvas = ({ formId }: CanvasProps) => {
     setSelectedQuestionType(question.type);
   };
 
-  const handleTypeChange = (newType: QuestionType) => {
-    setSelectedQuestionType(newType);
+  const handleTypeChange = async (newType: QuestionType) => {
+    if (selectedQuestion) {
+      try {
+        await mutate({ id: selectedQuestion._id, type: newType });
+        setSelectedQuestion({ ...selectedQuestion, type: newType });
+        setSelectedQuestionType(newType);
+        toast.success("Type updated");
+      } catch (error) {
+        toast.error("Failed to update type");
+      }
+    }
   };
 
   if (!questions) return null;

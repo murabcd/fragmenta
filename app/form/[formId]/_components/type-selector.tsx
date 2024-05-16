@@ -3,6 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
+import { ChevronDown, Check } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+
+import { QuestionType } from "@/types/canvas";
+
 import {
   Command,
   CommandEmpty,
@@ -12,17 +18,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
-import { ChevronDown, Check } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-
-import { QuestionType } from "@/types/canvas";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface TypeSelectorProps {
   type: QuestionType;
@@ -30,11 +26,7 @@ interface TypeSelectorProps {
   className?: string;
 }
 
-export const TypeSelector = ({
-  type,
-  onTypeChange,
-  className,
-}: TypeSelectorProps) => {
+export const TypeSelector = ({ type, onTypeChange, className }: TypeSelectorProps) => {
   const handleTypeSelect = (type: QuestionType) => {
     onTypeChange(type);
   };
