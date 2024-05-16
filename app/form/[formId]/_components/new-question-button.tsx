@@ -7,6 +7,8 @@ import { Hint } from "@/components/hint";
 
 import { Plus, LoaderCircle } from "lucide-react";
 
+import { QuestionType } from "@/types/canvas";
+
 import { useQuery } from "convex/react";
 
 import { useApiMutation } from "@/hooks/use-api-mutation";
@@ -28,7 +30,7 @@ export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
       formId,
       title: "Untitled",
       description: "Description (optional)",
-      type: "Type your answer here...",
+      type: QuestionType.Short,
       position,
     })
       .then(() => {
