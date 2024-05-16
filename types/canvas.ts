@@ -3,6 +3,7 @@ export interface Question {
   title: string;
   description?: string;
   type: QuestionType;
+  response: string | string[];
   position: number;
   formId: string;
 }

@@ -82,6 +82,7 @@ export const update = mutation({
     title: v.string(),
     description: v.optional(v.string()),
     type: v.string(),
+    position: v.number(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -104,6 +105,7 @@ export const update = mutation({
       title: args.title,
       description: args.description,
       type: args.type,
+      position: args.position,
     });
 
     return question;
