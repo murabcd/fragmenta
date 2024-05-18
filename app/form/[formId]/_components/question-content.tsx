@@ -1,9 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-import { useDebouncedCallback } from "use-debounce";
-
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
@@ -15,44 +11,27 @@ import { RatingScore } from "./form-elements/rating-score";
 
 import { Question, QuestionType } from "@/types/canvas";
 
-import { useApiMutation } from "@/hooks/use-api-mutation";
-
-import { api } from "@/convex/_generated/api";
-
 interface QuestionContentProps {
   question: Question;
+  newTitle: string;
+  newDescription: string;
+  onTitleChange: (id: string, title: string) => void;
+  onDescriptionChange: (id: string, description: string) => void;
 }
 
-export const QuestionContent = ({ question }: QuestionContentProps) => {
-  const { mutate: title } = useApiMutation(api.question.title);
-  const { mutate: description } = useApiMutation(api.question.description);
-
-  const [newTitle, setNewTitle] = useState<string>(question.title);
-  const [newDescription, setNewDescription] = useState<string>(question.description!);
-
-  useEffect(() => {
-    setNewTitle(question.title);
-    setNewDescription(question.description!);
-  }, [question]);
-
-  const debouncedSaveTitle = useDebouncedCallback((newTitle) => {
-    title({ id: question._id, title: newTitle });
-  }, 500);
-
-  const debouncedSaveDescription = useDebouncedCallback((newDescription) => {
-    description({ id: question._id, description: newDescription });
-  }, 500);
-
+export const QuestionContent = ({
+  question,
+  newTitle,
+  newDescription,
+  onTitleChange,
+  onDescriptionChange,
+}: QuestionContentProps) => {
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = event.target.value;
-    setNewTitle(newTitle);
-    debouncedSaveTitle(newTitle);
+    onTitleChange(question._id, event.target.value);
   };
 
   const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newDescription = event.target.value;
-    setNewDescription(newDescription);
-    debouncedSaveDescription(newDescription);
+    onDescriptionChange(question._id, event.target.value);
   };
 
   const renderQuestionContent = () => {
