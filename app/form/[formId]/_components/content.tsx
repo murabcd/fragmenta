@@ -3,8 +3,11 @@
 import { Question } from "@/types/canvas";
 
 import { QuestionContent } from "./question-content";
+import { EmptyQuestionState } from "@/components/empty-question-state";
 
 interface ContentProps {
+  formId: string;
+  questions: Question[];
   selectedQuestion: Question | null;
   newTitle: string;
   newDescription: string;
@@ -13,6 +16,8 @@ interface ContentProps {
 }
 
 export const Content = ({
+  formId,
+  questions,
   selectedQuestion,
   newTitle,
   newDescription,
@@ -21,7 +26,9 @@ export const Content = ({
 }: ContentProps) => {
   return (
     <div className="flex flex-1 flex-col items-center justify-center h-full p-4">
-      {selectedQuestion ? (
+      {questions.length === 0 ? (
+        <EmptyQuestionState formId={formId} />
+      ) : selectedQuestion ? (
         <QuestionContent
           question={selectedQuestion}
           newTitle={newTitle}
@@ -30,7 +37,7 @@ export const Content = ({
           onDescriptionChange={onDescriptionChange}
         />
       ) : (
-        <p>Select a question</p>
+        <div className="text-muted-foreground">Select a question to edit</div>
       )}
     </div>
   );

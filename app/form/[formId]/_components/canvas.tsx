@@ -150,6 +150,8 @@ export const Canvas = ({ formId }: CanvasProps) => {
           onDragEnd={onDragEnd}
         />
         <Content
+          formId={formId}
+          questions={questions}
           selectedQuestion={selectedQuestion}
           newTitle={newTitle}
           newDescription={newDescription}
