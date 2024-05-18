@@ -20,7 +20,7 @@ export const QuestionItem = ({ question, className, onClick }: QuestionItemProps
       onClick={onClick}
       className={`flex items-center justify-between m-2 p-3 font-medium cursor-pointer border bg-background/55 dark:border-primary/10 hover:text-primary hover:bg-primary/10 rounded-lg transition ${className}`}
     >
-      {question.title}
+      <span className="truncate max-w-[calc(100%-40px)]">{question.title}</span>
       <QuestionActions id={question._id} title={question.title} align="end" side="right">
         <Button variant="ghost" size="icon">
           <MoreHorizontal className="h-4 w-4" />

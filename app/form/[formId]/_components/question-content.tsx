@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { useDebouncedCallback } from "use-debounce";
 
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,53 +15,60 @@ import { RatingScore } from "./form-elements/rating-score";
 
 import { Question, QuestionType } from "@/types/canvas";
 
+import { useApiMutation } from "@/hooks/use-api-mutation";
+
+import { api } from "@/convex/_generated/api";
+
 interface QuestionContentProps {
   question: Question;
 }
 
 export const QuestionContent = ({ question }: QuestionContentProps) => {
-  const [shortTextResponse, setShortTextResponse] = useState<string>("");
-  const [longTextResponse, setLongTextResponse] = useState<string>("");
-  const [yesNoResponse, setYesNoResponse] = useState<string>("");
-  const [multipleChoiceResponse, setMultipleChoiceResponse] = useState<string[]>([]);
-  const [ratingScoreResponse, setRatingScoreResponse] = useState<string>("");
+  const { mutate: title } = useApiMutation(api.question.title);
+  const { mutate: description } = useApiMutation(api.question.description);
 
-  console.log("Question received in QuestionContent:", question);
+  const [newTitle, setNewTitle] = useState<string>(question.title);
+  const [newDescription, setNewDescription] = useState<string>(question.description!);
 
-  const handleShortTextChange = (newResponse: string) => {
-    setShortTextResponse(newResponse);
+  useEffect(() => {
+    setNewTitle(question.title);
+    setNewDescription(question.description!);
+  }, [question]);
+
+  const debouncedSaveTitle = useDebouncedCallback((newTitle) => {
+    title({ id: question._id, title: newTitle });
+  }, 500);
+
+  const debouncedSaveDescription = useDebouncedCallback((newDescription) => {
+    description({ id: question._id, description: newDescription });
+  }, 500);
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = event.target.value;
+    setNewTitle(newTitle);
+    debouncedSaveTitle(newTitle);
   };
 
-  const handleLongTextChange = (newResponse: string) => {
-    setLongTextResponse(newResponse);
-  };
-
-  const handleYesNoChange = (newResponse: string) => {
-    setYesNoResponse(newResponse);
-  };
-
-  const handleMultipleChoiceChange = (newResponse: string[]) => {
-    setMultipleChoiceResponse(newResponse);
-  };
-
-  const handleRatingScoreChange = (newResponse: string) => {
-    setRatingScoreResponse(newResponse);
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newDescription = event.target.value;
+    setNewDescription(newDescription);
+    debouncedSaveDescription(newDescription);
   };
 
   const renderQuestionContent = () => {
     console.log("Rendering content for question type:", question.type);
     switch (question.type) {
       case QuestionType.Short:
-        return <ShortText value={shortTextResponse} onChange={handleShortTextChange} />;
+        return <ShortText value={""} onChange={() => {}} />;
       case QuestionType.Long:
-        return <LongText value={longTextResponse} onChange={handleLongTextChange} />;
+        return <LongText value={""} onChange={() => {}} />;
       case QuestionType.YesNo:
-        return <YesNoChoice value={yesNoResponse} onChange={handleYesNoChange} />;
+        return <YesNoChoice value={""} onChange={() => {}} />;
       case QuestionType.Multiple:
         return (
           <MultipleChoice
-            values={multipleChoiceResponse}
-            onChange={handleMultipleChoiceChange}
+            values={[]}
+            onChange={() => {}}
             options={[
               { label: "Option 1", value: "option1" },
               { label: "Option 2", value: "option2" },
@@ -68,11 +77,8 @@ export const QuestionContent = ({ question }: QuestionContentProps) => {
           />
         );
       case QuestionType.Rating:
-        return (
-          <RatingScore value={ratingScoreResponse} onChange={handleRatingScoreChange} />
-        );
+        return <RatingScore value={""} onChange={() => {}} />;
       default:
-        // console.warn(`Unsupported question type: ${question.type}`);
         return null;
     }
   };
@@ -81,11 +87,15 @@ export const QuestionContent = ({ question }: QuestionContentProps) => {
     <Card className="flex flex-col items-center justify-center h-[600px] w-full max-w-4xl p-4 bg-secondary shadow-md rounded-lg space-y-4">
       <Input
         className="bg-primary-foreground text-lg hover:bg-primary/10"
-        value={question.title}
+        value={newTitle}
+        placeholder="Title"
+        onChange={handleTitleChange}
       />
       <Input
         className="bg-primary-foreground text-muted-foreground hover:bg-primary/10"
-        value={question.description}
+        value={newDescription}
+        placeholder="Description (optional)"
+        onChange={handleDescriptionChange}
       />
       {renderQuestionContent()}
     </Card>

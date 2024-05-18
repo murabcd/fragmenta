@@ -14,7 +14,7 @@ export default defineSchema({
 
   questions: defineTable({
     title: v.string(),
-    description: v.optional(v.string()),
+    description: v.string(),
     type: v.string(),
     response: v.optional(v.string()),
     position: v.number(),

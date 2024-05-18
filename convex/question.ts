@@ -5,7 +5,7 @@ import { mutation } from "./_generated/server";
 export const create = mutation({
   args: {
     title: v.string(),
-    description: v.optional(v.string()),
+    description: v.string(),
     type: v.string(),
     position: v.number(),
     formId: v.string(),
@@ -76,13 +76,10 @@ export const duplicate = mutation({
   },
 });
 
-export const update = mutation({
+export const title = mutation({
   args: {
     id: v.id("questions"),
     title: v.string(),
-    description: v.optional(v.string()),
-    type: v.string(),
-    position: v.number(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -91,21 +88,28 @@ export const update = mutation({
       throw new Error("Unauthorized");
     }
 
-    const title = args.title.trim();
+    const question = await ctx.db.patch(args.id, {
+      title: args.title,
+    });
 
-    if (!title) {
-      throw new Error("Title is required");
-    }
+    return question;
+  },
+});
 
-    if (title.length > 60) {
-      throw new Error("Title cannot be longer than 60 characters");
+export const description = mutation({
+  args: {
+    id: v.id("questions"),
+    description: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
     }
 
     const question = await ctx.db.patch(args.id, {
-      title: args.title,
       description: args.description,
-      type: args.type,
-      position: args.position,
     });
 
     return question;

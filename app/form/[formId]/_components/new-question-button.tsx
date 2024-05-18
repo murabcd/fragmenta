@@ -29,7 +29,7 @@ export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
     mutate({
       formId,
       title: "Untitled",
-      description: "Description (optional)",
+      description: "",
       type: QuestionType.Short,
       position,
     })
