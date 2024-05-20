@@ -58,7 +58,7 @@ export const EmptyQuestionState = ({ formId }: { formId: string }) => {
           disabled={pending}
           className="w-40 h-40 border rounded-lg hover:bg-primary/10 flex flex-col items-center justify-center py-6"
         >
-          <Sparkles className="w-6 h-6 mb-2" />
+          <Sparkles className="w-6 h-6 mb-2" color="#8879d4" />
           <p className="text-sm font-light">Create with AI</p>
         </button>
       </div>
