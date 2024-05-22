@@ -16,8 +16,16 @@ export default defineSchema({
     title: v.string(),
     description: v.string(),
     type: v.string(),
-    response: v.optional(v.string()),
+    choices: v.optional(v.array(v.string())),
     position: v.number(),
     formId: v.string(),
   }).index("by_form", ["formId", "position"]),
+
+  responses: defineTable({
+    response: v.array(v.string()),
+    questionId: v.string(),
+    formId: v.string(),
+  })
+    .index("by_form", ["formId"])
+    .index("by_question", ["questionId"]),
 });

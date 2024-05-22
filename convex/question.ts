@@ -7,6 +7,7 @@ export const create = mutation({
     title: v.string(),
     description: v.string(),
     type: v.string(),
+    choices: v.array(v.string()),
     position: v.number(),
     formId: v.string(),
   },
@@ -29,6 +30,7 @@ export const create = mutation({
       title: args.title,
       description: args.description,
       type: args.type,
+      choices: args.choices,
       position: newPosition,
       formId: args.formId,
     });
@@ -68,6 +70,7 @@ export const duplicate = mutation({
       title: `${question.title} (copy)`,
       description: question.description,
       type: question.type,
+      choices: question.choices,
       position: question.position,
       formId: question.formId,
     });
@@ -150,6 +153,26 @@ export const type = mutation({
 
     const question = await ctx.db.patch(args.id, {
       type: args.type,
+    });
+
+    return question;
+  },
+});
+
+export const choices = mutation({
+  args: {
+    id: v.id("questions"),
+    choices: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const question = await ctx.db.patch(args.id, {
+      choices: args.choices,
     });
 
     return question;
