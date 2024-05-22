@@ -17,6 +17,7 @@ interface QuestionContentProps {
   newDescription: string;
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
+  updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
 }
 
 export const QuestionContent = ({
@@ -25,6 +26,7 @@ export const QuestionContent = ({
   newDescription,
   onTitleChange,
   onDescriptionChange,
+  updateChoices,
 }: QuestionContentProps) => {
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onTitleChange(question._id, event.target.value);
@@ -46,13 +48,11 @@ export const QuestionContent = ({
       case QuestionType.Multiple:
         return (
           <MultipleChoice
+            questionId={question._id}
             values={[]}
             onChange={() => {}}
-            options={[
-              { label: "Option 1", value: "option1" },
-              { label: "Option 2", value: "option2" },
-              { label: "Option 3", value: "option3" },
-            ]}
+            options={question.choices.map((choice) => ({ label: choice, value: choice }))}
+            updateChoices={updateChoices}
           />
         );
       case QuestionType.Rating:

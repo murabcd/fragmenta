@@ -22,10 +22,9 @@ CheckboxCard.displayName = "CheckboxCard";
 const CheckboxCardItem = React.forwardRef<
   React.ElementRef<typeof CheckboxCardsPrimitive.Checkbox>,
   React.ComponentPropsWithoutRef<typeof CheckboxCardsPrimitive.Checkbox> & {
-    label: string;
-    description?: string;
+    label: React.ReactNode;
   }
->(({ className, label, description, ...props }, ref) => {
+>(({ className, label, ...props }, ref) => {
   return (
     <CheckboxCardsPrimitive.Checkbox
       ref={ref}
@@ -38,7 +37,6 @@ const CheckboxCardItem = React.forwardRef<
     >
       <div className="flex flex-col items-start gap-2">
         <span className="text-sm">{label}</span>
-        {description && <span>{description}</span>}
       </div>
     </CheckboxCardsPrimitive.Checkbox>
   );

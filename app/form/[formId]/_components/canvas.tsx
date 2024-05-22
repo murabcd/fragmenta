@@ -42,6 +42,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
   const { mutate: updateType } = useApiMutation(api.question.type);
   const { mutate: updateTitle } = useApiMutation(api.question.title);
   const { mutate: updateDescription } = useApiMutation(api.question.description);
+  const { mutate: updateChoices } = useApiMutation(api.question.choices);
 
   const [newTitle, setNewTitle] = useState<string>("");
   const [newDescription, setNewDescription] = useState<string>("");
@@ -71,6 +72,10 @@ export const Canvas = ({ formId }: CanvasProps) => {
       setNewDescription(selectedQuestion.description || "");
     }
   }, [selectedQuestion]);
+
+  useEffect(() => {
+    setOrderQuestion(questions);
+  }, [questions]);
 
   const debouncedSaveTitle = useDebouncedCallback((id, newTitle) => {
     updateTitle({ id, title: newTitle });
@@ -157,6 +162,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
           newDescription={newDescription}
           onTitleChange={handleTitleChange}
           onDescriptionChange={handleDescriptionChange}
+          updateChoices={updateChoices}
         />
         <Settings type={selectedQuestionType} onTypeChange={handleTypeChange} />
       </div>
