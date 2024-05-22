@@ -31,6 +31,7 @@ export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
       title: "Untitled",
       description: "",
       type: QuestionType.Short,
+      choices: [],
       position,
     })
       .then(() => {

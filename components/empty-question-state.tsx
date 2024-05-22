@@ -21,6 +21,7 @@ export const EmptyQuestionState = ({ formId }: { formId: string }) => {
       title: "Untitled",
       description: "",
       type: QuestionType.Short,
+      choices: [],
       position: 0,
     })
       .then(() => {
