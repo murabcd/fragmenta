@@ -48,8 +48,8 @@ export const QuestionContent = ({
       case QuestionType.Multiple:
         return (
           <MultipleChoice
+            id={question._id}
             key={question._id}
-            questionId={question._id}
             values={[]}
             onChange={() => {}}
             options={question.choices.map((choice) => ({ label: choice, value: choice }))}

@@ -9,17 +9,17 @@ import { CheckboxCard, CheckboxCardItem } from "@/components/ui/checkbox-card";
 import { toast } from "sonner";
 
 interface MultipleChoiceProps {
+  id: string;
   values: string[];
   options: { label: string; value: string }[];
-  questionId: string;
   onChange: (value: string[]) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
 }
 
 export const MultipleChoice = ({
+  id,
   values,
   options: initialOptions,
-  questionId,
   onChange,
   updateChoices,
 }: MultipleChoiceProps) => {
@@ -29,7 +29,7 @@ export const MultipleChoice = ({
   const debouncedUpdateLabel = useDebouncedCallback(
     (updatedOptions: { label: string; value: string }[]) => {
       updateChoices({
-        id: questionId,
+        id,
         choices: updatedOptions.map((option) => option.label),
       });
     },
@@ -59,7 +59,7 @@ export const MultipleChoice = ({
 
     setOptions(updatedOptions);
     updateChoices({
-      id: questionId,
+      id,
       choices: updatedOptions.map((option) => option.label),
     })
       .then(() => {

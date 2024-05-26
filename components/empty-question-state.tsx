@@ -12,7 +12,6 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 import { api } from "@/convex/_generated/api";
 
 export const EmptyQuestionState = ({ formId }: { formId: string }) => {
-  console.log("Received formId:", formId);
   const { mutate, pending } = useApiMutation(api.question.create);
 
   const onClick = () => {
