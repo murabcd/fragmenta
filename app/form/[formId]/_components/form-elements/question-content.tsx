@@ -3,11 +3,11 @@
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-import { ShortText } from "./form-elements/short-text";
-import { LongText } from "./form-elements/long-text";
-import { SingleChoice } from "./form-elements/single-choice";
-import { MultipleChoice } from "./form-elements/multiple-choice";
-import { RatingScore } from "./form-elements/rating-score";
+import { ShortText } from "./short-text";
+import { LongText } from "./long-text";
+import { SingleChoice } from "./single-choice";
+import { MultipleChoice } from "./multiple-choice";
+import { RatingScore } from "./rating-score";
 
 import { Question, QuestionType } from "@/types/canvas";
 

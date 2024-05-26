@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 import { MoreHorizontal } from "lucide-react";
 
-import { QuestionActions } from "./question-actions";
+import { QuestionActions } from "../question-actions";
 
 import { Question } from "@/types/canvas";
 
