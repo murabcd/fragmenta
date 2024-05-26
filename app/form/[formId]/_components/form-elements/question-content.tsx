@@ -18,6 +18,7 @@ interface QuestionContentProps {
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
+  previewSize: string;
 }
 
 export const QuestionContent = ({
@@ -27,6 +28,7 @@ export const QuestionContent = ({
   onTitleChange,
   onDescriptionChange,
   updateChoices,
+  previewSize,
 }: QuestionContentProps) => {
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onTitleChange(question._id, event.target.value);
@@ -37,13 +39,12 @@ export const QuestionContent = ({
   };
 
   const renderQuestionContent = () => {
-    console.log("Rendering content for question type:", question.type);
     switch (question.type) {
       case QuestionType.Short:
         return <ShortText value={""} onChange={() => {}} />;
       case QuestionType.Long:
         return <LongText value={""} onChange={() => {}} />;
-      case QuestionType.YesNo:
+      case QuestionType.Single:
         return (
           <SingleChoice
             id={question._id}
@@ -73,7 +74,9 @@ export const QuestionContent = ({
   };
 
   return (
-    <Card className="flex flex-col items-center justify-center h-[600px] w-full max-w-4xl px-20 bg-secondary shadow-md rounded-lg space-y-4">
+    <Card
+      className={`flex flex-col items-center justify-center h-[600px] w-full px-4 bg-secondary shadow-md rounded-lg space-y-4 ${previewSize}`}
+    >
       <Input
         className="bg-primary-foreground text-lg hover:bg-primary/10"
         value={newTitle}

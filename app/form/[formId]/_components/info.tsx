@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, Eye, Menu } from "lucide-react";
 
 import { Hint } from "@/components/hint";
+
 import { FormActions } from "@/components/form-actions";
 
 import { useRenameModal } from "@/hooks/use-rename-modal";
@@ -65,9 +66,7 @@ export const Info = ({ formId }: InfoProps) => {
         </div>
       </FormActions>
       <div className="ml-auto flex w-full space-x-2 sm:justify-end">
-        <Hint label="Preview" side="bottom" sideOffset={10}>
-          <FormViewer formId={formId} />
-        </Hint>
+        <FormViewer formId={formId} />
         <Hint label="Make publicly accessible" side="bottom" sideOffset={10}>
           <Button>Publish</Button>
         </Hint>
