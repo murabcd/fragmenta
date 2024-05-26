@@ -43,7 +43,7 @@ export const FormViewer = ({ formId }: FormViewerProps) => {
           </Button>
         </Hint>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[850px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[1024px] max-h-[768px] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Preview mode</DialogTitle>
           <DialogDescription>View your form in preview mode.</DialogDescription>

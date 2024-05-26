@@ -75,7 +75,7 @@ export const QuestionContent = ({
 
   return (
     <Card
-      className={`flex flex-col items-center justify-center h-[600px] w-full px-4 bg-secondary shadow-md rounded-lg space-y-4 ${previewSize}`}
+      className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-secondary shadow-md rounded-lg space-y-4 ${previewSize}`}
     >
       <Input
         className="bg-primary-foreground text-lg hover:bg-primary/10"

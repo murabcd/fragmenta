@@ -14,6 +14,7 @@ interface ContentProps {
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
+  previewSize: string;
 }
 
 export const Content = ({
@@ -25,6 +26,7 @@ export const Content = ({
   onTitleChange,
   onDescriptionChange,
   updateChoices,
+  previewSize,
 }: ContentProps) => {
   return (
     <div className="flex flex-1 flex-col items-center justify-center h-full p-4">
@@ -38,6 +40,7 @@ export const Content = ({
           onTitleChange={onTitleChange}
           onDescriptionChange={onDescriptionChange}
           updateChoices={updateChoices}
+          previewSize={previewSize}
         />
       ) : (
         <div className="text-muted-foreground">Select a question to edit</div>
