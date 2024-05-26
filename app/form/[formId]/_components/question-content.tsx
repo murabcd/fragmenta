@@ -73,7 +73,7 @@ export const QuestionContent = ({
   };
 
   return (
-    <Card className="flex flex-col items-center justify-center h-[600px] w-full max-w-4xl p-4 bg-secondary shadow-md rounded-lg space-y-4">
+    <Card className="flex flex-col items-center justify-center h-[600px] w-full max-w-4xl px-20 bg-secondary shadow-md rounded-lg space-y-4">
       <Input
         className="bg-primary-foreground text-lg hover:bg-primary/10"
         value={newTitle}

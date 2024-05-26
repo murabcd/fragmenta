@@ -107,7 +107,7 @@ export const MultipleChoice = ({
           ))}
         </CheckboxCard>
       </div>
-      <div className="mt-2 mx-2 text-xs font-light text-muted-foreground hover:text-primary">
+      <div className="mt-2 text-xs font-light text-muted-foreground hover:text-primary">
         <button onClick={handleAddChoice}>Add new choice</button>
       </div>
     </div>
