@@ -7,7 +7,7 @@ import { ChevronDown, Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { QuestionType } from "@/types/canvas";
+import { Question, QuestionType } from "@/types/canvas";
 
 import {
   Command,
@@ -21,14 +21,20 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface TypeSelectorProps {
+  question: Question;
   type: QuestionType;
-  onTypeChange: (newType: QuestionType) => void;
+  onTypeChange: (id: string, newType: QuestionType) => void;
   className?: string;
 }
 
-export const TypeSelector = ({ type, onTypeChange, className }: TypeSelectorProps) => {
+export const TypeSelector = ({
+  question,
+  type,
+  onTypeChange,
+  className,
+}: TypeSelectorProps) => {
   const handleTypeSelect = (type: QuestionType) => {
-    onTypeChange(type);
+    onTypeChange(question._id, type);
   };
 
   return (

@@ -6,16 +6,21 @@ import { PanelRightClose } from "lucide-react";
 
 import { Hint } from "@/components/hint";
 
-import { TypeSelector } from "./type-selector";
+import { QuestionSettings } from "./question-settings";
 
-import { QuestionType } from "@/types/canvas";
+import { Question, QuestionType } from "@/types/canvas";
 
 interface SettingsProps {
-  type: QuestionType;
-  onTypeChange: (newType: QuestionType) => void;
+  selectedQuestion: Question | null;
+  handleTypeChange: (id: string, newType: QuestionType) => void;
+  newType: QuestionType;
 }
 
-export const Settings = ({ type, onTypeChange }: SettingsProps) => {
+export const Settings = ({
+  selectedQuestion,
+  handleTypeChange,
+  newType,
+}: SettingsProps) => {
   return (
     <div className="flex flex-col h-full w-64 ml-auto bg-secondary">
       <div className="flex items-center justify-between p-2">
@@ -27,7 +32,13 @@ export const Settings = ({ type, onTypeChange }: SettingsProps) => {
         </Hint>
       </div>
       <div className="flex-1">
-        <TypeSelector type={type} onTypeChange={onTypeChange} />
+        {selectedQuestion && (
+          <QuestionSettings
+            question={selectedQuestion}
+            newType={newType}
+            handleTypeChange={handleTypeChange}
+          />
+        )}
       </div>
     </div>
   );

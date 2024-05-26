@@ -46,8 +46,9 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
   const [newTitle, setNewTitle] = useState<string>("");
   const [newDescription, setNewDescription] = useState<string>("");
+  const [newType, setNewType] = useState<QuestionType>(QuestionType.Short);
+
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
-  const [selectedQuestionType, setSelectedQuestionType] = useState(QuestionType.Short);
   const [orderQuestion, setOrderQuestion] = useState<Question[]>(questions);
 
   const reorderQuestion = useMutation(api.question.position).withOptimisticUpdate(
@@ -70,6 +71,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
     if (selectedQuestion) {
       setNewTitle(selectedQuestion.title);
       setNewDescription(selectedQuestion.description || "");
+      setNewType(selectedQuestion.type);
     }
   }, [selectedQuestion]);
 
@@ -97,15 +99,14 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
   const handleQuestionSelect = (question: Question) => {
     setSelectedQuestion(question);
-    setSelectedQuestionType(question.type);
   };
 
-  const handleTypeChange = async (newType: QuestionType) => {
+  const handleTypeChange = async (id: string, newType: QuestionType) => {
     if (selectedQuestion) {
       try {
-        await updateType({ id: selectedQuestion._id, type: newType });
+        await updateType({ id, type: newType });
         setSelectedQuestion({ ...selectedQuestion, type: newType });
-        setSelectedQuestionType(newType);
+
         toast.success("Type updated");
       } catch (error) {
         toast.error("Failed to update type");
@@ -164,7 +165,11 @@ export const Canvas = ({ formId }: CanvasProps) => {
           onDescriptionChange={handleDescriptionChange}
           updateChoices={updateChoices}
         />
-        <Settings type={selectedQuestionType} onTypeChange={handleTypeChange} />
+        <Settings
+          selectedQuestion={selectedQuestion}
+          newType={newType}
+          handleTypeChange={handleTypeChange}
+        />
       </div>
     </main>
   );
