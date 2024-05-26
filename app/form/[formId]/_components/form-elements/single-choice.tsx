@@ -6,6 +6,8 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { RadioCard, RadioCardItem } from "@/components/ui/radio-card";
 
+import { toast } from "sonner";
+
 interface SingleChoiceProps {
   id: string;
   value: string;
@@ -37,7 +39,13 @@ export const SingleChoice = ({
       updateChoices({
         id,
         choices: updatedOptions.map((option) => option.label),
-      });
+      })
+        .then(() => {
+          toast.success("Choice updated");
+        })
+        .catch(() => {
+          toast.error("Failed to update choice");
+        });
     },
     500
   );

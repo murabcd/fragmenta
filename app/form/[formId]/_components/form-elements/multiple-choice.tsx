@@ -40,7 +40,13 @@ export const MultipleChoice = ({
       updateChoices({
         id,
         choices: updatedOptions.map((option) => option.label),
-      });
+      })
+        .then(() => {
+          toast.success("Choice updated");
+        })
+        .catch(() => {
+          toast.error("Failed to update choice");
+        });
     },
     500
   );
