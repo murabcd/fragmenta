@@ -23,8 +23,17 @@ export const MultipleChoice = ({
   onChange,
   updateChoices,
 }: MultipleChoiceProps) => {
+  const defaultOptions =
+    initialOptions.length > 0
+      ? initialOptions
+      : [
+          { label: "Choice 1", value: "choice-1" },
+          { label: "Choice 2", value: "choice-2" },
+          { label: "Choice 3", value: "choice-3" },
+        ];
+
   const [editingOption, setEditingOption] = useState<string | null>(null);
-  const [options, setOptions] = useState(initialOptions);
+  const [options, setOptions] = useState(defaultOptions);
 
   const debouncedUpdateLabel = useDebouncedCallback(
     (updatedOptions: { label: string; value: string }[]) => {
