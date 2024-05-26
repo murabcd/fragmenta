@@ -22,10 +22,9 @@ RadioCard.displayName = "RadioCards";
 const RadioCardItem = React.forwardRef<
   React.ElementRef<typeof RadioCardsPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioCardsPrimitive.Item> & {
-    label: string;
-    description?: string;
+    label: React.ReactNode;
   }
->(({ className, label, description, ...props }, ref) => {
+>(({ className, label, ...props }, ref) => {
   return (
     <RadioCardsPrimitive.Item
       ref={ref}
@@ -38,7 +37,6 @@ const RadioCardItem = React.forwardRef<
     >
       <div className="flex flex-col items-start gap-2">
         <span className="text-sm">{label}</span>
-        {description && <span>{description}</span>}
       </div>
     </RadioCardsPrimitive.Item>
   );
