@@ -11,6 +11,8 @@ import { FormActions } from "@/components/form-actions";
 
 import { useRenameModal } from "@/hooks/use-rename-modal";
 
+import { FormViewer } from "./preview/form-viewer";
+
 import { useQuery } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
@@ -53,12 +55,7 @@ export const Info = ({ formId }: InfoProps) => {
         </Button>
       </Hint>
       <TabSeparator />
-      <FormActions
-        id={data._id}
-        title={data.title}
-        side="bottom"
-        sideOffset={10}
-      >
+      <FormActions id={data._id} title={data.title} side="bottom" sideOffset={10}>
         <div>
           <Hint label="Main menu" align="end" side="bottom" sideOffset={10}>
             <Button variant="outline" size="icon">
@@ -69,9 +66,7 @@ export const Info = ({ formId }: InfoProps) => {
       </FormActions>
       <div className="ml-auto flex w-full space-x-2 sm:justify-end">
         <Hint label="Preview" side="bottom" sideOffset={10}>
-          <Button variant="outline" size="icon">
-            <Eye className="h-4 w-4" />
-          </Button>
+          <FormViewer formId={formId} />
         </Hint>
         <Hint label="Make publicly accessible" side="bottom" sideOffset={10}>
           <Button>Publish</Button>
