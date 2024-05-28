@@ -23,7 +23,7 @@ const RadioCardItem = React.forwardRef<
   React.ElementRef<typeof RadioCardsPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioCardsPrimitive.Item> & {
     label: React.ReactNode;
-    children: React.ReactNode;
+    children?: React.ReactNode;
   }
 >(({ className, label, children, ...props }, ref) => {
   return (
@@ -36,7 +36,7 @@ const RadioCardItem = React.forwardRef<
       )}
       {...props}
     >
-      <div className="flex justify-between items-center w-full">
+      <div className="flex justify-between items-center">
         <span className="text-sm">{label}</span>
         {children}
       </div>
