@@ -106,7 +106,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
       try {
         await updateType({ id, type: newType });
         await updateChoices({ id, choices: [] });
-        setSelectedQuestion({ ...selectedQuestion, type: newType });
+        setSelectedQuestion({ ...selectedQuestion, type: newType, choices: [] });
         toast.success("Type updated");
       } catch (error) {
         toast.error("Failed to update type");
