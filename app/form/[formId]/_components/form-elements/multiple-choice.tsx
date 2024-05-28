@@ -6,6 +6,8 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { CheckboxCard, CheckboxCardItem } from "@/components/ui/checkbox-card";
 
+import { X } from "lucide-react";
+
 import { toast } from "sonner";
 
 interface MultipleChoiceProps {
@@ -40,13 +42,7 @@ export const MultipleChoice = ({
       updateChoices({
         id,
         choices: updatedOptions.map((option) => option.label),
-      })
-        .then(() => {
-          toast.success("Choice updated");
-        })
-        .catch(() => {
-          toast.error("Failed to update choice");
-        });
+      });
     },
     500
   );
@@ -85,6 +81,28 @@ export const MultipleChoice = ({
       });
   };
 
+  const handleDeleteChoice = (index: number) => {
+    const updatedOptions = options.filter((_, i) => i !== index);
+    setOptions(updatedOptions);
+    updateChoices({
+      id,
+      choices: updatedOptions.map((option) => option.label),
+    })
+      .then(() => {
+        toast.success("Choice deleted");
+      })
+      .catch(() => {
+        toast.error("Failed to delete choice");
+      });
+  };
+
+  const handleBlur = () => {
+    if (editingOption !== null) {
+      debouncedUpdateLabel.flush();
+      setEditingOption(null);
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="max-h-64 overflow-y-auto">
@@ -99,6 +117,7 @@ export const MultipleChoice = ({
                     type="text"
                     value={option.label}
                     onChange={(e) => handleLabelChange(e.target.value, index)}
+                    onBlur={handleBlur}
                     className="bg-transparent border-none focus:outline-none"
                     autoFocus
                   />
@@ -109,11 +128,15 @@ export const MultipleChoice = ({
                 )
               }
               checked={values.includes(option.value)}
-            />
+            >
+              <button onClick={() => handleDeleteChoice(index)}>
+                <X className="h-3 w-3 text-muted-foreground hover:text-primary" />
+              </button>
+            </CheckboxCardItem>
           ))}
         </CheckboxCard>
       </div>
-      <div className="mt-2 text-xs font-light text-muted-foreground hover:text-primary">
+      <div className="mt-4 text-xs font-light text-muted-foreground hover:text-primary">
         <button onClick={handleAddChoice}>Add new choice</button>
       </div>
     </div>
