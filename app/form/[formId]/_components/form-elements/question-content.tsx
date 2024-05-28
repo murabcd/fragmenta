@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 
 import { ShortText } from "./short-text";
 import { LongText } from "./long-text";
+import { YesNoChoice } from "./yes-no-choice";
 import { SingleChoice } from "./single-choice";
 import { MultipleChoice } from "./multiple-choice";
 import { RatingScore } from "./rating-score";
@@ -48,6 +49,17 @@ export const QuestionContent = ({
         return <ShortText value={""} onChange={() => {}} />;
       case QuestionType.Long:
         return <LongText value={""} onChange={() => {}} />;
+      case QuestionType.YesNo:
+        return (
+          <YesNoChoice
+            id={question._id}
+            key={question._id}
+            value={""}
+            onChange={() => {}}
+            options={question.choices.map((choice) => ({ label: choice, value: choice }))}
+            updateChoices={updateChoices}
+          />
+        );
       case QuestionType.Single:
         return (
           <SingleChoice

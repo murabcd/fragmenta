@@ -11,6 +11,7 @@ export interface Question {
 export enum QuestionType {
   Short = "Short text",
   Long = "Long text",
+  YesNo = "Yes/no choice",
   Single = "Single choice",
   Multiple = "Multiple choice",
   Rating = "Rating",
