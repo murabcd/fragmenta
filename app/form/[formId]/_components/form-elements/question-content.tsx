@@ -9,6 +9,8 @@ import { SingleChoice } from "./single-choice";
 import { MultipleChoice } from "./multiple-choice";
 import { RatingScore } from "./rating-score";
 
+import { usePreviewSize } from "@/hooks/use-preview";
+
 import { Question, QuestionType } from "@/types/canvas";
 
 interface QuestionContentProps {
@@ -18,7 +20,7 @@ interface QuestionContentProps {
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
-  previewSize: string;
+  isPreviewMode?: boolean;
 }
 
 export const QuestionContent = ({
@@ -28,8 +30,10 @@ export const QuestionContent = ({
   onTitleChange,
   onDescriptionChange,
   updateChoices,
-  previewSize,
+  isPreviewMode = false,
 }: QuestionContentProps) => {
+  const { previewSize } = usePreviewSize();
+
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onTitleChange(question._id, event.target.value);
   };
@@ -75,7 +79,7 @@ export const QuestionContent = ({
 
   return (
     <Card
-      className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-secondary shadow-md rounded-lg space-y-4 ${previewSize}`}
+      className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-secondary shadow-md rounded-lg space-y-4 ${isPreviewMode ? previewSize : ""}`}
     >
       <Input
         className="bg-primary-foreground text-lg hover:bg-primary/10"

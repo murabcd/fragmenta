@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { Question } from "@/types/canvas";
 
 import { Eye, Monitor, Smartphone, Tablet } from "lucide-react";
@@ -19,6 +17,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import { usePreviewSize } from "@/hooks/use-preview";
+
 import { QuestionContent } from "../form-elements/question-content";
 
 import { useQuery } from "convex/react";
@@ -32,7 +32,7 @@ interface FormViewerProps {
 export const FormViewer = ({ formId }: FormViewerProps) => {
   const questions = useQuery(api.questions.get, { formId }) as Question[];
 
-  const [previewSize, setPreviewSize] = useState("w-full");
+  const { previewSize, setPreviewSize } = usePreviewSize();
 
   return (
     <Dialog>
@@ -76,7 +76,7 @@ export const FormViewer = ({ formId }: FormViewerProps) => {
               onTitleChange={() => {}}
               onDescriptionChange={() => {}}
               updateChoices={() => Promise.resolve()}
-              previewSize={previewSize}
+              isPreviewMode={true}
             />
           ))}
         </div>
