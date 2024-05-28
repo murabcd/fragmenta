@@ -19,7 +19,7 @@ import {
 
 import { usePreviewSize } from "@/hooks/use-preview";
 
-import { QuestionContent } from "../form-elements/question-content";
+import { QuestionContent } from "./question-content";
 
 import { useQuery } from "convex/react";
 

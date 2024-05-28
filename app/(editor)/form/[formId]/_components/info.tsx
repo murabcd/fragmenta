@@ -12,7 +12,7 @@ import { FormActions } from "@/components/form-actions";
 
 import { useRenameModal } from "@/hooks/use-rename-modal";
 
-import { FormViewer } from "./preview/form-viewer";
+import { FormViewer } from "./form-elements/form-viewer";
 
 import { useQuery } from "convex/react";
 

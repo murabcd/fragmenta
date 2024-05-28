@@ -2,7 +2,7 @@
 
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
-import { NewQuestionButton } from "./new-question-button";
+import { NewQuestionButton } from "./form-elements/new-question-button";
 
 import { QuestionItem } from "./form-elements/question-item";
 

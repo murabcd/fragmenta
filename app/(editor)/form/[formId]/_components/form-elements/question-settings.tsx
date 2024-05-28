@@ -1,6 +1,6 @@
 "use client";
 
-import { TypeSelector } from "../type-selector";
+import { TypeSelector } from "./type-selector";
 
 import { Question, QuestionType } from "@/types/canvas";
 
