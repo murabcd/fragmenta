@@ -14,8 +14,8 @@ export const FormCardFooter = ({
   onClick,
 }: FormCardFooterProps) => {
   return (
-    <div className="relative p-3">
-      <p className="text-sm font-medium text-muted-foreground group-hover:text-primary truncate max-w-[calc(100%-20px)]">
+    <div className="relative p-3 bg-muted/50">
+      <p className="text-sm text-muted-foreground group-hover:text-foreground truncate max-w-[calc(100%-20px)]">
         {title}
       </p>
       <p className="opacity-0 group-hover:opacity-100 transition-opacity text-xs text-muted-foreground truncate">

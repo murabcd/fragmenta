@@ -49,7 +49,7 @@ export const TypeSelector = ({
             role="combobox"
             aria-label="Select a type"
             className={cn(
-              "mx-auto w-[230px] p-3 justify-between shadow-sm text-muted-foreground bg-primary-foreground hover:bg-primary/10 ",
+              "mx-auto w-[230px] p-3 justify-between shadow-sm font-normal text-muted-foreground hover:bg-transparent",
               className
             )}
           >
@@ -67,7 +67,7 @@ export const TypeSelector = ({
                   <CommandItem
                     key={typeItem}
                     onSelect={() => handleTypeSelect(typeItem)}
-                    className="cursor-pointer text-sm text-muted-foreground font-basic"
+                    className="cursor-pointer text-sm text-muted-foreground hover:text-foreground"
                   >
                     {typeItem}
                     {typeItem === type && (

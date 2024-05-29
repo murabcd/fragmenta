@@ -22,9 +22,9 @@ export const Settings = ({
   newType,
 }: SettingsProps) => {
   return (
-    <div className="flex flex-col h-full w-64 ml-auto bg-secondary">
+    <div className="flex flex-col h-full w-64 ml-auto bg-background">
       <div className="flex items-center justify-between p-2">
-        <div className="text-basic font-medium">Settings</div>
+        <div className="font-semibold">Settings</div>
         <Hint label="Hide settings menu" side="bottom" sideOffset={10}>
           <Button variant="outline" size="icon">
             <PanelRightClose className="h-4 w-4" />

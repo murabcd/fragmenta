@@ -145,7 +145,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
   };
 
   return (
-    <main className="h-full w-full overflow-hidden relative bg-mute touch-none">
+    <main className="h-full w-full overflow-hidden relative bg-muted/40 touch-none">
       <Info formId={formId} />
       <div className="flex h-[750px]">
         <Editor

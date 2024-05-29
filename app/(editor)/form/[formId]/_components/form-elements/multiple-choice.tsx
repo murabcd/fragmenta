@@ -130,13 +130,13 @@ export const MultipleChoice = ({
               checked={values.includes(option.value)}
             >
               <button onClick={() => handleDeleteChoice(index)}>
-                <X className="h-3 w-3 text-muted-foreground hover:text-primary" />
+                <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
               </button>
             </CheckboxCardItem>
           ))}
         </CheckboxCard>
       </div>
-      <div className="mt-4 text-xs font-light text-muted-foreground hover:text-primary">
+      <div className="mt-4 text-xs font-light text-muted-foreground hover:text-foreground">
         <button onClick={handleAddChoice}>Add new choice</button>
       </div>
     </div>

@@ -13,7 +13,6 @@ export const ShortText = ({
 }: ShortTextProps) => {
   return (
     <Input
-      className="bg-primary-foreground hover:bg-primary/10"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}

@@ -41,7 +41,7 @@ export const Content = ({
           updateChoices={updateChoices}
         />
       ) : (
-        <div className="text-muted-foreground">Select a question to edit</div>
+        <p className="text-sm text-muted-foreground">Select a question to edit</p>
       )}
     </div>
   );

@@ -12,11 +12,11 @@ import { Zap } from "lucide-react";
 
 const UpgradePro = () => {
   return (
-    <Card>
+    <Card className="bg-muted/40">
       <CardHeader>
-        <CardTitle>Upgrade to Pro</CardTitle>
+        <CardTitle className="text-xl">Upgrade to Pro</CardTitle>
         <CardDescription>
-          Upgrade to our Pro plan to gain unlimited access to all our features.
+          Upgrade to Pro plan to unlock unlimited features.
         </CardDescription>
       </CardHeader>
       <CardContent>

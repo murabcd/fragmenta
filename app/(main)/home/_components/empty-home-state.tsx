@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
-import { Plus, Sparkles, LoaderCircle } from "lucide-react";
+import { Plus, LoaderCircle, Home } from "lucide-react";
 
 import { useOrganization } from "@clerk/nextjs";
 import { useApiMutation } from "@/hooks/use-api-mutation";
@@ -36,7 +36,7 @@ export const EmptyHomeState = () => {
   return (
     <div className="h-full flex flex-col items-center justify-center">
       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-        <Sparkles className="w-10 h-10" />
+        <Home className="w-10 h-10" />
       </div>
       <h2 className="text-2xl font-semibold mt-6">Create your first form</h2>
       <p className="text-muted-foreground text-sm mt-2">

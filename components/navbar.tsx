@@ -20,9 +20,7 @@ const Navbar = () => {
     <div className="w-full flex items-center justify-between py-2 px-4 h-16">
       <div className="flex items-center">
         <MobileSidebar />
-        <div className="text-xl font-medium capitalize ml-4 md:ml-0">
-          {segment}
-        </div>
+        <div className="text-2xl font-medium capitalize ml-4 md:ml-2">{segment}</div>
       </div>
       <div className="flex items-center gap-x-3">
         <InviteButton />

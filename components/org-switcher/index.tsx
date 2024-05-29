@@ -5,11 +5,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { ChevronDown } from "lucide-react";
 
@@ -37,7 +33,7 @@ const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
           aria-expanded={open}
           aria-label="Select an organization"
           className={cn(
-            "mx-auto w-[230px] mt-5 p-3 justify-between shadow-sm text-muted-foreground bg-primary-foreground hover:bg-primary/10 ",
+            "mx-auto w-[230px] mt-5 p-3 justify-between shadow-sm font-normal text-muted-foreground hover:bg-transparent",
             className
           )}
         >

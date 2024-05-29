@@ -26,12 +26,12 @@ export const Editor = ({
   onDragEnd,
 }: EditorProps) => {
   return (
-    <div className="flex flex-col h-full w-64 bg-secondary">
+    <div className="flex flex-col h-full w-64 bg-background">
       <div className="flex items-center justify-between p-2">
-        <div className="text-basic font-medium">Questions</div>
+        <div className="font-semibold">Questions</div>
         <NewQuestionButton formId={formId} />
       </div>
-      <div className="flex flex-col text-sm font-medium text-muted-foreground overflow-y-auto">
+      <div className="flex flex-col text-sm text-muted-foreground overflow-y-auto">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="questionsDroppable">
             {(provided) => (
@@ -49,7 +49,7 @@ export const Editor = ({
                           question={question}
                           onClick={() => onQuestionSelect(question)}
                           className={cn({
-                            "text-primary bg-primary/10":
+                            "text-foreground bg-primary/10":
                               selectedQuestion && question._id === selectedQuestion._id,
                           })}
                         />

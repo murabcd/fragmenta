@@ -43,19 +43,19 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="w-64 flex flex-col h-full bg-secondary">
+    <div className="w-64 flex flex-col h-full bg-background">
       <SidebarLogo />
       <OrgSwitcher />
       <SearchToggleCommand />
-      <nav className="mt-5 grid items-start px-2 text-sm font-medium text-muted-foreground">
+      <nav className="mt-5 grid items-start px-2 text-sm text-muted-foreground">
         {routes.map((route) => (
           <div
             key={route.href}
             onClick={() => route.href}
             className={cn(
-              "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-primary/10 rounded-lg transition",
+              "text-sm group flex p-3 w-full justify-start cursor-pointer hover:text-foreground rounded-lg transition",
               {
-                "bg-primary/10": pathname === route.href,
+                "bg-primary/10 text-foreground": pathname === route.href,
               }
             )}
           >

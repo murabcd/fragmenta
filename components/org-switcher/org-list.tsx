@@ -1,6 +1,7 @@
 "use client";
 
 import { useOrganizationList } from "@clerk/nextjs";
+
 import { OrgItem } from "./org-item";
 
 export const OrgList = () => {

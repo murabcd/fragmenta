@@ -15,7 +15,7 @@ export const LongText = ({
 }: LongTextProps) => {
   return (
     <Textarea
-      className="bg-primary-foreground hover:bg-primary/10 resize-none"
+      className="resize-none"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}

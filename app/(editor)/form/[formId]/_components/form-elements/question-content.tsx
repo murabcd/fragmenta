@@ -1,6 +1,5 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 import { ShortText } from "./short-text";
@@ -13,6 +12,7 @@ import { RatingScore } from "./rating-score";
 import { usePreviewSize } from "@/hooks/use-preview";
 
 import { Question, QuestionType } from "@/types/canvas";
+import { Card } from "@/components/ui/card";
 
 interface QuestionContentProps {
   question: Question;
@@ -91,16 +91,16 @@ export const QuestionContent = ({
 
   return (
     <Card
-      className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-secondary shadow-md rounded-lg space-y-4 ${isPreviewMode ? previewSize : ""}`}
+      className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-background shadow-none space-y-4 ${isPreviewMode ? previewSize : ""}`}
     >
       <Input
-        className="bg-primary-foreground text-lg hover:bg-primary/10"
+        className="border-none text-lg"
         value={newTitle}
         placeholder="Title"
         onChange={handleTitleChange}
       />
       <Input
-        className="bg-primary-foreground text-muted-foreground hover:bg-primary/10"
+        className="border-none text-muted-foreground"
         value={newDescription}
         placeholder="Description (optional)"
         onChange={handleDescriptionChange}

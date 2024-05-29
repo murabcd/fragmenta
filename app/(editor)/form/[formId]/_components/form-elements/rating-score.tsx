@@ -22,7 +22,7 @@ export const RatingScore = ({ value, onChange }: RatingScoreProps) => {
             value={rating}
             label={rating}
             checked={value === rating}
-            className="flex items-center justify-center h-10 w-10"
+            className="flex items-center justify-center h-10 w-10 text-muted-foreground hover:text-foreground"
           />
         ))}
       </RadioCard>

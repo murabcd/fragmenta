@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+
 import { useOrganization, useOrganizationList } from "@clerk/nextjs";
 
 import { Check } from "lucide-react";
@@ -25,7 +26,7 @@ export const OrgItem = ({ id, name, imageUrl }: OrgItemProps) => {
   return (
     <li
       onClick={onClick}
-      className="flex items-center p-2 cursor-pointer hover:bg-secondary"
+      className="flex items-center p-2 cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
     >
       <Image
         src={imageUrl}
@@ -34,7 +35,7 @@ export const OrgItem = ({ id, name, imageUrl }: OrgItemProps) => {
         height={20}
         className="mr-2 rounded-sm"
       />
-      <span className="text-sm font-basic text-muted-foreground">{name}</span>
+      <span className="text-sm">{name}</span>
       {isActive && <Check className="ml-auto h-3 w-3 opacity-50" />}
     </li>
   );

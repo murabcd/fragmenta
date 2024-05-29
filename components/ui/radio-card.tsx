@@ -30,9 +30,9 @@ const RadioCardItem = React.forwardRef<
     <RadioCardsPrimitive.Item
       ref={ref}
       className={cn(
-        "p-2 w-[230px] rounded-lg cursor-pointer border bg-background/55 dark:border-primary/10 hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "p-2 w-[230px] rounded-lg cursor-pointer border hover:bg-accent text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className,
-        props.checked && "bg-primary/10 text-primary font-medium"
+        props.checked && "bg-accent font-medium"
       )}
       {...props}
     >
