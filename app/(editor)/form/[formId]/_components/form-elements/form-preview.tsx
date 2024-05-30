@@ -25,11 +25,11 @@ import { useQuery } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
 
-interface FormViewerProps {
+interface FormPreviewProps {
   formId: string;
 }
 
-export const FormViewer = ({ formId }: FormViewerProps) => {
+export const FormPreview = ({ formId }: FormPreviewProps) => {
   const questions = useQuery(api.questions.get, { formId }) as Question[];
 
   const { previewSize, setPreviewSize } = usePreviewSize();

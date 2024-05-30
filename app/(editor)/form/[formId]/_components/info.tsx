@@ -12,7 +12,8 @@ import { FormActions } from "@/components/form-actions";
 
 import { useRenameModal } from "@/hooks/use-rename-modal";
 
-import { FormViewer } from "./form-elements/form-viewer";
+import { FormPreview } from "./form-elements/form-preview";
+import { Publish } from "./form-elements/publish";
 
 import { useQuery } from "convex/react";
 
@@ -40,7 +41,7 @@ export const Info = ({ formId }: InfoProps) => {
     <div className="flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16">
       <Hint label="Back to forms" side="bottom" sideOffset={10}>
         <Link href="/home">
-          <Button variant="secondary" size="icon">
+          <Button variant="outline" size="icon">
             <ChevronLeft className="h-4 w-4" />
           </Button>
         </Link>
@@ -49,7 +50,7 @@ export const Info = ({ formId }: InfoProps) => {
       <Hint label="Rename" side="bottom" sideOffset={10}>
         <Button
           variant="ghost"
-          className="text-base font-normal px-2"
+          className="text-base font-medium px-2"
           onClick={() => onOpen(data._id, data.title)}
         >
           {data.title}
@@ -66,10 +67,8 @@ export const Info = ({ formId }: InfoProps) => {
         </div>
       </FormActions>
       <div className="ml-auto flex w-full space-x-2 sm:justify-end">
-        <FormViewer formId={formId} />
-        <Hint label="Make publicly accessible" side="bottom" sideOffset={10}>
-          <Button>Publish</Button>
-        </Hint>
+        <FormPreview formId={formId} />
+        <Publish formId={data._id} />
       </div>
     </div>
   );

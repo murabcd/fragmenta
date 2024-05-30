@@ -89,3 +89,20 @@ export const get = query({
     return form;
   },
 });
+
+export const publish = mutation({
+  args: { id: v.id("forms"), isPublished: v.boolean() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const form = await ctx.db.patch(args.id, {
+      isPublished: args.isPublished,
+    });
+
+    return form;
+  },
+});
