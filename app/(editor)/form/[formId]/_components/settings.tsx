@@ -6,7 +6,7 @@ import { PanelRightClose } from "lucide-react";
 
 import { Hint } from "@/components/hint";
 
-import { QuestionSettings } from "./form-elements/question-settings";
+import { QuestionSettings } from "@/components/question-settings";
 
 import { Question, QuestionType } from "@/types/canvas";
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
 import { Plus, MessageCircleQuestion, LoaderCircle, Sparkles } from "lucide-react";
 

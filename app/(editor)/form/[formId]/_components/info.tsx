@@ -12,8 +12,8 @@ import { FormActions } from "@/components/form-actions";
 
 import { useRenameModal } from "@/hooks/use-rename-modal";
 
-import { FormPreview } from "./form-elements/form-preview";
-import { Publish } from "./form-elements/publish";
+import { FormPreview } from "@/components/form-preview";
+import { Publish } from "@/components/publish";
 
 import { useQuery } from "convex/react";
 

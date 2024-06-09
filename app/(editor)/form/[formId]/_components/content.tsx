@@ -2,7 +2,7 @@
 
 import { Question } from "@/types/canvas";
 
-import { QuestionContent } from "./form-elements/question-content";
+import { QuestionContent } from "@/components/question-content";
 
 import { EmptyQuestionState } from "@/components/empty-question-state";
 

@@ -2,12 +2,12 @@
 
 import { Input } from "@/components/ui/input";
 
-import { ShortText } from "./short-text";
-import { LongText } from "./long-text";
-import { YesNoChoice } from "./yes-no-choice";
-import { SingleChoice } from "./single-choice";
-import { MultipleChoice } from "./multiple-choice";
-import { RatingScore } from "./rating-score";
+import { ShortText } from "./form-elements/short-text";
+import { LongText } from "./form-elements/long-text";
+import { YesNoChoice } from "./form-elements/yes-no-choice";
+import { SingleChoice } from "./form-elements/single-choice";
+import { MultipleChoice } from "./form-elements/multiple-choice";
+import { RatingScore } from "./form-elements/rating-score";
 
 import { usePreviewSize } from "@/hooks/use-preview";
 
@@ -91,7 +91,7 @@ export const QuestionContent = ({
 
   return (
     <Card
-      className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-background shadow-none space-y-4 ${isPreviewMode ? previewSize : ""}`}
+      className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-background border-none shadow-none space-y-4 ${isPreviewMode ? previewSize : ""}`}
     >
       <Input
         className="border-none text-lg"
