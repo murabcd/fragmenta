@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { useDebouncedCallback } from "use-debounce";
 
@@ -36,6 +36,8 @@ export const MultipleChoice = ({
 
   const [editingOption, setEditingOption] = useState<string | null>(null);
   const [options, setOptions] = useState(defaultOptions);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const debouncedUpdateLabel = useDebouncedCallback(
     (updatedOptions: { label: string; value: string }[]) => {
@@ -103,9 +105,34 @@ export const MultipleChoice = ({
     }
   };
 
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (containerRef.current) {
+        setIsOverflowing(
+          containerRef.current.scrollHeight > containerRef.current.clientHeight
+        );
+      }
+    };
+
+    checkOverflow();
+  }, [options]);
+
+  const handleScroll = () => {
+    if (containerRef.current) {
+      const isAtBottom =
+        containerRef.current.scrollHeight - containerRef.current.scrollTop ===
+        containerRef.current.clientHeight;
+      setIsOverflowing(!isAtBottom);
+    }
+  };
+
   return (
-    <div className="w-full">
-      <div className="max-h-64 overflow-y-auto">
+    <div className="w-full relative">
+      <div
+        ref={containerRef}
+        className="max-h-64 overflow-y-auto"
+        onScroll={handleScroll}
+      >
         <CheckboxCard>
           {options.map((option, index) => (
             <CheckboxCardItem
@@ -136,6 +163,9 @@ export const MultipleChoice = ({
           ))}
         </CheckboxCard>
       </div>
+      {isOverflowing && (
+        <div className="absolute bottom-8 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent dark:from-[#09090b] dark:to-transparent pointer-events-none"></div>
+      )}
       <div className="mt-4 text-xs font-light text-muted-foreground hover:text-foreground">
         <button onClick={handleAddChoice}>Add new choice</button>
       </div>
