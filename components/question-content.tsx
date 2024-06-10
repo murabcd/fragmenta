@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { useAutoResizeTextarea } from "@/hooks/use-auto-resize";
 
 import { ShortText } from "./form-elements/short-text";
 import { LongText } from "./form-elements/long-text";
@@ -35,11 +35,14 @@ export const QuestionContent = ({
 }: QuestionContentProps) => {
   const { previewSize } = usePreviewSize();
 
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const titleRef = useAutoResizeTextarea(newTitle, "32px");
+  const descriptionRef = useAutoResizeTextarea(newDescription, "32px");
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onTitleChange(question._id, event.target.value);
   };
 
-  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onDescriptionChange(question._id, event.target.value);
   };
 
@@ -93,14 +96,16 @@ export const QuestionContent = ({
     <Card
       className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-background border-none shadow-none space-y-4 ${isPreviewMode ? previewSize : ""}`}
     >
-      <Input
-        className="border-none text-lg"
+      <textarea
+        ref={titleRef}
+        className="bg-transparent text-2xl w-full focus-visible:outline-none resize-none"
         value={newTitle}
         placeholder="Title"
         onChange={handleTitleChange}
       />
-      <Input
-        className="border-none text-muted-foreground"
+      <textarea
+        ref={descriptionRef}
+        className="bg-transparent text-sm text-muted-foreground w-full focus-visible:outline-none resize-none"
         value={newDescription}
         placeholder="Description (optional)"
         onChange={handleDescriptionChange}
