@@ -17,7 +17,7 @@ export const ShortText = ({
     <textarea
       ref={textRef}
       value={value}
-      className="bg-transparent text-sm w-full focus-visible:outline-none resize-none"
+      className="bg-transparent border-b border-muted focus:border-b-1 focus:border-muted-foreground/30 text-sm w-full focus-visible:outline-none resize-none"
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
     />
