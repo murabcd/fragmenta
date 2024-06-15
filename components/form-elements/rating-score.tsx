@@ -10,11 +10,10 @@ export const RatingScore = ({ value, onChange }: RatingScoreProps) => {
 
   return (
     <div className="w-full">
-      {/* TODO: Temporarily using flex-wrap, but should be grid */}
       <RadioCard
         value={value}
         onValueChange={onChange}
-        className="flex flex-wrap justify-between"
+        className="grid grid-cols-6 md:grid-cols-11 gap-2"
       >
         {ratings.map((rating) => (
           <RadioCardItem
