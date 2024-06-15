@@ -42,3 +42,16 @@ export const count = query({
     return questions.length;
   },
 });
+
+export const getById = query({
+  args: { formId: v.id("forms") },
+  handler: async (ctx, args) => {
+    const questions = await ctx.db
+      .query("questions")
+      .withIndex("by_form", (query) => query.eq("formId", args.formId))
+      .order("asc")
+      .collect();
+
+    return questions;
+  },
+});

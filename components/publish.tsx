@@ -77,14 +77,16 @@ export const Publish = ({ formId }: PublishProps) => {
     <Popover>
       <PopoverTrigger>
         <Hint label="Make publicly accessible" side="bottom" sideOffset={10}>
-          <Button>{data?.isPublished ? "Published" : "Publish"}</Button>
+          <Button variant={data?.isPublished ? "outline" : "default"}>
+            {data?.isPublished ? "Published" : "Publish"}
+          </Button>
         </Hint>
       </PopoverTrigger>
       <PopoverContent className="w-72" align="end" sideOffset={10} forceMount>
         {data?.isPublished ? (
           <div className="space-y-4">
             <div className="flex items-center gap-x-2">
-              <Globe className="animate-pulse h-6 w-6" />
+              <Globe className="text-sky-500 animate-pulse h-6 w-6" />
               <p className="text-sm text-balance leading-relaxed">
                 This form is live on the web.
               </p>
@@ -103,7 +105,7 @@ export const Publish = ({ formId }: PublishProps) => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
-            <GlobeLock className="h-8 w-8 text-muted-foreground mb-2" />
+            <GlobeLock className="h-8 w-8 text-muted-foreground mb-2 text-sky-500" />
             <h3 className="text-lg font-semibold">Publish form</h3>
             <p className="text-sm text-muted-foreground mb-4">
               Share your work with others.
