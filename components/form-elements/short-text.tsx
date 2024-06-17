@@ -4,14 +4,16 @@ interface ShortTextProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  resizeTrigger: any;
 }
 
 export const ShortText = ({
   value,
   onChange,
   placeholder = "Type your answer here...",
+  resizeTrigger,
 }: ShortTextProps) => {
-  const textRef = useAutoResizeTextarea(value, "32px");
+  const textRef = useAutoResizeTextarea(value, "32px", resizeTrigger);
 
   return (
     <textarea

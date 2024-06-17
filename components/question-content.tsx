@@ -1,7 +1,5 @@
 "use client";
 
-import { useAutoResizeTextarea } from "@/hooks/use-auto-resize";
-
 import { ShortText } from "./form-elements/short-text";
 import { LongText } from "./form-elements/long-text";
 import { YesNoChoice } from "./form-elements/yes-no-choice";
@@ -10,6 +8,9 @@ import { MultipleChoice } from "./form-elements/multiple-choice";
 import { RatingScore } from "./form-elements/rating-score";
 
 import { usePreviewSize } from "@/hooks/use-preview";
+import { useAutoResizeTextarea } from "@/hooks/use-auto-resize";
+
+import { cn } from "@/lib/utils";
 
 import { Question, QuestionType } from "@/types/canvas";
 import { Card } from "@/components/ui/card";
@@ -22,6 +23,7 @@ interface QuestionContentProps {
   onDescriptionChange: (id: string, description: string) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
   isPreviewMode?: boolean;
+  isPublished?: boolean;
 }
 
 export const QuestionContent = ({
@@ -35,8 +37,8 @@ export const QuestionContent = ({
 }: QuestionContentProps) => {
   const { previewSize } = usePreviewSize();
 
-  const titleRef = useAutoResizeTextarea(newTitle, "32px");
-  const descriptionRef = useAutoResizeTextarea(newDescription, "32px");
+  const titleRef = useAutoResizeTextarea(newTitle, "32px", previewSize);
+  const descriptionRef = useAutoResizeTextarea(newDescription, "32px", previewSize);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onTitleChange(question._id, event.target.value);
@@ -49,9 +51,9 @@ export const QuestionContent = ({
   const renderQuestionContent = () => {
     switch (question.type) {
       case QuestionType.Short:
-        return <ShortText value={""} onChange={() => {}} />;
+        return <ShortText value={""} onChange={() => {}} resizeTrigger={previewSize} />;
       case QuestionType.Long:
-        return <LongText value={""} onChange={() => {}} />;
+        return <LongText value={""} onChange={() => {}} resizeTrigger={previewSize} />;
       case QuestionType.YesNo:
         return (
           <YesNoChoice
@@ -94,7 +96,10 @@ export const QuestionContent = ({
 
   return (
     <Card
-      className={`flex flex-col items-center justify-center w-full h-[600px] px-4 bg-background border-none shadow-none space-y-4 ${isPreviewMode ? previewSize : ""}`}
+      className={cn(
+        "flex flex-col items-center justify-center w-full min-h-[600px] px-4 bg-background border-none shadow-none space-y-4",
+        isPreviewMode ? previewSize : ""
+      )}
     >
       <textarea
         ref={titleRef}

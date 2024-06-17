@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 
 export const useAutoResizeTextarea = (
   content: string,
-  initialHeight: string = "auto"
+  initialHeight: string = "auto",
+  resizeTrigger: any
 ) => {
   const ref = useRef<HTMLTextAreaElement>(null);
 
@@ -26,7 +27,7 @@ export const useAutoResizeTextarea = (
         textarea.removeEventListener("input", resizeTextarea);
       }
     };
-  }, [content, initialHeight]);
+  }, [content, initialHeight, resizeTrigger]);
 
   return ref;
 };

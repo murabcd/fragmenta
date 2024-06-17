@@ -6,6 +6,6 @@ interface PreviewSize {
 }
 
 export const usePreviewSize = create<PreviewSize>((set) => ({
-  previewSize: "w-full",
+  previewSize: "max-w-[720px]",
   setPreviewSize: (size) => set({ previewSize: size }),
 }));

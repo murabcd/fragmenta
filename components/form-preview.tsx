@@ -52,7 +52,7 @@ export const FormPreview = ({ formId }: FormPreviewProps) => {
           <div className="h-[28px] items-center justify-center gap-1.5 rounded-md border p-[2px] shadow-sm md:flex">
             <ToggleGroup type="single" value={previewSize} onValueChange={setPreviewSize}>
               <ToggleGroupItem
-                value="w-full"
+                value="max-w-[720px]"
                 className="h-[22px] w-[22px] rounded-sm p-0"
               >
                 <Monitor className="h-3.5 w-3.5" />
@@ -60,7 +60,7 @@ export const FormPreview = ({ formId }: FormPreviewProps) => {
               <ToggleGroupItem value="w-3/5" className="h-[22px] w-[22px] rounded-sm p-0">
                 <Tablet className="h-3.5 w-3.5" />
               </ToggleGroupItem>
-              <ToggleGroupItem value="w-1/3" className="h-[22px] w-[22px] rounded-sm p-0">
+              <ToggleGroupItem value="w-2/5" className="h-[22px] w-[22px] rounded-sm p-0">
                 <Smartphone className="h-3.5 w-3.5" />
               </ToggleGroupItem>
             </ToggleGroup>
@@ -72,7 +72,7 @@ export const FormPreview = ({ formId }: FormPreviewProps) => {
               key={question._id}
               question={question}
               newTitle={question.title}
-              newDescription={question.description || " "}
+              newDescription={question.description || ""}
               onTitleChange={() => {}}
               onDescriptionChange={() => {}}
               updateChoices={() => Promise.resolve()}

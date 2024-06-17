@@ -5,14 +5,16 @@ interface LongTextProps {
   onChange: (value: string) => void;
   placeholder?: string;
   maxLength?: number;
+  resizeTrigger: any;
 }
 
 export const LongText = ({
   value,
   onChange,
   placeholder = "Type your answer here...",
+  resizeTrigger,
 }: LongTextProps) => {
-  const textRef = useAutoResizeTextarea(value, "32px");
+  const textRef = useAutoResizeTextarea(value, "32px", resizeTrigger);
 
   return (
     <textarea
