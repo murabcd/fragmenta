@@ -5,7 +5,7 @@ import { SearchCommand } from "@/components/search-command";
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-full bg-muted/40">
-      <div className=" flex-1 hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col md:border-r md:shadow-sm">
+      <div className=" flex-1 hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
         <Sidebar />
       </div>
       <main className="md:pl-64 h-full">

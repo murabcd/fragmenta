@@ -43,7 +43,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="w-64 flex flex-col h-full bg-background">
+    <div className="w-64 flex flex-col h-full border bg-background">
       <SidebarLogo />
       <OrgSwitcher />
       <SearchToggleCommand />

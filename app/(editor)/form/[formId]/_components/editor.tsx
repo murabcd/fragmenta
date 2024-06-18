@@ -26,7 +26,7 @@ export const Editor = ({
   onDragEnd,
 }: EditorProps) => {
   return (
-    <div className="flex flex-col h-full w-64 bg-background">
+    <div className="flex flex-col h-full w-64 border rounded-tr-md bg-background">
       <div className="flex items-center justify-between p-2">
         <div className="font-semibold">Questions</div>
         <NewQuestionButton formId={formId} />

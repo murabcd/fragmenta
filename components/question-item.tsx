@@ -18,7 +18,7 @@ export const QuestionItem = ({ question, className, onClick }: QuestionItemProps
   return (
     <ul
       onClick={onClick}
-      className={`flex items-center justify-between m-2 p-3 cursor-pointer border hover:text-foreground rounded-lg transition ${className}`}
+      className={`flex items-center justify-between m-2 p-3 cursor-pointer hover:text-foreground rounded-lg transition ${className}`}
     >
       <span className="truncate max-w-[calc(100%-40px)]">{question.title}</span>
       <QuestionActions id={question._id} title={question.title} align="end" side="right">

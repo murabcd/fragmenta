@@ -23,7 +23,6 @@ interface QuestionContentProps {
   onDescriptionChange: (id: string, description: string) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
   isPreviewMode?: boolean;
-  isPublished?: boolean;
 }
 
 export const QuestionContent = ({

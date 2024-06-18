@@ -4,7 +4,6 @@ interface LongTextProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  maxLength?: number;
   resizeTrigger: any;
 }
 

@@ -92,6 +92,7 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
             onTitleChange={() => {}}
             onDescriptionChange={() => {}}
             updateChoices={() => Promise.resolve()}
+            isPublished={true}
           />
         </div>
       </div>
