@@ -122,20 +122,37 @@ export const description = mutation({
 export const position = mutation({
   args: {
     id: v.id("questions"),
+    formId: v.string(),
     position: v.number(),
   },
   handler: async (ctx, args) => {
+    const { id, formId, position } = args;
+
     const identity = await ctx.auth.getUserIdentity();
 
     if (!identity) {
       throw new Error("Unauthorized");
     }
 
-    const question = await ctx.db.patch(args.id, {
-      position: args.position,
-    });
+    const questions = await ctx.db
+      .query("questions")
+      .withIndex("by_form", (q) => q.eq("formId", formId))
+      .order("asc")
+      .collect();
 
-    return question;
+    const index = questions.findIndex((q) => q._id === id);
+
+    const [question] = questions.splice(index, 1);
+
+    questions.splice(position, 0, question);
+
+    const destination = questions.map((question, index) =>
+      ctx.db.patch(question._id, { position: index })
+    );
+
+    await Promise.all(destination);
+
+    return questions;
   },
 });
 

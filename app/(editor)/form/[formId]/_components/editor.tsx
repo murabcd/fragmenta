@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
 import { NewQuestionButton } from "@/components/new-question-button";
@@ -42,8 +40,6 @@ export const Editor = ({
   onQuestionSelect,
   selectedQuestion,
 }: EditorProps) => {
-  const [orderQuestion, setOrderQuestion] = useState<Question[]>(questions);
-
   const reorderQuestion = useMutation(api.question.position).withOptimisticUpdate(
     (localStore, { id, position }) => {
       const currentQuestions = localStore.getQuery(api.questions.get, { formId });
@@ -67,24 +63,21 @@ export const Editor = ({
       return;
     }
 
-    const newOrderedQuestion = reorder(orderQuestion, source.index, destination.index);
-
-    setOrderQuestion(newOrderedQuestion);
+    const newOrderedQuestion = reorder(questions, source.index, destination.index);
 
     try {
       await Promise.all(
         newOrderedQuestion.map((question, index) =>
           reorderQuestion({
             id: question._id as Id<"questions">,
+            formId: formId,
             position: index,
           })
         )
       );
-      toast.success("Question reordered");
+      toast.success("Questions reordered");
     } catch (error) {
-      toast.error("Failed to reorder question");
-
-      setOrderQuestion(questions);
+      toast.error("Failed to reorder questions");
     }
   };
 
@@ -99,7 +92,7 @@ export const Editor = ({
           <Droppable droppableId="list">
             {(provided) => (
               <ol {...provided.droppableProps} ref={provided.innerRef}>
-                {orderQuestion.map((question, index) => (
+                {questions.map((question, index) => (
                   <QuestionItem
                     index={index}
                     key={question._id}
