@@ -5,6 +5,8 @@ import { Draggable } from "@hello-pangea/dnd";
 import { Button } from "@/components/ui/button";
 
 import {
+  ListStart,
+  ListEnd,
   Text,
   ListMinus,
   CheckCheck,
@@ -26,6 +28,8 @@ interface QuestionItemProps {
 }
 
 const questionTypelcons = {
+  [QuestionType.Start]: ListStart,
+  [QuestionType.End]: ListEnd,
   [QuestionType.Short]: Text,
   [QuestionType.Long]: ListMinus,
   [QuestionType.YesNo]: CheckCheck,
