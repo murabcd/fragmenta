@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-
-import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { useDebounce } from "use-debounce";
 
@@ -32,18 +29,6 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
   const [positionIndex, setPositionIndex] = useState(0);
   const [debouncedPositionIndex] = useDebounce(positionIndex, 300);
 
-  const handleBack = () => {
-    if (positionIndex > 0) {
-      setPositionIndex(positionIndex - 1);
-    }
-  };
-
-  const handleForward = () => {
-    if (positionIndex < questions.length - 1) {
-      setPositionIndex(positionIndex + 1);
-    }
-  };
-
   const form = useQuery(api.form.get, {
     id: params.formId as Id<"forms">,
   });
@@ -52,13 +37,30 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
     formId: params.formId as Id<"forms">,
   }) as Question[];
 
+  const handleBack = () => {
+    if (questions && positionIndex > 0) {
+      setPositionIndex(positionIndex - 1);
+    }
+  };
+
+  const handleForward = () => {
+    if (questions && positionIndex < questions.length - 1) {
+      setPositionIndex(positionIndex + 1);
+    }
+  };
+
+  const handleComplete = () => {
+    // Handle form submission logic here
+    console.log("Form completed");
+  };
+
   const progress =
     questions && questions.length > 0
       ? ((positionIndex + 1) / questions.length) * 100
       : 0;
 
   if (!form || !questions) {
-    return;
+    return null;
   }
 
   if (!form.isPublished) {
@@ -92,19 +94,15 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
             onTitleChange={() => {}}
             onDescriptionChange={() => {}}
             updateChoices={() => Promise.resolve()}
-            isPublished={true}
+            onStart={handleForward}
+            onComplete={handleComplete}
+            onBack={handleBack}
+            onForward={handleForward}
+            isBackDisabled={positionIndex === 0}
+            isForwardDisabled={positionIndex === questions.length - 1}
+            isPreviewMode={true}
           />
         </div>
-      </div>
-      <div className="fixed bottom-3 right-3 flex items-center gap-2">
-        <Button onClick={handleBack} disabled={positionIndex === 0}>
-          <ChevronUp className="w-4 h-4 mr-2" />
-          Back
-        </Button>
-        <Button onClick={handleForward} disabled={positionIndex === questions.length - 1}>
-          <ChevronDown className="w-4 h-4 mr-2" />
-          Next
-        </Button>
       </div>
     </div>
   );
