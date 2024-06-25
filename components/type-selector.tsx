@@ -37,6 +37,11 @@ export const TypeSelector = ({
     onTypeChange(question._id, type);
   };
 
+  const screenTypes = [QuestionType.Start, QuestionType.End];
+  const questionTypes = Object.values(QuestionType).filter(
+    (t) => !screenTypes.includes(t)
+  );
+
   return (
     <div className="grid gap-2">
       <Label className="px-3 mt-5" htmlFor="type">
@@ -62,8 +67,22 @@ export const TypeSelector = ({
             <CommandList className="max-h-[400px]">
               <CommandInput placeholder="Search by type..." />
               <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup>
-                {Object.values(QuestionType).map((typeItem) => (
+              <CommandGroup heading="Questions">
+                {questionTypes.map((typeItem) => (
+                  <CommandItem
+                    key={typeItem}
+                    onSelect={() => handleTypeSelect(typeItem)}
+                    className="cursor-pointer text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    {typeItem}
+                    {typeItem === type && (
+                      <Check className="ml-auto h-3 w-3 opacity-50" />
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+              <CommandGroup heading="Screens">
+                {screenTypes.map((typeItem) => (
                   <CommandItem
                     key={typeItem}
                     onSelect={() => handleTypeSelect(typeItem)}
