@@ -9,6 +9,8 @@ export interface Question {
 }
 
 export enum QuestionType {
+  Start = "Start screen",
+  End = "End screen",
   Short = "Short text",
   Long = "Long text",
   YesNo = "Yes/no choice",

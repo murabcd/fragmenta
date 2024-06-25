@@ -1,11 +1,18 @@
 "use client";
 
+import { StartScreen } from "./form-elements/start-screen";
+import { EndScreen } from "./form-elements/end-screen";
+
 import { ShortText } from "./form-elements/short-text";
 import { LongText } from "./form-elements/long-text";
 import { YesNoChoice } from "./form-elements/yes-no-choice";
 import { SingleChoice } from "./form-elements/single-choice";
 import { MultipleChoice } from "./form-elements/multiple-choice";
 import { RatingScore } from "./form-elements/rating-score";
+
+import { StartButton } from "./start-button";
+import { CompleteButton } from "./complete-button";
+import { NavigationButtons } from "./nav-button";
 
 import { usePreviewSize } from "@/hooks/use-preview";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize";
@@ -22,6 +29,12 @@ interface QuestionContentProps {
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
+  onStart?: () => void;
+  onComplete?: () => void;
+  onBack?: () => void;
+  onForward?: () => void;
+  isBackDisabled?: boolean;
+  isForwardDisabled?: boolean;
   isPreviewMode?: boolean;
 }
 
@@ -32,6 +45,12 @@ export const QuestionContent = ({
   onTitleChange,
   onDescriptionChange,
   updateChoices,
+  onStart,
+  onComplete,
+  onBack,
+  onForward,
+  isBackDisabled,
+  isForwardDisabled,
   isPreviewMode = false,
 }: QuestionContentProps) => {
   const { previewSize } = usePreviewSize();
@@ -49,6 +68,10 @@ export const QuestionContent = ({
 
   const renderQuestionContent = () => {
     switch (question.type) {
+      case QuestionType.Start:
+        return <StartScreen />;
+      case QuestionType.End:
+        return <EndScreen />;
       case QuestionType.Short:
         return <ShortText value={""} onChange={() => {}} resizeTrigger={previewSize} />;
       case QuestionType.Long:
@@ -93,6 +116,27 @@ export const QuestionContent = ({
     }
   };
 
+  const renderButtons = () => {
+    if (question.type === QuestionType.Start && onStart) {
+      return <StartButton onClick={onStart} />;
+    } else if (question.type === QuestionType.End && onComplete) {
+      return <CompleteButton onClick={onComplete} />;
+    } else if (onBack && onForward) {
+      return (
+        <NavigationButtons
+          onBack={onBack}
+          onForward={onForward}
+          isBackDisabled={isBackDisabled || false}
+          isForwardDisabled={isForwardDisabled || false}
+        />
+      );
+    }
+    return null;
+  };
+
+  const isScreen =
+    question.type === QuestionType.Start || question.type === QuestionType.End;
+
   return (
     <Card
       className={cn(
@@ -100,21 +144,30 @@ export const QuestionContent = ({
         isPreviewMode ? previewSize : ""
       )}
     >
-      <textarea
-        ref={titleRef}
-        className="bg-transparent text-2xl w-full focus-visible:outline-none resize-none"
-        value={newTitle}
-        placeholder="Title"
-        onChange={handleTitleChange}
-      />
-      <textarea
-        ref={descriptionRef}
-        className="bg-transparent text-sm text-muted-foreground w-full focus-visible:outline-none resize-none"
-        value={newDescription}
-        placeholder="Description (optional)"
-        onChange={handleDescriptionChange}
-      />
+      <div className={cn("w-full", isScreen && "flex flex-col items-center space-y-6")}>
+        <textarea
+          ref={titleRef}
+          className={cn(
+            "bg-transparent w-full focus-visible:outline-none resize-none",
+            isScreen ? "text-3xl text-center" : "text-2xl"
+          )}
+          value={newTitle}
+          placeholder="Title"
+          onChange={handleTitleChange}
+        />
+        <textarea
+          ref={descriptionRef}
+          className={cn(
+            "bg-transparent w-full text-muted-foreground focus-visible:outline-none resize-none",
+            isScreen ? "text-lg text-center max-w-md" : "text-sm"
+          )}
+          value={newDescription}
+          placeholder="Description (optional)"
+          onChange={handleDescriptionChange}
+        />
+      </div>
       {renderQuestionContent()}
+      {renderButtons()}
     </Card>
   );
 };
