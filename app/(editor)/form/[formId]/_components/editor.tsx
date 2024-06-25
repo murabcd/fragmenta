@@ -81,6 +81,10 @@ export const Editor = ({
     }
   };
 
+  if (questions.length > 0 && !selectedQuestion) {
+    onQuestionSelect(questions[0]);
+  }
+
   return (
     <div className="flex flex-col h-full w-64 border rounded-tr-md bg-background">
       <div className="flex items-center justify-between p-2">

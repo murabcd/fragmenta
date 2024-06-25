@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { useDebouncedCallback } from "use-debounce";
 
@@ -37,14 +37,6 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
 
-  useEffect(() => {
-    if (selectedQuestion) {
-      setNewTitle(selectedQuestion.title);
-      setNewDescription(selectedQuestion.description || "");
-      setNewType(selectedQuestion.type);
-    }
-  }, [selectedQuestion]);
-
   const debouncedSaveTitle = useDebouncedCallback((id, newTitle) => {
     updateTitle({ id, title: newTitle });
   }, 500);
@@ -65,6 +57,9 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
   const handleQuestionSelect = (question: Question) => {
     setSelectedQuestion(question);
+    setNewTitle(question.title);
+    setNewDescription(question.description || "");
+    setNewType(question.type);
   };
 
   const handleTypeChange = async (id: string, newType: QuestionType) => {
