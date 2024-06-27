@@ -82,6 +82,7 @@ export const FormPreview = ({ formId }: FormPreviewProps) => {
               onResponseChange={() => {}}
               updateChoices={() => Promise.resolve()}
               isPreviewMode={true}
+              isPublished={true}
             />
           ))}
         </div>

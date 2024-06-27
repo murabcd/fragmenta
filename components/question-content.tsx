@@ -173,9 +173,8 @@ export const QuestionContent = ({
   return (
     <Card
       className={cn(
-        "flex flex-col items-center justify-center w-full min-h-[600px] px-4 bg-background shadow-none space-y-4",
-        isPreviewMode ? previewSize : "",
-        isPublished ? "border-none" : "border"
+        "flex flex-col items-center justify-center w-full min-h-[600px] px-4 bg-background border shadow-none space-y-4",
+        isPreviewMode ? previewSize : ""
       )}
     >
       <div className={cn("w-full", isScreen && "flex flex-col items-center")}>
