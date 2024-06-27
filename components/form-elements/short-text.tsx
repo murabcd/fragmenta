@@ -5,6 +5,7 @@ interface ShortTextProps {
   onChange: (value: string) => void;
   placeholder?: string;
   resizeTrigger: any;
+  isPublished: boolean;
 }
 
 export const ShortText = ({
@@ -12,8 +13,17 @@ export const ShortText = ({
   onChange,
   placeholder = "Type your answer here...",
   resizeTrigger,
+  isPublished,
 }: ShortTextProps) => {
   const textRef = useAutoResizeTextarea(value, "32px", resizeTrigger);
+
+  if (!isPublished) {
+    return (
+      <div className="w-full border-b border-muted py-2 text-sm text-muted-foreground">
+        {placeholder}
+      </div>
+    );
+  }
 
   return (
     <textarea

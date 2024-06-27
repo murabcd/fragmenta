@@ -5,6 +5,7 @@ interface LongTextProps {
   onChange: (value: string) => void;
   placeholder?: string;
   resizeTrigger: any;
+  isPublished: boolean;
 }
 
 export const LongText = ({
@@ -12,8 +13,17 @@ export const LongText = ({
   onChange,
   placeholder = "Type your answer here...",
   resizeTrigger,
+  isPublished,
 }: LongTextProps) => {
   const textRef = useAutoResizeTextarea(value, "32px", resizeTrigger);
+
+  if (!isPublished) {
+    return (
+      <div className="w-full border-b border-muted py-2 text-sm text-muted-foreground">
+        {placeholder}
+      </div>
+    );
+  }
 
   return (
     <textarea

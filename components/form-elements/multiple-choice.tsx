@@ -16,6 +16,7 @@ interface MultipleChoiceProps {
   options: { label: string; value: string }[];
   onChange: (value: string[]) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
+  isPublished: boolean;
 }
 
 export const MultipleChoice = ({
@@ -24,6 +25,7 @@ export const MultipleChoice = ({
   options: initialOptions,
   onChange,
   updateChoices,
+  isPublished,
 }: MultipleChoiceProps) => {
   const defaultOptions =
     initialOptions.length > 0
@@ -59,13 +61,30 @@ export const MultipleChoice = ({
   };
 
   const handleOptionClick = (optionValue: string) => {
+    if (isPublished) {
+      onChange(
+        values.includes(optionValue)
+          ? values.filter((v) => v !== optionValue)
+          : [...values, optionValue]
+      );
+      return;
+    }
+
     if (editingOption !== null) {
       debouncedUpdateLabel.flush();
     }
     setEditingOption(optionValue);
+
+    onChange(
+      values.includes(optionValue)
+        ? values.filter((v) => v !== optionValue)
+        : [...values, optionValue]
+    );
   };
 
   const handleAddChoice = () => {
+    if (isPublished) return;
+
     const newChoiceLabel = "New choice";
     const newChoice = { label: newChoiceLabel, value: `new-${Date.now()}` };
     const updatedOptions = [...options, newChoice];
@@ -84,6 +103,8 @@ export const MultipleChoice = ({
   };
 
   const handleDeleteChoice = (index: number) => {
+    if (isPublished) return;
+
     const updatedOptions = options.filter((_, i) => i !== index);
     setOptions(updatedOptions);
     updateChoices({
@@ -99,6 +120,8 @@ export const MultipleChoice = ({
   };
 
   const handleBlur = () => {
+    if (isPublished) return;
+
     if (editingOption !== null) {
       debouncedUpdateLabel.flush();
       setEditingOption(null);
@@ -139,7 +162,7 @@ export const MultipleChoice = ({
               key={option.value}
               value={option.value}
               label={
-                editingOption === option.value ? (
+                editingOption === option.value && !isPublished ? (
                   <input
                     type="text"
                     value={option.label}
@@ -154,11 +177,14 @@ export const MultipleChoice = ({
                   </span>
                 )
               }
-              checked={values.includes(option.value)}
+              checked={isPublished && values.includes(option.value)}
+              onClick={() => handleOptionClick(option.value)}
             >
-              <button onClick={() => handleDeleteChoice(index)}>
-                <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-              </button>
+              {!isPublished && (
+                <button onClick={() => handleDeleteChoice(index)}>
+                  <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                </button>
+              )}
             </CheckboxCardItem>
           ))}
         </CheckboxCard>
@@ -166,9 +192,11 @@ export const MultipleChoice = ({
       {isOverflowing && (
         <div className="absolute bottom-8 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent dark:from-[#09090b] dark:to-transparent pointer-events-none"></div>
       )}
-      <div className="mt-4 text-xs font-light text-muted-foreground hover:text-foreground">
-        <button onClick={handleAddChoice}>Add new choice</button>
-      </div>
+      {!isPublished && (
+        <div className="mt-4 ml-2 text-xs font-light text-muted-foreground hover:text-foreground">
+          <button onClick={handleAddChoice}>Add new choice</button>
+        </div>
+      )}
     </div>
   );
 };

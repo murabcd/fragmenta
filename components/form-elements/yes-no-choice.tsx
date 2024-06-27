@@ -12,6 +12,7 @@ interface YesNoChoiceProps {
   options: { label: string; value: string }[];
   onChange: (value: string) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
+  isPublished: boolean;
 }
 
 export const YesNoChoice = ({
@@ -20,6 +21,7 @@ export const YesNoChoice = ({
   options: initialOptions,
   onChange,
   updateChoices,
+  isPublished,
 }: YesNoChoiceProps) => {
   const defaultOptions =
     initialOptions.length > 0
@@ -43,6 +45,8 @@ export const YesNoChoice = ({
   );
 
   const handleLabelChange = (value: string, index: number) => {
+    if (isPublished) return;
+
     setOptions((currentOptions) => {
       const newOptions = [...currentOptions];
       newOptions[index].label = value;
@@ -52,6 +56,11 @@ export const YesNoChoice = ({
   };
 
   const handleOptionClick = (optionValue: string) => {
+    if (isPublished) {
+      onChange(optionValue);
+      return;
+    }
+
     if (editingOption !== null) {
       debouncedUpdateChoices.flush();
     }
@@ -60,6 +69,8 @@ export const YesNoChoice = ({
   };
 
   const handleBlur = () => {
+    if (isPublished) return;
+
     if (editingOption !== null) {
       debouncedUpdateChoices.flush();
       setEditingOption(null);
@@ -75,7 +86,7 @@ export const YesNoChoice = ({
               key={option.value}
               value={option.value}
               label={
-                editingOption === option.value ? (
+                editingOption === option.value && !isPublished ? (
                   <input
                     type="text"
                     value={option.label}
@@ -90,7 +101,8 @@ export const YesNoChoice = ({
                   </span>
                 )
               }
-              checked={value === option.value}
+              checked={isPublished && value === option.value}
+              onClick={() => handleOptionClick(option.value)}
             ></RadioCardItem>
           ))}
         </RadioCard>

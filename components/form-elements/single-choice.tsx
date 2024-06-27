@@ -16,6 +16,7 @@ interface SingleChoiceProps {
   options: { label: string; value: string }[];
   onChange: (value: string) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
+  isPublished: boolean;
 }
 
 export const SingleChoice = ({
@@ -24,6 +25,7 @@ export const SingleChoice = ({
   options: initialOptions,
   onChange,
   updateChoices,
+  isPublished,
 }: SingleChoiceProps) => {
   const defaultOptions =
     initialOptions.length > 0
@@ -49,6 +51,8 @@ export const SingleChoice = ({
   );
 
   const handleLabelChange = (value: string, index: number) => {
+    if (isPublished) return;
+
     setOptions((currentOptions) => {
       const newOptions = [...currentOptions];
       newOptions[index].label = value;
@@ -58,14 +62,22 @@ export const SingleChoice = ({
   };
 
   const handleOptionClick = (optionValue: string) => {
+    if (isPublished) {
+      onChange(optionValue);
+      return;
+    }
+
     if (editingOption !== null) {
       debouncedUpdateChoices.flush();
     }
     setEditingOption(optionValue);
+
     onChange(optionValue);
   };
 
   const handleAddChoice = () => {
+    if (isPublished) return;
+
     const newChoiceLabel = "New choice";
     const newChoice = { label: newChoiceLabel, value: `new-${Date.now()}` };
     const updatedOptions = [...options, newChoice];
@@ -84,6 +96,8 @@ export const SingleChoice = ({
   };
 
   const handleDeleteChoice = (index: number) => {
+    if (isPublished) return;
+
     const updatedOptions = options.filter((_, i) => i !== index);
     setOptions(updatedOptions);
     updateChoices({
@@ -99,6 +113,8 @@ export const SingleChoice = ({
   };
 
   const handleBlur = () => {
+    if (isPublished) return;
+
     if (editingOption !== null) {
       debouncedUpdateChoices.flush();
       setEditingOption(null);
@@ -139,7 +155,7 @@ export const SingleChoice = ({
               key={option.value}
               value={option.value}
               label={
-                editingOption === option.value ? (
+                editingOption === option.value && !isPublished ? (
                   <input
                     type="text"
                     value={option.label}
@@ -154,11 +170,14 @@ export const SingleChoice = ({
                   </span>
                 )
               }
-              checked={value === option.value}
+              checked={isPublished && value === option.value}
+              onClick={() => handleOptionClick(option.value)}
             >
-              <button onClick={() => handleDeleteChoice(index)}>
-                <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-              </button>
+              {!isPublished && (
+                <button onClick={() => handleDeleteChoice(index)}>
+                  <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                </button>
+              )}
             </RadioCardItem>
           ))}
         </RadioCard>
@@ -166,9 +185,11 @@ export const SingleChoice = ({
       {isOverflowing && (
         <div className="absolute bottom-8 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent dark:from-[#09090b] dark:to-transparent pointer-events-none"></div>
       )}
-      <div className="mt-4 text-xs font-light text-muted-foreground hover:text-foreground">
-        <button onClick={handleAddChoice}>Add new choice</button>
-      </div>
+      {!isPublished && (
+        <div className="mt-4 ml-2 text-xs font-light text-muted-foreground hover:text-foreground">
+          <button onClick={handleAddChoice}>Add new choice</button>
+        </div>
+      )}
     </div>
   );
 };
