@@ -5,6 +5,7 @@ export interface Question {
   type: QuestionType;
   choices: string[];
   position: number;
+  response?: string | string[];
   formId: string;
 }
 

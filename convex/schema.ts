@@ -22,7 +22,7 @@ export default defineSchema({
   }).index("by_form", ["formId", "position"]),
 
   responses: defineTable({
-    response: v.array(v.string()),
+    response: v.union(v.string(), v.array(v.string())),
     questionId: v.string(),
     formId: v.string(),
   })

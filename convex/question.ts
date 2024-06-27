@@ -195,3 +195,30 @@ export const choices = mutation({
     return question;
   },
 });
+
+export const response = mutation({
+  args: {
+    questionId: v.id("questions"),
+    formId: v.id("forms"),
+    response: v.union(v.string(), v.array(v.string())),
+  },
+  handler: async (ctx, args) => {
+    const { questionId, formId, response } = args;
+
+    const existingResponse = await ctx.db
+      .query("responses")
+      .withIndex("by_question", (q) => q.eq("questionId", questionId))
+      .filter((q) => q.eq(q.field("formId"), formId))
+      .first();
+
+    if (existingResponse) {
+      return await ctx.db.patch(existingResponse._id, { response });
+    } else {
+      return await ctx.db.insert("responses", {
+        questionId,
+        formId,
+        response,
+      });
+    }
+  },
+});
