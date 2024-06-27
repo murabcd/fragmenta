@@ -1,4 +1,8 @@
+import { Suspense } from "react";
+
 import { Canvas } from "./_components/canvas";
+
+import Loading from "./loading";
 
 interface FormIdPageProps {
   params: {
@@ -7,7 +11,11 @@ interface FormIdPageProps {
 }
 
 const FormIdPage = ({ params }: FormIdPageProps) => {
-  return <Canvas formId={params.formId} />;
+  return (
+    <Suspense fallback={<Loading />}>
+      <Canvas formId={params.formId} />
+    </Suspense>
+  );
 };
 
 export default FormIdPage;
