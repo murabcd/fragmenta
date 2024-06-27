@@ -12,8 +12,10 @@ interface ContentProps {
   selectedQuestion: Question | null;
   newTitle: string;
   newDescription: string;
+  newResponse: string | string[];
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
+  onResponseChange: (id: string, response: string | string[]) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
 }
 
@@ -23,8 +25,10 @@ export const Content = ({
   selectedQuestion,
   newTitle,
   newDescription,
+  newResponse,
   onTitleChange,
   onDescriptionChange,
+  onResponseChange,
   updateChoices,
 }: ContentProps) => {
   return (
@@ -36,8 +40,10 @@ export const Content = ({
           question={selectedQuestion}
           newTitle={newTitle}
           newDescription={newDescription}
+          newResponse={newResponse}
           onTitleChange={onTitleChange}
           onDescriptionChange={onDescriptionChange}
+          onResponseChange={onResponseChange}
           updateChoices={updateChoices}
         />
       ) : (

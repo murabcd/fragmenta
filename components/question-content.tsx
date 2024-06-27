@@ -26,8 +26,10 @@ interface QuestionContentProps {
   question: Question;
   newTitle: string;
   newDescription: string;
+  newResponse: string | string[];
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
+  onResponseChange: (id: string, response: string | string[]) => void;
   updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
   onStart?: () => void;
   onComplete?: () => void;
@@ -36,14 +38,17 @@ interface QuestionContentProps {
   isBackDisabled?: boolean;
   isForwardDisabled?: boolean;
   isPreviewMode?: boolean;
+  isPublished?: boolean;
 }
 
 export const QuestionContent = ({
   question,
   newTitle,
   newDescription,
+  newResponse,
   onTitleChange,
   onDescriptionChange,
+  onResponseChange,
   updateChoices,
   onStart,
   onComplete,
@@ -52,6 +57,7 @@ export const QuestionContent = ({
   isBackDisabled,
   isForwardDisabled,
   isPreviewMode = false,
+  isPublished,
 }: QuestionContentProps) => {
   const { previewSize } = usePreviewSize();
 
@@ -66,6 +72,10 @@ export const QuestionContent = ({
     onDescriptionChange(question._id, event.target.value);
   };
 
+  const handleResponseChange = (value: string | string[]) => {
+    onResponseChange(question._id, value);
+  };
+
   const renderQuestionContent = () => {
     switch (question.type) {
       case QuestionType.Start:
@@ -73,18 +83,33 @@ export const QuestionContent = ({
       case QuestionType.End:
         return <EndScreen />;
       case QuestionType.Short:
-        return <ShortText value={""} onChange={() => {}} resizeTrigger={previewSize} />;
+        return (
+          <ShortText
+            value={newResponse as string}
+            onChange={handleResponseChange}
+            resizeTrigger={previewSize}
+            isPublished={isPublished || false}
+          />
+        );
       case QuestionType.Long:
-        return <LongText value={""} onChange={() => {}} resizeTrigger={previewSize} />;
+        return (
+          <LongText
+            value={newResponse as string}
+            onChange={handleResponseChange}
+            resizeTrigger={previewSize}
+            isPublished={isPublished || false}
+          />
+        );
       case QuestionType.YesNo:
         return (
           <YesNoChoice
             id={question._id}
             key={question._id}
-            value={""}
-            onChange={() => {}}
+            value={newResponse as string}
+            onChange={handleResponseChange}
             options={question.choices.map((choice) => ({ label: choice, value: choice }))}
             updateChoices={updateChoices}
+            isPublished={isPublished || false}
           />
         );
       case QuestionType.Single:
@@ -92,10 +117,11 @@ export const QuestionContent = ({
           <SingleChoice
             id={question._id}
             key={question._id}
-            value={""}
-            onChange={() => {}}
+            value={newResponse as string}
+            onChange={handleResponseChange}
             options={question.choices.map((choice) => ({ label: choice, value: choice }))}
             updateChoices={updateChoices}
+            isPublished={isPublished || false}
           />
         );
       case QuestionType.Multiple:
@@ -103,14 +129,21 @@ export const QuestionContent = ({
           <MultipleChoice
             id={question._id}
             key={question._id}
-            values={[]}
-            onChange={() => {}}
+            values={newResponse as string[]}
+            onChange={handleResponseChange}
             options={question.choices.map((choice) => ({ label: choice, value: choice }))}
             updateChoices={updateChoices}
+            isPublished={isPublished || false}
           />
         );
       case QuestionType.Rating:
-        return <RatingScore value={""} onChange={() => {}} />;
+        return (
+          <RatingScore
+            value={newResponse as string}
+            onChange={handleResponseChange}
+            isPublished={isPublished || false}
+          />
+        );
       default:
         return null;
     }
@@ -140,31 +173,36 @@ export const QuestionContent = ({
   return (
     <Card
       className={cn(
-        "flex flex-col items-center justify-center w-full min-h-[600px] px-4 bg-background border-none shadow-none space-y-4",
-        isPreviewMode ? previewSize : ""
+        "flex flex-col items-center justify-center w-full min-h-[600px] px-4 bg-background shadow-none space-y-4",
+        isPreviewMode ? previewSize : "",
+        isPublished ? "border-none" : "border"
       )}
     >
-      <div className={cn("w-full", isScreen && "flex flex-col items-center space-y-6")}>
+      <div className={cn("w-full", isScreen && "flex flex-col items-center")}>
         <textarea
           ref={titleRef}
           className={cn(
-            "bg-transparent w-full focus-visible:outline-none resize-none",
-            isScreen ? "text-3xl text-center" : "text-2xl"
+            "bg-transparent w-full text-2xl focus-visible:outline-none resize-none",
+            isScreen ? "text-center" : ""
           )}
           value={newTitle}
           placeholder="Title"
           onChange={handleTitleChange}
+          readOnly={isPublished}
         />
-        <textarea
-          ref={descriptionRef}
-          className={cn(
-            "bg-transparent w-full text-muted-foreground focus-visible:outline-none resize-none",
-            isScreen ? "text-lg text-center max-w-md" : "text-sm"
-          )}
-          value={newDescription}
-          placeholder="Description (optional)"
-          onChange={handleDescriptionChange}
-        />
+        {(!isPublished || newDescription) && (
+          <textarea
+            ref={descriptionRef}
+            className={cn(
+              "bg-transparent w-full text-sm text-muted-foreground focus-visible:outline-none resize-none",
+              isScreen ? "text-center max-w-md" : ""
+            )}
+            value={newDescription}
+            placeholder="Description (optional)"
+            onChange={handleDescriptionChange}
+            readOnly={isPublished}
+          />
+        )}
       </div>
       {renderQuestionContent()}
       {renderButtons()}

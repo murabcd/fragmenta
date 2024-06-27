@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { Progress } from "@/components/ui/progress";
 
-import { useDebounce } from "use-debounce";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 import { QuestionContent } from "@/components/question-content";
 
@@ -16,6 +18,8 @@ import { cn } from "@/lib/utils";
 
 import { useQuery } from "convex/react";
 
+import { useApiMutation } from "@/hooks/use-api-mutation";
+
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
@@ -26,8 +30,13 @@ interface FormIdPagePublishedProps {
 }
 
 const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
+  const { mutate: updateResponse } = useApiMutation(api.question.response);
+
+  const router = useRouter();
+
   const [positionIndex, setPositionIndex] = useState(0);
   const [debouncedPositionIndex] = useDebounce(positionIndex, 300);
+  const [responses, setResponses] = useState<Record<string, string | string[]>>({});
 
   const form = useQuery(api.form.get, {
     id: params.formId as Id<"forms">,
@@ -50,8 +59,28 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
   };
 
   const handleComplete = () => {
-    // Handle form submission logic here
-    console.log("Form completed");
+    router.push("/");
+  };
+
+  const debouncedUpdateResponse = useDebouncedCallback(
+    (questionId: Id<"questions">, formId: Id<"forms">, response: string | string[]) => {
+      updateResponse({
+        questionId,
+        formId,
+        response,
+      });
+    },
+    500
+  );
+
+  const handleResponseChange = (id: string, response: string | string[]) => {
+    setResponses((prev) => ({ ...prev, [id]: response }));
+
+    debouncedUpdateResponse(
+      id as Id<"questions">,
+      params.formId as Id<"forms">,
+      response
+    );
   };
 
   const progress =
@@ -75,7 +104,7 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
     <div>
       <div className="w-full h-2.5 p-3">
         <Progress
-          className="h-2.5 rounded-full transition-all duration-300"
+          className="h-2 rounded-full transition-all duration-300"
           value={progress}
         />
       </div>
@@ -91,8 +120,10 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
             key={questions[debouncedPositionIndex]._id}
             newTitle={questions[debouncedPositionIndex].title}
             newDescription={questions[debouncedPositionIndex].description || ""}
+            newResponse={responses[questions[debouncedPositionIndex]._id] || ""}
             onTitleChange={() => {}}
             onDescriptionChange={() => {}}
+            onResponseChange={handleResponseChange}
             updateChoices={() => Promise.resolve()}
             onStart={handleForward}
             onComplete={handleComplete}
@@ -101,6 +132,7 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
             isBackDisabled={positionIndex === 0}
             isForwardDisabled={positionIndex === questions.length - 1}
             isPreviewMode={true}
+            isPublished={true}
           />
         </div>
       </div>

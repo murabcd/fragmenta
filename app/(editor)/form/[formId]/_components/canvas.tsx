@@ -33,6 +33,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
   const [newTitle, setNewTitle] = useState<string>("");
   const [newDescription, setNewDescription] = useState<string>("");
+  const [newResponse, setNewResponse] = useState<string | string[]>("");
   const [newType, setNewType] = useState<QuestionType>(QuestionType.Short);
 
   const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
@@ -55,6 +56,10 @@ export const Canvas = ({ formId }: CanvasProps) => {
     debouncedSaveDescription(id, description);
   };
 
+  const handleResponseChange = (id: string, response: string | string[]) => {
+    setNewResponse(response);
+  };
+
   const handleQuestionSelect = (question: Question) => {
     setSelectedQuestion(question);
     setNewTitle(question.title);
@@ -64,13 +69,18 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
   const handleTypeChange = async (id: string, newType: QuestionType) => {
     if (selectedQuestion) {
+      const previousQuestion = { ...selectedQuestion };
+      setSelectedQuestion({ ...selectedQuestion, type: newType, choices: [] });
+
       try {
-        await updateType({ id, type: newType });
-        await updateChoices({ id, choices: [] });
-        setSelectedQuestion({ ...selectedQuestion, type: newType, choices: [] });
+        await Promise.all([
+          updateType({ id, type: newType }),
+          updateChoices({ id, choices: [] }),
+        ]);
         toast.success("Type updated");
       } catch (error) {
         toast.error("Failed to update type");
+        setSelectedQuestion(previousQuestion);
       }
     }
   };
@@ -93,8 +103,10 @@ export const Canvas = ({ formId }: CanvasProps) => {
           selectedQuestion={selectedQuestion}
           newTitle={newTitle}
           newDescription={newDescription}
+          newResponse={newResponse}
           onTitleChange={handleTitleChange}
           onDescriptionChange={handleDescriptionChange}
+          onResponseChange={handleResponseChange}
           updateChoices={updateChoices}
         />
         <Settings
