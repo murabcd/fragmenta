@@ -24,8 +24,9 @@ const CheckboxCardItem = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CheckboxCardsPrimitive.Checkbox> & {
     label: React.ReactNode;
     children: React.ReactNode;
+    onClick?: () => void;
   }
->(({ className, label, children, ...props }, ref) => {
+>(({ className, label, children, onClick, ...props }, ref) => {
   return (
     <CheckboxCardsPrimitive.Checkbox
       ref={ref}
@@ -35,9 +36,10 @@ const CheckboxCardItem = React.forwardRef<
         props.checked && "bg-accent font-medium"
       )}
       {...props}
+      onClick={onClick}
     >
       <div className="flex justify-between items-center w-full">
-        <span className="text-sm">{label}</span>
+        <span className="text-sm break-words">{label}</span>
         {children}
       </div>
     </CheckboxCardsPrimitive.Checkbox>

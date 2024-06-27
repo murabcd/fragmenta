@@ -24,8 +24,9 @@ const RadioCardItem = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof RadioCardsPrimitive.Item> & {
     label: React.ReactNode;
     children?: React.ReactNode;
+    onClick?: () => void;
   }
->(({ className, label, children, ...props }, ref) => {
+>(({ className, label, children, onClick, ...props }, ref) => {
   return (
     <RadioCardsPrimitive.Item
       ref={ref}
@@ -34,10 +35,11 @@ const RadioCardItem = React.forwardRef<
         className,
         props.checked && "bg-accent font-medium"
       )}
+      onClick={onClick}
       {...props}
     >
       <div className="flex justify-between items-center">
-        <span className="text-sm">{label}</span>
+        <span className="text-sm break-words">{label}</span>
         {children}
       </div>
     </RadioCardsPrimitive.Item>
