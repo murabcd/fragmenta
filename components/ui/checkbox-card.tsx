@@ -31,7 +31,7 @@ const CheckboxCardItem = React.forwardRef<
     <CheckboxCardsPrimitive.Checkbox
       ref={ref}
       className={cn(
-        "p-2 w-[230px] rounded-lg cursor-pointer border hover:bg-accent text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "p-2 w-[230px] rounded-md cursor-pointer border hover:bg-accent text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className,
         props.checked && "bg-accent font-medium"
       )}
