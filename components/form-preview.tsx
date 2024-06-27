@@ -45,8 +45,11 @@ export const FormPreview = ({ formId }: FormPreviewProps) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[1024px] max-h-[768px] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Preview mode</DialogTitle>
-          <DialogDescription>View your form in preview mode.</DialogDescription>
+          <DialogTitle>Form preview</DialogTitle>
+          <DialogDescription>
+            View your form as respondents will see it. Use device icons to check different
+            screen sizes.
+          </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center">
           <div className="h-[28px] items-center justify-center gap-1.5 rounded-md border p-[2px] shadow-sm md:flex">
@@ -73,8 +76,10 @@ export const FormPreview = ({ formId }: FormPreviewProps) => {
               question={question}
               newTitle={question.title}
               newDescription={question.description || ""}
+              newResponse={""}
               onTitleChange={() => {}}
               onDescriptionChange={() => {}}
+              onResponseChange={() => {}}
               updateChoices={() => Promise.resolve()}
               isPreviewMode={true}
             />

@@ -76,19 +76,19 @@ export const Publish = ({ formId }: PublishProps) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Hint label="Make publicly accessible" side="bottom" sideOffset={10}>
+        <Hint label="Make accessible" side="bottom" sideOffset={10}>
           <Button variant={data?.isPublished ? "outline" : "default"}>
             {data?.isPublished ? "Published" : "Publish"}
           </Button>
         </Hint>
       </PopoverTrigger>
-      <PopoverContent className="w-72" align="end" sideOffset={10} forceMount>
+      <PopoverContent className="w-80" align="end" sideOffset={10} forceMount>
         {data?.isPublished ? (
           <div className="space-y-4">
             <div className="flex items-center gap-x-2">
               <Globe className="text-sky-500 animate-pulse h-6 w-6" />
               <p className="text-sm text-balance leading-relaxed">
-                This form is live on the web.
+                Your form is live and accessible online.
               </p>
             </div>
             <div className="flex items-center space-x-2">
@@ -105,10 +105,10 @@ export const Publish = ({ formId }: PublishProps) => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center">
-            <GlobeLock className="h-8 w-8 text-muted-foreground mb-2 text-sky-500" />
+            <GlobeLock className="h-6 w-6 text-muted-foreground mb-2" />
             <h3 className="text-lg font-semibold">Publish form</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Share your work with others.
+              Make your form accessible to others online.
             </p>
             <Button disabled={pending} onClick={onPublish} className="w-full">
               <Send className="h-4 w-4 mr-2" />
