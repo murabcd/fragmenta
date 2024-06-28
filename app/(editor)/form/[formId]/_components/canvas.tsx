@@ -88,9 +88,9 @@ export const Canvas = ({ formId }: CanvasProps) => {
   if (!questions) return null;
 
   return (
-    <main className="h-full w-full overflow-hidden relative bg-muted/40 touch-none">
+    <main className="h-full w-full overflow-hidden relative bg-muted/40 touch-none flex flex-col">
       <Info formId={formId} />
-      <div className="flex h-[750px]">
+      <div className="flex flex-1 overflow-hidden">
         <Editor
           formId={formId}
           questions={questions}
