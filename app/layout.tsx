@@ -12,7 +12,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Fragmenta",
-  description: "A new way to manage your forms",
+  description: "A new way to manage your forms.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
