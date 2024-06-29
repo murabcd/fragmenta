@@ -45,10 +45,9 @@ export const FormPreview = ({ formId }: FormPreviewProps) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[1024px] max-h-[768px] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Form preview</DialogTitle>
+          <DialogTitle>Preview</DialogTitle>
           <DialogDescription>
-            View your form as respondents will see it. Use device icons to check different
-            screen sizes.
+            View your form as respondents will see it.
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center">

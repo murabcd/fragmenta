@@ -14,6 +14,7 @@ import { useRenameModal } from "@/hooks/use-rename-modal";
 
 import { FormPreview } from "@/components/form-preview";
 import { Publish } from "@/components/publish";
+import { QuestionDrawer } from "@/components/question-drawer";
 
 import { useQuery } from "convex/react";
 
@@ -58,18 +59,25 @@ export const Info = ({ formId }: InfoProps) => {
           </Button>
         </Hint>
         <TabSeparator />
-        <FormActions id={data._id} title={data.title} side="bottom" sideOffset={10}>
-          <div>
-            <Hint label="Main menu" align="end" side="bottom" sideOffset={10}>
-              <Button variant="outline" size="icon">
-                <Menu className="h-4 w-4" />
-              </Button>
-            </Hint>
-          </div>
-        </FormActions>
+        <div className="hidden sm:block">
+          <FormActions id={data._id} title={data.title} side="bottom" sideOffset={10}>
+            <div>
+              <Hint label="Main menu" align="end" side="bottom" sideOffset={10}>
+                <Button variant="outline" size="icon">
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </Hint>
+            </div>
+          </FormActions>
+        </div>
       </div>
       <div className="flex items-center space-x-2 flex-shrink-0">
-        <FormPreview formId={formId} />
+        <div className="sm:hidden">
+          <QuestionDrawer formId={formId} />
+        </div>
+        <div className="hidden sm:block">
+          <FormPreview formId={formId} />
+        </div>
         <Publish formId={data._id} />
       </div>
     </div>
