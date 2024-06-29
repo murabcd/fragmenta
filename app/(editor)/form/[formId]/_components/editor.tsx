@@ -91,7 +91,7 @@ export const Editor = ({
         <div className="font-semibold">Questions</div>
         <NewQuestionButton formId={formId} />
       </div>
-      <div className="flex flex-col text-sm text-muted-foreground overflow-y-auto">
+      <div className="flex-1 text-sm text-muted-foreground overflow-y-auto">
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="list">
             {(provided) => (

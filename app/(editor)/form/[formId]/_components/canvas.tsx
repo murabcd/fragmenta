@@ -89,15 +89,17 @@ export const Canvas = ({ formId }: CanvasProps) => {
   if (!questions) return null;
 
   return (
-    <main className="h-full w-full overflow-hidden relative bg-muted/40 touch-none flex flex-col">
+    <main className="h-screen w-full overflow-hidden relative bg-muted/40 touch-none flex flex-col">
       <Info formId={formId} />
       <div className="flex flex-1 overflow-hidden">
-        <Editor
-          formId={formId}
-          questions={questions}
-          onQuestionSelect={handleQuestionSelect}
-          selectedQuestion={selectedQuestion}
-        />
+        <div className="hidden sm:block">
+          <Editor
+            formId={formId}
+            questions={questions}
+            onQuestionSelect={handleQuestionSelect}
+            selectedQuestion={selectedQuestion}
+          />
+        </div>
         <Content
           formId={formId}
           questions={questions}
@@ -110,11 +112,13 @@ export const Canvas = ({ formId }: CanvasProps) => {
           onResponseChange={handleResponseChange}
           updateChoices={updateChoices}
         />
-        <Settings
-          selectedQuestion={selectedQuestion}
-          newType={newType}
-          handleTypeChange={handleTypeChange}
-        />
+        <div className="hidden sm:block">
+          <Settings
+            selectedQuestion={selectedQuestion}
+            newType={newType}
+            handleTypeChange={handleTypeChange}
+          />
+        </div>
       </div>
     </main>
   );

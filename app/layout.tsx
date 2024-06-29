@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+
 import { GeistSans } from "geist/font/sans";
-import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import { ConvexClientProvider } from "@/providers/convex-client-provider";
 import { ModalProvider } from "@/providers/modal-provider";
+
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Fragmenta",
