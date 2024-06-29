@@ -71,6 +71,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
     if (selectedQuestion) {
       const previousQuestion = { ...selectedQuestion };
       setSelectedQuestion({ ...selectedQuestion, type: newType, choices: [] });
+      setNewType(newType);
 
       try {
         await Promise.all([
