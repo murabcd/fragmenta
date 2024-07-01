@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-import SidebarLogo from "@/components/sidebar-logo";
+import Logo from "@/components/logo";
 import SearchToggleCommand from "@/components/search-toggle-command";
 import OrgSwitcher from "@/components/org-switcher";
 
@@ -44,7 +44,9 @@ const Sidebar = () => {
 
   return (
     <div className="w-64 flex flex-col h-full border bg-background">
-      <SidebarLogo />
+      <div className="ml-3 mt-2">
+        <Logo />
+      </div>
       <OrgSwitcher />
       <SearchToggleCommand />
       <nav className="mt-5 grid items-start px-2 text-sm text-muted-foreground">

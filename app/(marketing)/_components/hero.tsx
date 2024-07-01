@@ -13,7 +13,13 @@ export const Hero = () => {
           <p className="text-muted-foreground text-xl">A new way to manage your forms.</p>
         </div>
         <div className="flex justify-center items-center mt-10">
-          <Button>Join waitlist</Button>
+          <Link
+            href="/published/j5728zde5ya7kr1fwqjnkrxyfs6w3j91"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button>Join waitlist</Button>
+          </Link>
           <div className="ml-4">
             <Link
               href="#"

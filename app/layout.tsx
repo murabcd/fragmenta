@@ -14,7 +14,16 @@ export const metadata: Metadata = {
   title: "Fragmenta",
   description: "A new way to manage your forms.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      {
+        media: "(prefers-color-scheme: light)",
+        url: "/logo.svg",
+      },
+      {
+        media: "(prefers-color-scheme: dark)",
+        url: "/logo-dark.svg",
+      },
+    ],
   },
 };
 
