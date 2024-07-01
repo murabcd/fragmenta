@@ -183,7 +183,11 @@ export const SingleChoice = ({
         </RadioCard>
       </div>
       {isOverflowing && (
-        <div className="absolute bottom-8 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent dark:from-[#09090b] dark:to-transparent pointer-events-none"></div>
+        <div
+          className={`absolute left-0 right-0 h-8 bg-gradient-to-t from-background to-transparent pointer-events-none ${
+            isPublished ? "bottom-0" : "bottom-8"
+          }`}
+        ></div>
       )}
       {!isPublished && (
         <div className="mt-4 ml-2 text-xs font-light text-muted-foreground hover:text-foreground">
