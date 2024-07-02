@@ -157,6 +157,8 @@ export const SingleChoice = ({
               label={
                 editingOption === option.value && !isPublished ? (
                   <input
+                    id="single-choice"
+                    name="single-choice"
                     type="text"
                     value={option.label}
                     onChange={(e) => handleLabelChange(e.target.value, index)}

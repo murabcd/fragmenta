@@ -44,12 +44,13 @@ export const TypeSelector = ({
 
   return (
     <div className="grid gap-2">
-      <Label className="px-3 mt-5" htmlFor="type">
+      <Label className="px-3 mt-5" htmlFor="type-selector">
         Type
       </Label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
+            id="type-selector"
             variant="outline"
             role="combobox"
             aria-label="Select a type"

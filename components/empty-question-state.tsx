@@ -112,8 +112,8 @@ export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
             <form onSubmit={onSubmit}>
               <div className="grid gap-4 py-4">
                 <Textarea
-                  id="description"
-                  name="description"
+                  id="form-description"
+                  name="form-description"
                   required
                   placeholder="E.g., feedback form about team building held in New York"
                   className="resize-none"

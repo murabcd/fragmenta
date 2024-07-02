@@ -88,6 +88,8 @@ export const YesNoChoice = ({
               label={
                 editingOption === option.value && !isPublished ? (
                   <input
+                    id="yes-no-choice"
+                    name="yes-no-choice"
                     type="text"
                     value={option.label}
                     onChange={(e) => handleLabelChange(e.target.value, index)}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
 import { NewQuestionButton } from "@/components/new-question-button";
@@ -81,9 +83,11 @@ export const Editor = ({
     }
   };
 
-  if (questions.length > 0 && !selectedQuestion) {
-    onQuestionSelect(questions[0]);
-  }
+  useEffect(() => {
+    if (questions.length > 0 && !selectedQuestion) {
+      onQuestionSelect(questions[0]);
+    }
+  }, [questions, selectedQuestion, onQuestionSelect]);
 
   return (
     <div className="flex flex-col h-full w-64 border rounded-tr-md bg-background">

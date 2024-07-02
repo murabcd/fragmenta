@@ -179,6 +179,8 @@ export const QuestionContent = ({
     >
       <div className={cn("w-full", isScreen && "flex flex-col items-center")}>
         <textarea
+          id="question-title"
+          name="question-title"
           ref={titleRef}
           className={cn(
             "bg-transparent w-full text-2xl focus-visible:outline-none resize-none",
@@ -191,6 +193,8 @@ export const QuestionContent = ({
         />
         {(!isPublished || newDescription) && (
           <textarea
+            id="question-description"
+            name="question-description"
             ref={descriptionRef}
             className={cn(
               "bg-transparent w-full text-sm text-muted-foreground focus-visible:outline-none resize-none",

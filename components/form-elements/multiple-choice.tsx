@@ -164,6 +164,8 @@ export const MultipleChoice = ({
               label={
                 editingOption === option.value && !isPublished ? (
                   <input
+                    id="multiple-choice"
+                    name="multiple-choice"
                     type="text"
                     value={option.label}
                     onChange={(e) => handleLabelChange(e.target.value, index)}

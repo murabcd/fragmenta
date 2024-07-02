@@ -27,6 +27,8 @@ export const ShortText = ({
 
   return (
     <textarea
+      id="short-text"
+      name="short-text"
       ref={textRef}
       value={value}
       className="bg-transparent border-b border-muted focus:border-b-1 focus:border-muted-foreground/30 text-sm w-full focus-visible:outline-none resize-none"
