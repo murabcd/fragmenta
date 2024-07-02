@@ -1,8 +1,30 @@
 "use client";
 
-import { toast } from "sonner";
+import { FormEventHandler } from "react";
 
-import { Plus, MessageCircleQuestion, LoaderCircle, Sparkles } from "lucide-react";
+import { useCompletion } from "ai/react";
+
+import {
+  Plus,
+  MessageCircleQuestion,
+  LoaderCircle,
+  Sparkles,
+  WandSparkles,
+} from "lucide-react";
+
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 import { QuestionType } from "@/types/canvas";
 
@@ -10,8 +32,17 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 
 import { api } from "@/convex/_generated/api";
 
-export const EmptyQuestionState = ({ formId }: { formId: string }) => {
+interface EmptyQuestionStateProps {
+  formId: string;
+}
+
+export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
   const { mutate, pending } = useApiMutation(api.question.create);
+
+  const { input, handleInputChange, handleSubmit } = useCompletion({
+    api: "https://brilliant-cobra-27.convex.site/api/generate",
+    body: { formId },
+  });
 
   const onClick = () => {
     mutate({
@@ -28,6 +59,18 @@ export const EmptyQuestionState = ({ formId }: { formId: string }) => {
       .catch(() => {
         toast.error("Failed to create question");
       });
+  };
+
+  const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+
+    try {
+      await handleSubmit(event);
+      toast.success("Questions generated");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to generate questions");
+    }
   };
 
   return (
@@ -52,14 +95,53 @@ export const EmptyQuestionState = ({ formId }: { formId: string }) => {
           )}
           <p className="text-sm font-light">Start from scratch</p>
         </button>
-        <button
-          onClick={() => {}}
-          disabled={pending}
-          className="w-40 h-40 border rounded-lg hover:bg-accent flex flex-col items-center justify-center py-6"
-        >
-          <Sparkles className="w-6 h-6 mb-2" color="#8879d4" />
-          <p className="text-sm font-light">Create with AI</p>
-        </button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="w-40 h-40 border rounded-lg hover:bg-accent flex flex-col items-center justify-center py-6">
+              <Sparkles className="w-6 h-6 mb-2" color="#8879d4" />
+              <p className="text-sm font-light">Create with AI</p>
+            </button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[525px]">
+            <DialogHeader>
+              <DialogTitle>Generate custom questions with AI</DialogTitle>
+              <DialogDescription>
+                Describe the form you have in mind and AI will do the magic.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={onSubmit}>
+              <div className="grid gap-4 py-4">
+                <Textarea
+                  id="description"
+                  name="description"
+                  required
+                  placeholder="E.g., feedback form about team building held in New York"
+                  className="resize-none"
+                  value={input}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <span className="text-xs text-muted-foreground flex items-center">
+                AI can make mistakes. Check important info.
+              </span>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="ghost" type="button">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type="submit">
+                  {pending ? (
+                    <LoaderCircle className="animate-spin w-4 h-4 mr-2" />
+                  ) : (
+                    <WandSparkles className="w-4 h-4 mr-2" />
+                  )}
+                  Generate
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
     id: params.formId as Id<"forms">,
   });
 
-  const questions = useQuery(api.questions.getById, {
+  const questions = useQuery(api.questions.published, {
     formId: params.formId as Id<"forms">,
   }) as Question[];
 

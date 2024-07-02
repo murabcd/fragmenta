@@ -16,6 +16,7 @@ import type {
 } from "convex/server";
 import type * as form from "../form.js";
 import type * as forms from "../forms.js";
+import type * as http from "../http.js";
 import type * as question from "../question.js";
 import type * as questions from "../questions.js";
 
@@ -30,6 +31,7 @@ import type * as questions from "../questions.js";
 declare const fullApi: ApiFromModules<{
   form: typeof form;
   forms: typeof forms;
+  http: typeof http;
   question: typeof question;
   questions: typeof questions;
 }>;

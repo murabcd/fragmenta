@@ -57,28 +57,28 @@ export const RenameModal = () => {
             Enter a new form name. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <DialogDescription>
-          <form onSubmit={onSubmit} className="space-y-4">
-            <Input
-              disabled={pending}
-              required
-              maxLength={60}
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              placeholder="Form title"
-            />
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="outline">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button disabled={pending} type="submit">
-                Save
+        <form onSubmit={onSubmit} className="space-y-4">
+          <Input
+            id="form-title"
+            name="form-title"
+            disabled={pending}
+            required
+            maxLength={60}
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Form title"
+          />
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="ghost">
+                Cancel
               </Button>
-            </DialogFooter>
-          </form>
-        </DialogDescription>
+            </DialogClose>
+            <Button disabled={pending} type="submit">
+              Save
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
