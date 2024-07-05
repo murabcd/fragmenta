@@ -3,14 +3,16 @@
 import { usePathname } from "next/navigation";
 
 import Logo from "@/components/logo";
-import SearchToggleCommand from "@/components/search-toggle-command";
-import OrgSwitcher from "@/components/org-switcher";
+
+import { SearchToggleCommand } from "@/components/search-toggle-command";
+
+import { UpgradePro } from "@/components/upgrade-card";
+
+import { OrgSwitcher } from "@/components/org-switcher";
 
 import { Home, Workflow, History, Settings } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-
-import UpgradePro from "@/components/upgrade-card";
 
 const routes = [
   {
@@ -39,7 +41,7 @@ const routes = [
   },
 ];
 
-const Sidebar = () => {
+export const Sidebar = () => {
   const pathname = usePathname();
 
   return (
@@ -74,5 +76,3 @@ const Sidebar = () => {
     </div>
   );
 };
-
-export default Sidebar;

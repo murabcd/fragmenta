@@ -1,16 +1,19 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 
-const isProtectedRoute = createRouteMatcher([
-  "/home(.*)",
-  "/forms(.*)",
-  "/recent(.*)",
-  "/settings(.*)",
-]);
-
-export default clerkMiddleware((auth, request) => {
-  if (isProtectedRoute(request)) auth().protect();
+export default auth((req) => {
+  if (!req.auth && req.nextUrl.pathname !== "/signin") {
+    const newUrl = new URL("/signin", req.nextUrl.origin);
+    return Response.redirect(newUrl);
+  }
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    "/home/:path*",
+    "/forms/:path*",
+    "/recent/:path*",
+    "/settings/:path*",
+    "/signin",
+    "/register",
+  ],
 };

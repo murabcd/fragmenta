@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Zap } from "lucide-react";
 
-const UpgradePro = () => {
+export const UpgradePro = () => {
   return (
     <Card className="bg-muted/40">
       <CardHeader>
@@ -28,5 +28,3 @@ const UpgradePro = () => {
     </Card>
   );
 };
-
-export default UpgradePro;

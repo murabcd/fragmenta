@@ -26,10 +26,10 @@ interface CanvasProps {
 export const Canvas = ({ formId }: CanvasProps) => {
   const questions = useQuery(api.questions.get, { formId }) as Question[];
 
-  const { mutate: updateType } = useApiMutation(api.question.type);
-  const { mutate: updateTitle } = useApiMutation(api.question.title);
-  const { mutate: updateDescription } = useApiMutation(api.question.description);
-  const { mutate: updateChoices } = useApiMutation(api.question.choices);
+  const { mutate: updateType } = useApiMutation(api.questions.type);
+  const { mutate: updateTitle } = useApiMutation(api.questions.title);
+  const { mutate: updateDescription } = useApiMutation(api.questions.description);
+  const { mutate: updateChoices } = useApiMutation(api.questions.choices);
 
   const [newTitle, setNewTitle] = useState<string>("");
   const [newDescription, setNewDescription] = useState<string>("");
@@ -73,14 +73,20 @@ export const Canvas = ({ formId }: CanvasProps) => {
       setSelectedQuestion({ ...selectedQuestion, type: newType, choices: [] });
       setNewType(newType);
 
+      const promise = Promise.all([
+        updateType({ id, type: newType }),
+        updateChoices({ id, choices: [] }),
+      ]);
+
+      toast.promise(promise, {
+        loading: "Updating...",
+        success: "Question type updated",
+        error: "Failed to update question type",
+      });
+
       try {
-        await Promise.all([
-          updateType({ id, type: newType }),
-          updateChoices({ id, choices: [] }),
-        ]);
-        toast.success("Type updated");
+        await promise;
       } catch (error) {
-        toast.error("Failed to update type");
         setSelectedQuestion(previousQuestion);
       }
     }

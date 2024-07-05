@@ -38,7 +38,7 @@ export const FormActions = ({
   title,
 }: FormActionsProps) => {
   const router = useRouter();
-  const { mutate, pending } = useApiMutation(api.form.remove);
+  const { mutate, pending } = useApiMutation(api.forms.remove);
   const { onOpen } = useRenameModal();
 
   const onCopyLink = () => {
@@ -49,12 +49,17 @@ export const FormActions = ({
   };
 
   const onDelete = () => {
-    mutate({ id })
-      .then(() => {
-        toast.success("Form deleted");
-        router.push("/home");
-      })
-      .catch(() => toast.error("Failed to delete form"));
+    const promise = mutate({ id });
+
+    toast.promise(promise, {
+      loading: "Deleting...",
+      success: "Form deleted",
+      error: "Failed to delete form",
+    });
+
+    promise.then(() => {
+      router.push("/home");
+    });
   };
 
   return (
@@ -67,9 +72,7 @@ export const FormActions = ({
         sideOffset={sideOffset}
         className="w-[160px]"
       >
-        <DropdownMenuItem onClick={() => onOpen(id, title)}>
-          Rename
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onOpen(id, title)}>Rename</DropdownMenuItem>
         <DropdownMenuItem onClick={onCopyLink}>Copy link</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>

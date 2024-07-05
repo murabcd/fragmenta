@@ -53,4 +53,31 @@ app.post("/api/generate", async (c) => {
   return new StreamingTextResponse(stream, {}, data);
 });
 
+app.get("/.well-known/openid-configuration", async (c) => {
+  return c.json(
+    {
+      issuer: process.env.CONVEX_SITE_URL,
+      jwks_uri: process.env.CONVEX_SITE_URL + "/.well-known/jwks.json",
+      authorization_endpoint: process.env.CONVEX_SITE_URL + "/oauth/authorize",
+    },
+    200,
+    {
+      "Content-Type": "application/json",
+      "Cache-Control":
+        "public, max-age=15, stale-while-revalidate=15, stale-if-error=86400",
+    }
+  );
+});
+
+app.get("/.well-known/jwks.json", async (c) => {
+  if (process.env.JWKS === undefined) {
+    throw new Error("Missing JWKS Convex environment variable");
+  }
+  return c.text(process.env.JWKS, 200, {
+    "Content-Type": "application/json",
+    "Cache-Control":
+      "public, max-age=15, stale-while-revalidate=15, stale-if-error=86400",
+  });
+});
+
 export default new HttpRouterWithHono(app);

@@ -11,14 +11,17 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 
 import { api } from "@/convex/_generated/api";
 
+import { Id } from "@/convex/_generated/dataModel";
+import { cn } from "@/lib/utils";
+
 interface NewFormButtonProps {
-  orgId: string;
-  disabled: boolean;
+  orgId: Id<"organizations">;
+  disabled?: boolean;
 }
 
 export const NewFormButton = ({ orgId, disabled }: NewFormButtonProps) => {
   const router = useRouter();
-  const { mutate, pending } = useApiMutation(api.form.create);
+  const { mutate, pending } = useApiMutation(api.forms.create);
 
   const onClick = () => {
     mutate({
@@ -33,7 +36,13 @@ export const NewFormButton = ({ orgId, disabled }: NewFormButtonProps) => {
   };
 
   return (
-    <Button onClick={onClick} disabled={pending}>
+    <Button
+      onClick={onClick}
+      disabled={pending || disabled}
+      className={cn(
+        (pending || disabled) && "opacity-75 hover:bg-gray-600 cursor-not-allowed"
+      )}
+    >
       {pending ? (
         <LoaderCircle className="animate-spin w-4 h-4 mr-2" />
       ) : (

@@ -3,17 +3,13 @@
 import { useSelectedLayoutSegment } from "next/navigation";
 
 import { MobileSidebar } from "./mobile-sidebar";
-import { dark } from "@clerk/themes";
-
-import { useTheme } from "next-themes";
 
 import { ModeToggle } from "./theme-toggle-mode";
 import { InviteButton } from "./invite-button";
 
-import { UserButton } from "@clerk/nextjs";
+import { UserNav } from "./user-nav";
 
-const Navbar = () => {
-  const { theme } = useTheme();
+export const Navbar = () => {
   const segment = useSelectedLayoutSegment();
 
   return (
@@ -25,14 +21,8 @@ const Navbar = () => {
       <div className="flex items-center gap-x-3">
         <InviteButton />
         <ModeToggle />
-        <UserButton
-          appearance={{
-            baseTheme: theme === "dark" ? dark : undefined,
-          }}
-        />
+        <UserNav />
       </div>
     </div>
   );
 };
-
-export default Navbar;

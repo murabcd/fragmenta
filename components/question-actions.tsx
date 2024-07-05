@@ -32,21 +32,25 @@ export const QuestionActions = ({
   sideOffset,
   id,
 }: QuestionActionsProps) => {
-  const { mutate: removeQuestion } = useApiMutation(api.question.remove);
-  const { mutate: duplicateQuestion } = useApiMutation(api.question.duplicate);
+  const { mutate: removeQuestion } = useApiMutation(api.questions.remove);
+  const { mutate: duplicateQuestion } = useApiMutation(api.questions.duplicate);
 
   const onDuplicate = () => {
-    duplicateQuestion({ id })
-      .then(() => toast.success("Question duplicated"))
-      .catch(() => toast.error("Failed to duplicate question"));
+    const promise = duplicateQuestion({ id });
+    toast.promise(promise, {
+      loading: "Duplicating...",
+      success: "Question duplicated",
+      error: "Failed to duplicate question",
+    });
   };
 
   const onDelete = () => {
-    removeQuestion({ id })
-      .then(() => {
-        toast.success("Question deleted");
-      })
-      .catch(() => toast.error("Failed to delete question"));
+    const promise = removeQuestion({ id });
+    toast.promise(promise, {
+      loading: "Deleting...",
+      success: "Question deleted",
+      error: "Failed to delete question",
+    });
   };
 
   return (

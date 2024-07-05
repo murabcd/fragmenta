@@ -14,30 +14,35 @@ import { FormActions } from "@/components/form-actions";
 
 import { formatDistanceToNow } from "date-fns";
 
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
+
+import { Id } from "@/convex/_generated/dataModel";
 
 interface FormCardProps {
   id: string;
   title: string;
-  authorId: string;
-  authorName: string;
+  name: string;
   createdAt: number;
-  orgId: string;
+  userId: Id<"users">;
+  orgId: Id<"organizations">;
   isPublished: boolean;
 }
 
 export const FormCard = ({
   id,
   title,
-  authorId,
-  authorName,
+  userId,
+  name,
   createdAt,
   orgId,
   isPublished,
 }: FormCardProps) => {
-  const { userId } = useAuth();
+  const { data: session } = useSession();
+
+  if (!session?.user) return null;
+
   const authorLabel =
-    userId === authorId ? "Modified by me" : `Modified by ${authorName}`;
+    session.user.id === userId ? "Modified by me" : `Modified by ${name}`;
   const createdAtLabel = formatDistanceToNow(createdAt, { addSuffix: true });
 
   return (

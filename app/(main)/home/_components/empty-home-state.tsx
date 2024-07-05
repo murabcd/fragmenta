@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 
 import { Plus, LoaderCircle, Home } from "lucide-react";
 
-import { useOrganization } from "@clerk/nextjs";
+import { useOrganization } from "@/hooks/use-organization";
+
 import { useApiMutation } from "@/hooks/use-api-mutation";
 
 import { api } from "@/convex/_generated/api";
@@ -15,13 +16,13 @@ import { api } from "@/convex/_generated/api";
 export const EmptyHomeState = () => {
   const router = useRouter();
   const { organization } = useOrganization();
-  const { mutate, pending } = useApiMutation(api.form.create);
+  const { mutate, pending } = useApiMutation(api.forms.create);
 
   const onClick = () => {
     if (!organization) return;
 
     mutate({
-      orgId: organization.id,
+      orgId: organization._id,
       title: "Untitled",
     })
       .then((id) => {

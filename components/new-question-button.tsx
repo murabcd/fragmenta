@@ -21,7 +21,7 @@ interface NewQuestionButtonProps {
 
 export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
   const data = useQuery(api.questions.count, { formId });
-  const { mutate, pending } = useApiMutation(api.question.create);
+  const { mutate, pending } = useApiMutation(api.questions.create);
 
   const onClick = () => {
     const position = data ?? 0;

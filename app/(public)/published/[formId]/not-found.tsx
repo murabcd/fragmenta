@@ -4,7 +4,7 @@ import { ShieldAlert, ChevronLeft } from "lucide-react";
 
 import Link from "next/link";
 
-export const NotFoundState = () => {
+export default function NotFound() {
   return (
     <div className="flex h-screen w-full items-center justify-center bg-muted/40">
       <div className="h-full flex flex-col items-center justify-center">
@@ -26,4 +26,4 @@ export const NotFoundState = () => {
       </div>
     </div>
   );
-};
+}

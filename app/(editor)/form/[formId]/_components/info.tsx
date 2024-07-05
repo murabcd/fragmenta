@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
-import { ChevronLeft, Menu } from "lucide-react";
+import { ChevronLeft, Eye, Menu } from "lucide-react";
 
 import { Hint } from "@/components/hint";
 
@@ -25,6 +25,10 @@ interface InfoProps {
   formId: string;
 }
 
+interface Question {
+  _id: Id<"questions">;
+}
+
 const TabSeparator = () => {
   return <div className="text-neutral-300 px-1">|</div>;
 };
@@ -32,11 +36,15 @@ const TabSeparator = () => {
 export const Info = ({ formId }: InfoProps) => {
   const { onOpen } = useRenameModal();
 
-  const data = useQuery(api.form.get, {
+  const data = useQuery(api.forms.get, {
     id: formId as Id<"forms">,
   });
 
+  const questions = useQuery(api.questions.get, { formId }) as Question[];
+
   if (!data) return;
+
+  const hasQuestions = questions && questions.length > 0;
 
   return (
     <div className="flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16">
@@ -74,7 +82,15 @@ export const Info = ({ formId }: InfoProps) => {
           <QuestionDrawer formId={formId} />
         </div>
         <div className="hidden sm:block">
-          <FormPreview formId={formId} />
+          {hasQuestions ? (
+            <FormPreview formId={formId} />
+          ) : (
+            <Hint label="Preview" side="bottom" sideOffset={10}>
+              <Button variant="outline" size="icon" disabled>
+                <Eye className="h-4 w-4" />
+              </Button>
+            </Hint>
+          )}
         </div>
         <Publish formId={data._id} />
       </div>

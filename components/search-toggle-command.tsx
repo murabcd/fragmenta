@@ -7,7 +7,7 @@ import { Search } from "lucide-react";
 
 import { useSearch } from "@/hooks/use-search";
 
-const SearchToggleCommand = () => {
+export const SearchToggleCommand = () => {
   const search = useSearch();
 
   return (
@@ -28,5 +28,3 @@ const SearchToggleCommand = () => {
     </div>
   );
 };
-
-export default SearchToggleCommand;

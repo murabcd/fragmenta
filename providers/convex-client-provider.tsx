@@ -1,29 +1,59 @@
 "use client";
 
-import { ClerkProvider, useAuth } from "@clerk/nextjs";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { AuthLoading, Authenticated, ConvexReactClient } from "convex/react";
+import { ReactNode, useMemo } from "react";
 
-import { Loading } from "@/components/loading";
+import {
+  AuthLoading,
+  Authenticated,
+  ConvexProviderWithAuth,
+  ConvexReactClient,
+} from "convex/react";
 
-interface ConvexClientProviderProps {
-  children: React.ReactNode;
+import { SessionProvider, useSession } from "next-auth/react";
+import { Session } from "next-auth";
+
+const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+
+export default function ConvexClientProvider({
+  children,
+  session,
+}: {
+  children: ReactNode;
+  session: Session | null;
+}) {
+  return (
+    <SessionProvider session={session}>
+      <ConvexProviderWithAuth client={convex} useAuth={useAuth}>
+        {children}
+      </ConvexProviderWithAuth>
+    </SessionProvider>
+  );
 }
 
-const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
-const convex = new ConvexReactClient(convexUrl!);
+function useAuth() {
+  const { data: session, update } = useSession();
 
-export const ConvexClientProvider = ({
-  children,
-}: ConvexClientProviderProps) => {
-  return (
-    <ClerkProvider>
-      <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
-        <Authenticated>{children}</Authenticated>
-        <AuthLoading>
-          <Loading />
-        </AuthLoading>
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
+  const convexToken = convexTokenFromSession(session);
+  return useMemo(
+    () => ({
+      isLoading: false,
+      isAuthenticated: session !== null,
+      fetchAccessToken: async ({ forceRefreshToken }: { forceRefreshToken: boolean }) => {
+        if (forceRefreshToken) {
+          const session = await update();
+
+          return convexTokenFromSession(session);
+        }
+        return convexToken;
+      },
+    }),
+    // We only care about the user changes, and don't want to
+    // bust the memo when we fetch a new token.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(session?.user)]
   );
-};
+}
+
+function convexTokenFromSession(session: Session | null): string | null {
+  return session?.convexToken ?? null;
+}

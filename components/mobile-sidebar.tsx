@@ -2,7 +2,7 @@
 
 import { PanelLeftOpen } from "lucide-react";
 
-import Sidebar from "./sidebar";
+import { Sidebar } from "./sidebar";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 

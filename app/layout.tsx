@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 
 import { GeistSans } from "geist/font/sans";
 
+import { auth } from "@/auth";
+
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 
-import { ConvexClientProvider } from "@/providers/convex-client-provider";
+import ConvexClientProvider from "@/providers/convex-client-provider";
 import { ModalProvider } from "@/providers/modal-provider";
 
 import "./globals.css";
@@ -27,26 +29,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={GeistSans.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ConvexClientProvider>
+        <ConvexClientProvider session={session}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             {children}
+            <Toaster />
             <ModalProvider />
-          </ConvexClientProvider>
-          <Toaster />
-        </ThemeProvider>
+          </ThemeProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );

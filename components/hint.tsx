@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   Tooltip,
   TooltipContent,
@@ -8,6 +10,7 @@ import {
 export interface HintProps {
   label: string;
   children: React.ReactNode;
+  asChild?: boolean;
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
   sideOffset?: number;
@@ -15,29 +18,26 @@ export interface HintProps {
   variant?: "default" | "ghost";
 }
 
-export const Hint = ({
-  label,
-  children,
-  side,
-  align,
-  sideOffset,
-  alignOffset,
-  variant,
-}: HintProps) => {
-  return (
-    <TooltipProvider>
-      <Tooltip delayDuration={100}>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent
-          side={side}
-          align={align}
-          sideOffset={sideOffset}
-          alignOffset={alignOffset}
-          variant={variant}
-        >
-          <p>{label}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-};
+export const Hint = React.forwardRef<HTMLDivElement, HintProps>(
+  ({ label, children, asChild, side, align, sideOffset, alignOffset }, ref) => {
+    return (
+      <TooltipProvider>
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild={asChild}>
+            <div ref={ref}>{children}</div>
+          </TooltipTrigger>
+          <TooltipContent
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            alignOffset={alignOffset}
+          >
+            <p className="text-sm capitalize">{label}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+);
+
+Hint.displayName = "Hint";

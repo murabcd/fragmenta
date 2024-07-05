@@ -24,7 +24,7 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 import { api } from "@/convex/_generated/api";
 
 export const RenameModal = () => {
-  const { mutate, pending } = useApiMutation(api.form.update);
+  const { mutate, pending } = useApiMutation(api.forms.update);
 
   const { isOpen, onClose, initialValues } = useRenameModal();
 

@@ -42,7 +42,7 @@ export const Editor = ({
   onQuestionSelect,
   selectedQuestion,
 }: EditorProps) => {
-  const reorderQuestion = useMutation(api.question.position).withOptimisticUpdate(
+  const reorderQuestion = useMutation(api.questions.position).withOptimisticUpdate(
     (localStore, { id, position }) => {
       const currentQuestions = localStore.getQuery(api.questions.get, { formId });
 
@@ -67,20 +67,21 @@ export const Editor = ({
 
     const newOrderedQuestion = reorder(questions, source.index, destination.index);
 
-    try {
-      await Promise.all(
-        newOrderedQuestion.map((question, index) =>
-          reorderQuestion({
-            id: question._id as Id<"questions">,
-            formId: formId,
-            position: index,
-          })
-        )
-      );
-      toast.success("Questions reordered");
-    } catch (error) {
-      toast.error("Failed to reorder questions");
-    }
+    const reorderPromise = Promise.all(
+      newOrderedQuestion.map((question, index) =>
+        reorderQuestion({
+          id: question._id as Id<"questions">,
+          formId: formId,
+          position: index,
+        })
+      )
+    );
+
+    toast.promise(reorderPromise, {
+      loading: "Reordering...",
+      success: "Questions reordered",
+      error: "Failed to reorder questions",
+    });
   };
 
   useEffect(() => {

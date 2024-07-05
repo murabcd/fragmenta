@@ -26,11 +26,11 @@ interface PublishProps {
 }
 
 export const Publish = ({ formId }: PublishProps) => {
-  const data = useQuery(api.form.get, {
+  const data = useQuery(api.forms.get, {
     id: formId as Id<"forms">,
   });
 
-  const { mutate, pending } = useApiMutation(api.form.publish);
+  const { mutate, pending } = useApiMutation(api.forms.publish);
 
   const origin = useOrigin();
 
@@ -93,7 +93,7 @@ export const Publish = ({ formId }: PublishProps) => {
             </div>
             <div className="flex items-center space-x-2">
               <div className="grid flex-1 gap-2">
-                <Input id="link" value={url} disabled />
+                <Input id="publish-link" type="url" value={url} disabled />
               </div>
               <Button onClick={onCopy} disabled={copied} className="px-3">
                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}

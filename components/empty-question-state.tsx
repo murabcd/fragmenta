@@ -1,6 +1,9 @@
 "use client";
 
-import { FormEventHandler } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import * as z from "zod";
 
 import { useCompletion } from "ai/react";
 
@@ -25,6 +28,14 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 
 import { QuestionType } from "@/types/canvas";
 
@@ -36,12 +47,29 @@ interface EmptyQuestionStateProps {
   formId: string;
 }
 
-export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
-  const { mutate, pending } = useApiMutation(api.question.create);
+const formSchema = z.object({
+  prompt: z.string().min(10, {
+    message: "Prompt must be at least 10 characters.",
+  }),
+});
 
-  const { input, handleInputChange, handleSubmit } = useCompletion({
+export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
+  const { mutate, pending } = useApiMutation(api.questions.create);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      prompt: "",
+    },
+  });
+
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = form;
+
+  const { complete, isLoading } = useCompletion({
     api: "https://brilliant-cobra-27.convex.site/api/generate",
-    body: { formId },
   });
 
   const onClick = () => {
@@ -61,11 +89,9 @@ export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
       });
   };
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
-    event.preventDefault();
-
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await handleSubmit(event);
+      await complete(values.prompt, { body: { formId } });
       toast.success("Questions generated");
     } catch (error) {
       console.error(error);
@@ -88,11 +114,7 @@ export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
           disabled={pending}
           className="w-40 h-40 border rounded-lg hover:bg-accent flex flex-col items-center justify-center py-6"
         >
-          {pending ? (
-            <LoaderCircle className="animate-spin w-6 h-6 mb-2" />
-          ) : (
-            <Plus className="w-6 h-6 mb-2" />
-          )}
+          <Plus className="w-6 h-6 mb-2" />
           <p className="text-sm font-light">Start from scratch</p>
         </button>
         <Dialog>
@@ -109,37 +131,50 @@ export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
                 Describe the form you have in mind and AI will do the magic.
               </DialogDescription>
             </DialogHeader>
-            <form onSubmit={onSubmit}>
-              <div className="grid gap-4 py-4">
-                <Textarea
-                  id="form-description"
-                  name="form-description"
-                  required
-                  placeholder="E.g., feedback form about team building held in New York"
-                  className="resize-none"
-                  value={input}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <span className="text-xs text-muted-foreground flex items-center">
-                AI can make mistakes. Check important info.
-              </span>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant="ghost" type="button">
-                    Cancel
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="grid gap-4 py-4">
+                  <FormField
+                    control={form.control}
+                    name="prompt"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            placeholder="E.g., create a feedback survey for a new product launch"
+                            autoFocus
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          AI can make mistakes. Check important info.
+                        </FormDescription>
+                        <FormMessage>{errors.prompt?.message}</FormMessage>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {/* <span className="text-xs text-muted-foreground flex items-center">
+                  AI can make mistakes. Check important info.
+                </span> */}
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="ghost" type="button">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button type="submit">
+                    {isLoading ? (
+                      <LoaderCircle className="animate-spin w-4 h-4 mr-2" />
+                    ) : (
+                      <WandSparkles className="w-4 h-4 mr-2" />
+                    )}
+                    Generate
                   </Button>
-                </DialogClose>
-                <Button type="submit">
-                  {pending ? (
-                    <LoaderCircle className="animate-spin w-4 h-4 mr-2" />
-                  ) : (
-                    <WandSparkles className="w-4 h-4 mr-2" />
-                  )}
-                  Generate
-                </Button>
-              </DialogFooter>
-            </form>
+                </DialogFooter>
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>

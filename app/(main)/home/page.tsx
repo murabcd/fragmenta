@@ -4,14 +4,18 @@ import { FormItem } from "./_components/form-item";
 
 import { EmptyOrgState } from "@/components/empty-org-state";
 
-import { useOrganization } from "@clerk/nextjs";
+import { useOrganization } from "@/hooks/use-organization";
 
 const HomePage = () => {
   const { organization } = useOrganization();
 
+  if (!organization) {
+    return null;
+  }
+
   return (
     <div className="flex-1 h-[calc(100%-80px)] p-6">
-      {!organization ? <EmptyOrgState /> : <FormItem orgId={organization.id} />}
+      {organization?._id ? <FormItem orgId={organization._id} /> : <EmptyOrgState />}
     </div>
   );
 };

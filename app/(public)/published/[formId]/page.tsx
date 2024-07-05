@@ -10,9 +10,9 @@ import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 import { QuestionContent } from "@/components/question-content";
 
-import { NotFoundState } from "./_components/not-found-state";
-
 import { Question } from "@/types/canvas";
+
+import { notFound } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ interface FormIdPagePublishedProps {
 }
 
 const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
-  const { mutate: updateResponse } = useApiMutation(api.question.response);
+  const { mutate: updateResponse } = useApiMutation(api.questions.response);
 
   const router = useRouter();
 
@@ -38,13 +38,17 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
   const [debouncedPositionIndex] = useDebounce(positionIndex, 300);
   const [responses, setResponses] = useState<Record<string, string | string[]>>({});
 
-  const form = useQuery(api.form.get, {
+  const form = useQuery(api.forms.get, {
     id: params.formId as Id<"forms">,
   });
 
   const questions = useQuery(api.questions.published, {
     formId: params.formId as Id<"forms">,
   }) as Question[];
+
+  if (form === null || (form && !form.isPublished)) {
+    notFound();
+  }
 
   const handleBack = () => {
     if (questions && positionIndex > 0) {
@@ -90,14 +94,6 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
 
   if (!form || !questions) {
     return null;
-  }
-
-  if (!form.isPublished) {
-    return (
-      <div>
-        <NotFoundState />
-      </div>
-    );
   }
 
   return (

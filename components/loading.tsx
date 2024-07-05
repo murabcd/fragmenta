@@ -9,7 +9,7 @@ export const Loading = () => {
         width={30}
         height={30}
         className="animate-pulse duration-700 dark:hidden"
-        priority={true}
+        priority
       />
       <Image
         src="/logo-dark.svg"
@@ -17,7 +17,7 @@ export const Loading = () => {
         width={30}
         height={30}
         className="animate-pulse duration-700 hidden dark:block"
-        priority={true}
+        priority
       />
     </div>
   );
