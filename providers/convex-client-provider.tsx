@@ -2,12 +2,7 @@
 
 import { ReactNode, useMemo } from "react";
 
-import {
-  AuthLoading,
-  Authenticated,
-  ConvexProviderWithAuth,
-  ConvexReactClient,
-} from "convex/react";
+import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react";
 
 import { SessionProvider, useSession } from "next-auth/react";
 import { Session } from "next-auth";
