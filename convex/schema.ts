@@ -77,13 +77,22 @@ export default defineSchema({
     imageUrl: v.optional(v.string()),
   }).index("by_owner", ["ownerId"]),
 
-  userOrganizations: defineTable({
+  members: defineTable({
     userId: v.id("users"),
     orgId: v.id("organizations"),
     role: v.string(),
   })
     .index("by_user", ["userId"])
     .index("by_org", ["orgId"]),
+
+  invitations: defineTable({
+    email: v.string(),
+    orgId: v.id("organizations"),
+    role: v.string(),
+    status: v.string(),
+  })
+    .index("by_org", ["orgId"])
+    .index("by_email", ["email"]),
 
   forms: defineTable({
     title: v.string(),

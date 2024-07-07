@@ -18,6 +18,9 @@ import type * as auth from "../auth.js";
 import type * as authAdapter from "../authAdapter.js";
 import type * as forms from "../forms.js";
 import type * as http from "../http.js";
+import type * as invitations from "../invitations.js";
+import type * as invites from "../invites.js";
+import type * as members from "../members.js";
 import type * as organizations from "../organizations.js";
 import type * as questions from "../questions.js";
 
@@ -34,6 +37,9 @@ declare const fullApi: ApiFromModules<{
   authAdapter: typeof authAdapter;
   forms: typeof forms;
   http: typeof http;
+  invitations: typeof invitations;
+  invites: typeof invites;
+  members: typeof members;
   organizations: typeof organizations;
   questions: typeof questions;
 }>;

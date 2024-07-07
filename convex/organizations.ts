@@ -12,7 +12,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
 
-    if (!identity) throw new Error("Not authenticated");
+    if (!identity) throw new Error("Unauthorized");
 
     const userId = identity.subject as Id<"users">;
 
@@ -23,7 +23,7 @@ export const create = mutation({
       imageUrl: args.imageUrl || "https://avatar.vercel.sh/organization",
     });
 
-    await ctx.db.insert("userOrganizations", { userId, orgId, role: "owner" });
+    await ctx.db.insert("members", { userId, orgId, role: "owner" });
     return orgId;
   },
 });
@@ -37,7 +37,7 @@ export const get = query({
     const userId = identity.subject as Id<"users">;
 
     const userOrgs = await ctx.db
-      .query("userOrganizations")
+      .query("members")
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
 

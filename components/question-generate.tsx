@@ -51,7 +51,7 @@ export const GenerateQuestions = ({ formId }: GenerateQuestionsProps) => {
   });
 
   const { complete, isLoading } = useCompletion({
-    api: "https://brilliant-cobra-27.convex.site/api/generate",
+    api: `${process.env.NEXT_PUBLIC_CONVEX_URL}/api/generate`,
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -98,7 +98,7 @@ export const GenerateQuestions = ({ formId }: GenerateQuestionsProps) => {
                     <FormDescription>
                       AI can make mistakes. Check important info.
                     </FormDescription>
-                    <FormMessage>{form.formState.errors.prompt?.message}</FormMessage>
+                    <FormMessage className="text-xs text-destructive" />
                   </FormItem>
                 )}
               />
