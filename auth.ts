@@ -1,19 +1,21 @@
 import { ConvexAdapter } from "./app/convex-adapter";
 
+import { env } from "./env.mjs";
+
 import { SignJWT, importPKCS8 } from "jose";
 
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 
-const CONVEX_SITE_URL = process.env.NEXT_PUBLIC_CONVEX_URL!.replace(/.cloud$/, ".site");
+const CONVEX_SITE_URL = env.NEXT_PUBLIC_CONVEX_URL!.replace(/.cloud$/, ".site");
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: true,
   providers: [
     Google,
     Resend({
-      from: process.env.EMAIL_FROM,
+      from: env.EMAIL_FROM,
     }),
   ],
   adapter: ConvexAdapter,
@@ -24,7 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   callbacks: {
     async session({ session }) {
-      const privateKey = await importPKCS8(process.env.CONVEX_AUTH_PRIVATE_KEY!, "RS256");
+      const privateKey = await importPKCS8(env.CONVEX_AUTH_PRIVATE_KEY!, "RS256");
       const convexToken = await new SignJWT({
         sub: session.userId,
       })

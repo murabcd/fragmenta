@@ -69,11 +69,13 @@ export const Info = ({ formId }: InfoProps) => {
         <TabSeparator />
         <div className="hidden sm:block">
           <FormActions id={data._id} title={data.title} side="bottom" sideOffset={10}>
-            <Hint label="Main menu" align="end" side="bottom" sideOffset={10}>
-              <Button variant="outline" size="icon">
-                <Menu className="h-4 w-4" />
-              </Button>
-            </Hint>
+            <div>
+              <Hint label="Main menu" align="end" side="bottom" sideOffset={10}>
+                <Button variant="outline" size="icon">
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </Hint>
+            </div>
           </FormActions>
         </div>
       </div>

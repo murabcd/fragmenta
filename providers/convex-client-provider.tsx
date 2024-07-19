@@ -2,12 +2,14 @@
 
 import { ReactNode, useMemo } from "react";
 
+import { env } from "@/env.mjs";
+
 import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react";
 
 import { SessionProvider, useSession } from "next-auth/react";
 import { Session } from "next-auth";
 
-const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+const convex = new ConvexReactClient(env.NEXT_PUBLIC_CONVEX_URL!);
 
 export default function ConvexClientProvider({
   children,

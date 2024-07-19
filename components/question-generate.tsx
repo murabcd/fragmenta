@@ -51,7 +51,7 @@ export const GenerateQuestions = ({ formId }: GenerateQuestionsProps) => {
   });
 
   const { complete, isLoading } = useCompletion({
-    api: `${process.env.NEXT_PUBLIC_CONVEX_URL}/api/generate`,
+    api: "https://brilliant-cobra-27.convex.site/api/generate",
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
