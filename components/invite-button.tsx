@@ -123,7 +123,7 @@ export const InviteButton = () => {
                         <Input
                           id="member-email"
                           type="email"
-                          placeholder="name@domain.com"
+                          placeholder="Email address"
                           autoComplete="off"
                           autoFocus
                           {...field}

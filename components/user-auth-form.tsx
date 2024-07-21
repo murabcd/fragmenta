@@ -74,7 +74,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             </Label>
             <Input
               id="email"
-              placeholder="name@domain.com"
+              placeholder="Your email address"
               type="email"
               autoCapitalize="none"
               autoComplete="email"
@@ -86,7 +86,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
-          <Button variant="outline" type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading}>
             {isLoading && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
             Sign in with magic link
           </Button>
@@ -102,7 +102,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
-      <Button onClick={handleGoogleSignIn} disabled={isLoading || isGoogleLoading}>
+      <Button
+        variant="outline"
+        onClick={handleGoogleSignIn}
+        disabled={isLoading || isGoogleLoading}
+      >
         {isGoogleLoading ? (
           <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
         ) : (

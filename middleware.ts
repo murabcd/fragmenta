@@ -1,9 +1,13 @@
 import { auth } from "@/auth";
 
+import { NextResponse } from "next/server";
+
 export default auth((req) => {
-  if (!req.auth && req.nextUrl.pathname !== "/signin") {
+  const authPages = ["/signin", "/register"];
+
+  if (!req.auth && !authPages.includes(req.nextUrl.pathname)) {
     const newUrl = new URL("/signin", req.nextUrl.origin);
-    return Response.redirect(newUrl);
+    return NextResponse.redirect(newUrl);
   }
 });
 

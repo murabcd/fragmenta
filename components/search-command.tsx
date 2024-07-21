@@ -59,20 +59,22 @@ export const SearchCommand = () => {
       <CommandInput placeholder="Search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Forms">
-          {data?.map((form) => (
-            <CommandItem
-              key={form._id}
-              id={form._id}
-              title={form.title}
-              value={`${form._id}-${form.title}`}
-              onSelect={() => onSelect(form._id)}
-            >
-              <Circle className="mr-2 h-4 w-4" />
-              <span>{form.title}</span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        {data && data.length > 0 && (
+          <CommandGroup heading="Forms">
+            {data.map((form) => (
+              <CommandItem
+                key={form._id}
+                id={form._id}
+                title={form.title}
+                value={`${form._id}-${form.title}`}
+                onSelect={() => onSelect(form._id)}
+              >
+                <Circle className="mr-2 h-4 w-4" />
+                <span>{form.title}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        )}
       </CommandList>
     </CommandDialog>
   );
