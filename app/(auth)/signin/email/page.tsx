@@ -10,11 +10,11 @@ import { Button } from "@/components/ui/button";
 import { UserAuthForm } from "@/components/user-auth-form";
 
 export const metadata: Metadata = {
-  title: "Sign in",
+  title: "Sign in with email",
   description: "Sign in to your account",
 };
 
-export default function SignInPage() {
+export default function SignInEmailPage() {
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
       <Link href="/">
@@ -41,12 +41,12 @@ export default function SignInPage() {
             className="hidden dark:block"
             priority
           />
-          <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Welcome</h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email to sign in to your account
+            Enter your email and password to sign in
           </p>
         </div>
-        <UserAuthForm mode="signin" />
+        <UserAuthForm mode="signin-email" />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
             href="/register"

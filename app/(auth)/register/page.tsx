@@ -35,10 +35,10 @@ export default function RegisterPage() {
             />
             <h1 className="text-2xl font-semibold tracking-tight">Create an account</h1>
             <p className="text-sm text-muted-foreground">
-              Enter your email below to create your account
+              Enter your name, email and password below
             </p>
           </div>
-          <UserAuthForm />
+          <UserAuthForm mode="register" />
           <p className="text-center text-sm text-muted-foreground">
             By signing up, you agree to our{" "}
             <Link href="/terms" className="hover:text-brand underline underline-offset-4">
@@ -56,7 +56,7 @@ export default function RegisterPage() {
         </div>
       </div>
       <Link href="/signin">
-        <Button variant="ghost" className="absolute right-4 top-4 md:right-8 md:top-8">
+        <Button variant="ghost" className="absolute right-4 top-4 md:right-8 md:top-6">
           Sign in
         </Button>
       </Link>

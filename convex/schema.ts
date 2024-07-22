@@ -6,6 +6,7 @@ export const userSchema = {
   name: v.optional(v.string()),
   emailVerified: v.optional(v.number()),
   image: v.optional(v.string()),
+  password: v.optional(v.string()),
 };
 
 export const sessionSchema = {

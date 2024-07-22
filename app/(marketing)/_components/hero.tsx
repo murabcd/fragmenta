@@ -7,18 +7,22 @@ export const Hero = () => {
   return (
     <div className="w-full">
       <GridPattern />
-      <div className="max-w-2xl mx-auto text-center pt-50">
+      <div className="max-w-3xl mx-auto text-center pt-50">
         <div className="flex flex-col relative">
-          <h1 className="text-7xl font-semibold mb-4 relative">Fragmenta</h1>
-          <p className="text-muted-foreground text-xl">A new way to manage your forms.</p>
+          <h1 className="text-6xl font-bold mb-4 relative">
+            Create{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500">
+              powerful forms
+            </span>{" "}
+            with AI-driven insights
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Fragmenta is an open-source Typeform alternative.
+          </p>
         </div>
         <div className="flex justify-center items-center mt-10">
-          <Link
-            href="/published/j5728zde5ya7kr1fwqjnkrxyfs6w3j91"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button>Join waitlist</Button>
+          <Link href="/register" target="_blank" rel="noopener noreferrer">
+            <Button>Create your form</Button>
           </Link>
           <div className="ml-4">
             <Link

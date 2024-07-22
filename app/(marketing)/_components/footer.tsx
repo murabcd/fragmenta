@@ -1,9 +1,11 @@
 import Link from "next/link";
 
+import { ModeToggle } from "@/components/theme-toggle-mode";
+
 export const Footer = () => {
   return (
-    <footer className="py-6 px-4">
-      <div className="container mx-auto flex justify-center space-x-4">
+    <footer className="flex items-center justify-between w-full px-8 py-6">
+      <div className="flex space-x-4">
         <Link
           href="https://linkedin.com/company/fragmentainc/"
           className="text-muted-foreground hover:text-foreground transition-colors"
@@ -21,6 +23,7 @@ export const Footer = () => {
           Twitter
         </Link>
       </div>
+      <ModeToggle />
     </footer>
   );
 };

@@ -32,6 +32,7 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@t3-oss/env-nextjs": "^0.10.1",
     "ai": "^3.2.32",
+    "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -59,13 +60,14 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
-    "typescript": "^5.5.3",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.14.11",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.2",
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.6",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.2"
+    "typescript": "^5.5.3"
   }
 }

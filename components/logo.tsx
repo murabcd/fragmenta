@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Logo = () => {
   return (
-    <div className="flex flex-shrink-0 items-center mt-2">
+    <div className="flex flex-shrink-0 items-center">
       <Image
         src="/logo.svg"
         alt="logo"
