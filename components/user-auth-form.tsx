@@ -15,7 +15,7 @@ import Link from "next/link";
 
 import { LoaderCircle, Mail } from "lucide-react";
 
-import { userAuthSchema } from "@/types/validation/auth";
+import { magicLinkSchema, signInSchema, registerSchema } from "@/types/validation/auth";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,9 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   mode: "signin" | "signin-email" | "register";
 }
 
-type FormData = z.infer<typeof userAuthSchema>;
+type FormData = z.infer<
+  typeof magicLinkSchema | typeof signInSchema | typeof registerSchema
+>;
 
 export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
   const {
@@ -37,7 +39,13 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(userAuthSchema),
+    resolver: zodResolver(
+      mode === "signin"
+        ? magicLinkSchema
+        : mode === "signin-email"
+          ? signInSchema
+          : registerSchema
+    ),
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,17 +57,14 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
     if (mode === "signin" || mode === "signin-email") {
       const signInResult = signIn(mode === "signin" ? "resend" : "credentials", {
         email: data.email.toLowerCase(),
-        password: data.password,
+        password: (data as z.infer<typeof signInSchema>).password,
         redirect: false,
         callbackUrl: "/home",
       });
 
       toast.promise(signInResult, {
-        loading: "Processing...",
-        success:
-          mode === "signin"
-            ? "We sent you a link, check your email and spam folder"
-            : "Signed in",
+        loading: "Signing in...",
+        success: mode === "signin" ? "We sent you a link, check your email" : "Signed in",
         error: "Sign in request failed",
       });
     } else if (mode === "register") {
@@ -80,11 +85,11 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
   };
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
+    <div className={cn("grid gap-8", className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid gap-2">
+        <div className="grid gap-4">
           {mode === "register" && (
-            <div className="grid gap-1">
+            <div className="grid gap-2">
               <Label htmlFor="name">Name</Label>
               <Input
                 id="name"
@@ -95,12 +100,12 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
                 autoCorrect="off"
                 {...register("name")}
               />
-              {errors.name && (
+              {"name" in errors && errors.name && (
                 <p className="text-xs text-destructive">{errors.name.message}</p>
               )}
             </div>
           )}
-          <div className="grid gap-1">
+          <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
@@ -116,7 +121,7 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
             )}
           </div>
           {(mode === "signin-email" || mode === "register") && (
-            <div className="grid gap-1">
+            <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
@@ -126,7 +131,7 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
                 autoComplete="current-password"
                 {...register("password")}
               />
-              {errors.password && (
+              {"password" in errors && errors.password && (
                 <p className="text-xs text-destructive">{errors.password.message}</p>
               )}
             </div>

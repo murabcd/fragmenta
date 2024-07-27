@@ -11,12 +11,10 @@ import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 import Credentials from "next-auth/providers/credentials";
 
-import { userAuthSchema } from "./types/validation/auth";
+import { registerSchema } from "./types/validation/auth";
 
 import { fetchQuery } from "convex/nextjs";
 import { api } from "./convex/_generated/api";
-
-import { Id } from "./convex/_generated/dataModel";
 
 const CONVEX_SITE_URL = env.NEXT_PUBLIC_CONVEX_URL!.replace(/.cloud$/, ".site");
 
@@ -27,12 +25,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Resend({ from: env.EMAIL_FROM }),
     Credentials({
       async authorize(credentials) {
-        const validatedFields = userAuthSchema.safeParse(credentials);
+        const validatedFields = registerSchema.safeParse(credentials);
 
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
 
-          const user = await fetchQuery(api.users.getUserByEmail, { email });
+          const user = await fetchQuery(api.users.getByEmail, { email });
 
           if (!user || !user.password) return null;
 
@@ -53,13 +51,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider !== "credentials") return true;
+      if (account?.provider === "credentials") {
+        const existingUser = await fetchQuery(api.users.getByEmail, {
+          email: user.email!,
+        });
 
-      const existingUser = await fetchQuery(api.users.getUser, {
-        id: user.id as Id<"users">,
-      });
-
-      if (!existingUser?.emailVerified) return false;
+        if (!existingUser?.emailVerified) return false;
+      }
 
       return true;
     },

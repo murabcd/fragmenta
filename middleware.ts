@@ -3,21 +3,24 @@ import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
 export default auth((req) => {
-  const authPages = ["/signin", "/register"];
+  const publicPages = ["/"];
+  const authPages = ["/signin", "/signin/email", "/register"];
+  const oauthPages = ["/api/auth"];
 
-  if (!req.auth && !authPages.includes(req.nextUrl.pathname)) {
+  if (
+    publicPages.includes(req.nextUrl.pathname) ||
+    authPages.includes(req.nextUrl.pathname) ||
+    req.nextUrl.pathname.startsWith(oauthPages[0])
+  ) {
+    return NextResponse.next();
+  }
+
+  if (!req.auth) {
     const newUrl = new URL("/signin", req.nextUrl.origin);
     return NextResponse.redirect(newUrl);
   }
 });
 
 export const config = {
-  matcher: [
-    "/home/:path*",
-    "/forms/:path*",
-    "/recent/:path*",
-    "/settings/:path*",
-    "/signin",
-    "/register",
-  ],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

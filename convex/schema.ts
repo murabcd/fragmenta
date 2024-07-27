@@ -4,9 +4,9 @@ import { defineSchema, defineTable } from "convex/server";
 export const userSchema = {
   email: v.string(),
   name: v.optional(v.string()),
-  emailVerified: v.optional(v.number()),
   image: v.optional(v.string()),
   password: v.optional(v.string()),
+  emailVerified: v.optional(v.number()),
 };
 
 export const sessionSchema = {
