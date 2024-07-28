@@ -33,12 +33,17 @@ export const ConvexAdapter: Adapter = {
     });
     return { ...session, id };
   },
-  async createUser({ id: _, ...user }: User) {
+  async createUser({
+    id: _,
+    role = "owner",
+    ...user
+  }: User & { role?: "owner" | "admin" | "member" }) {
     const id = await callMutation(api.authAdapter.createUser, {
-      user: toDB(user),
+      user: toDB({ ...user, role }),
     });
-    return { ...user, id };
+    return { ...user, id, role };
   },
+
   async createVerificationToken(verificationToken: VerificationToken) {
     await callMutation(api.authAdapter.createVerificationToken, {
       verificationToken: toDB(verificationToken),

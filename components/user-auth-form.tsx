@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { signIn } from "next-auth/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +27,10 @@ import { Icons } from "@/components/icons";
 
 import { cn } from "@/lib/utils";
 
+import { useAction } from "convex/react";
+
+import { api } from "@/convex/_generated/api";
+
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   mode: "signin" | "signin-email" | "register";
 }
@@ -34,6 +40,8 @@ type FormData = z.infer<
 >;
 
 export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -51,29 +59,51 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
 
+  const createUser = useAction(api.users.create);
+
   async function onSubmit(data: FormData) {
     setIsLoading(true);
 
     if (mode === "signin" || mode === "signin-email") {
-      const signInResult = signIn(mode === "signin" ? "resend" : "credentials", {
+      const signInResult = await signIn(mode === "signin" ? "resend" : "credentials", {
         email: data.email.toLowerCase(),
         password: (data as z.infer<typeof signInSchema>).password,
         redirect: false,
         callbackUrl: "/home",
       });
 
-      toast.promise(signInResult, {
-        loading: "Signing in...",
-        success: mode === "signin" ? "We sent you a link, check your email" : "Signed in",
-        error: "Sign in request failed",
-      });
+      if (signInResult?.error) {
+        toast.error(signInResult.error);
+      } else if (signInResult?.ok) {
+        toast.success(
+          mode === "signin" ? "We sent you a link, check your email" : "Signed in"
+        );
+        router.push("/home");
+      }
     } else if (mode === "register") {
-      // Implement registration logic here
-      // You might want to use a mutation to create a new user in your Convex database
-      // and then sign in the user
-      // For example:
-      // await createUser({ email: data.email, name: data.name, password: data.password });
-      // await signIn("credentials", { email: data.email, password: data.password });
+      const user = await createUser({
+        email: data.email,
+        name: (data as z.infer<typeof registerSchema>).name,
+        password: (data as z.infer<typeof registerSchema>).password,
+      });
+
+      if (!user) {
+        toast.error("Sign up failed");
+        return;
+      }
+
+      const signInResult = await signIn("credentials", {
+        email: data.email,
+        password: (data as z.infer<typeof signInSchema>).password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        toast.error(signInResult.error);
+      } else if (signInResult?.ok) {
+        toast.success("Signed up");
+        router.push("/home");
+      }
     }
 
     setIsLoading(false);

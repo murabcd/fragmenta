@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "avatar.vercel.sh",
       },
+      {
+        protocol: "https",
+        hostname: "brilliant-cobra-27.convex.cloud",
+      },
     ],
   },
 };

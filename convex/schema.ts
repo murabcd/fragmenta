@@ -6,6 +6,7 @@ export const userSchema = {
   name: v.optional(v.string()),
   image: v.optional(v.string()),
   password: v.optional(v.string()),
+  role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
   emailVerified: v.optional(v.number()),
 };
 
@@ -53,16 +54,20 @@ export const authenticatorSchema = {
 
 const authTables = {
   users: defineTable(userSchema).index("email", ["email"]),
+
   sessions: defineTable(sessionSchema)
     .index("sessionToken", ["sessionToken"])
     .index("userId", ["userId"]),
+
   accounts: defineTable(accountSchema)
     .index("providerAndAccountId", ["provider", "providerAccountId"])
     .index("userId", ["userId"]),
+
   verificationTokens: defineTable(verificationTokenSchema).index("identifierToken", [
     "identifier",
     "token",
   ]),
+
   authenticators: defineTable(authenticatorSchema)
     .index("userId", ["userId"])
     .index("credentialID", ["credentialID"]),
@@ -74,14 +79,14 @@ export default defineSchema({
   organizations: defineTable({
     name: v.string(),
     slug: v.string(),
-    ownerId: v.id("users"),
+    ownerId: v.string(),
     imageUrl: v.optional(v.string()),
   }).index("by_owner", ["ownerId"]),
 
   members: defineTable({
-    userId: v.id("users"),
+    userId: v.string(),
     orgId: v.id("organizations"),
-    role: v.string(),
+    role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
   })
     .index("by_user", ["userId"])
     .index("by_org", ["orgId"]),

@@ -4,7 +4,16 @@ import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+
 import * as z from "zod";
+
+import Image from "next/image";
+
+import { Plus, ImagePlus, Upload, LoaderCircle } from "lucide-react";
+
+import { toast } from "sonner";
+
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,10 +35,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Plus, Upload } from "lucide-react";
-
 import { useApiMutation } from "@/hooks/use-api-mutation";
+
+import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -42,8 +52,14 @@ const formSchema = z.object({
 
 export const UserOrg = () => {
   const { mutate: createOrg } = useApiMutation(api.organizations.create);
+  const { mutate: getImageUrl } = useApiMutation(api.files.getImageUrl);
+  const { mutate: saveImageUrl } = useApiMutation(api.files.saveImageUrl);
+
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
 
   const [open, setOpen] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,10 +69,53 @@ export const UserOrg = () => {
     },
   });
 
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await createOrg({ name: values.name.trim(), slug: values.slug.trim() });
-    form.reset();
-    setOpen(false);
+    try {
+      const orgId = await createOrg({
+        name: values.name.trim(),
+        slug: values.slug.trim(),
+        imageUrl: imageUrl || undefined,
+      });
+      if (imageUrl) {
+        await saveImageUrl({ orgId, imageUrl });
+      }
+      toast.success("Organization created");
+      form.reset();
+      setImageUrl(null);
+      setOpen(false);
+    } catch (error) {
+      toast.error("Failed to create organization");
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setIsUploading(true);
+      try {
+        const uploadUrl = await generateUploadUrl();
+        const result = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": file.type },
+          body: file,
+        });
+        const { storageId } = await result.json();
+        const url = await getImageUrl({ storageId: storageId as Id<"_storage"> });
+        setImageUrl(url);
+        toast.success("Logo uploaded");
+      } catch (error) {
+        toast.error("Failed to upload logo");
+      } finally {
+        setIsUploading(false);
+      }
+    }
   };
 
   return (
@@ -77,14 +136,49 @@ export const UserOrg = () => {
             <div>
               <FormLabel htmlFor="org-logo">Logo</FormLabel>
               <div className="mt-1 flex items-center space-x-2">
-                <div className="w-16 h-16 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
-                  <Upload className="w-6 h-6 text-gray-400" />
+                <div
+                  className={cn(
+                    "w-16 h-16 flex items-center justify-center overflow-hidden rounded-lg",
+                    imageUrl ? "bg-transparent" : "bg-muted/40 border-2 border-dashed"
+                  )}
+                >
+                  {imageUrl ? (
+                    <Image
+                      src={imageUrl}
+                      alt="Logo"
+                      width={64}
+                      height={64}
+                      className="h-16 w-16 object-cover"
+                    />
+                  ) : (
+                    <ImagePlus className="w-6 h-6 text-muted-foreground" />
+                  )}
                 </div>
-                <Button type="button" variant="outline">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById("file-upload")?.click()}
+                  disabled={isUploading}
+                >
+                  {isUploading ? (
+                    <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4 mr-2" />
+                  )}
                   Upload
                 </Button>
+                <input
+                  id="file-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  disabled={isUploading}
+                />
               </div>
-              <p className="mt-1 text-xs text-gray-500">Recommend size 1:1, up to 5MB.</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Recommend size 1:1, JPEG or PNG, up to 5MB.
+              </p>
             </div>
             <FormField
               control={form.control}
@@ -98,6 +192,11 @@ export const UserOrg = () => {
                       {...field}
                       autoComplete="organization-name"
                       autoFocus
+                      onChange={(e) => {
+                        field.onChange(e);
+                        const slug = generateSlug(e.target.value);
+                        form.setValue("slug", slug);
+                      }}
                     />
                   </FormControl>
                   <FormDescription>The name of your organization.</FormDescription>
@@ -113,7 +212,6 @@ export const UserOrg = () => {
                   <FormLabel htmlFor="org-slug">Slug URL</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="my-org"
                       {...field}
                       autoComplete="organization-slug"
                       onChange={(e) => field.onChange(e.target.value.toLowerCase())}

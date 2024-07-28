@@ -11,9 +11,10 @@ export const create = action({
     email: v.string(),
     name: v.optional(v.string()),
     password: v.string(),
+    emailVerified: v.optional(v.number()),
   },
   handler: async (ctx, args): Promise<Doc<"users"> | null> => {
-    const existingUser = await ctx.runQuery(api.users.getByEmail, {
+    const existingUser = await ctx.runQuery(api.users.email, {
       email: args.email,
     });
 
@@ -27,6 +28,7 @@ export const create = action({
       email: args.email,
       name: args.name,
       password: hashedPassword,
+      emailVerified: args.emailVerified,
     });
 
     return await ctx.runQuery(api.users.get, { id: userId });
@@ -39,7 +41,7 @@ export const verify = action({
     password: v.string(),
   },
   handler: async (ctx, args): Promise<boolean> => {
-    const user = await ctx.runQuery(api.users.getByEmail, { email: args.email });
+    const user = await ctx.runQuery(api.users.email, { email: args.email });
 
     if (!user || !user.password) {
       return false;
@@ -56,24 +58,15 @@ export const get = query({
   },
 });
 
-export const getByEmail = query({
-  args: { email: v.string() },
-  handler: async (ctx, args): Promise<Doc<"users"> | null> => {
-    return await ctx.db
-      .query("users")
-      .filter((q) => q.eq(q.field("email"), args.email))
-      .first();
-  },
-});
-
 export const insert = mutation({
   args: {
     email: v.string(),
     name: v.optional(v.string()),
     password: v.string(),
+    emailVerified: v.optional(v.number()),
   },
   handler: async (ctx, args): Promise<Id<"users">> => {
-    return await ctx.db.insert("users", args);
+    return await ctx.db.insert("users", { ...args, role: "admin" });
   },
 });
 
@@ -99,5 +92,15 @@ export const remove = mutation({
   args: { id: v.id("users") },
   handler: async (ctx, args): Promise<void> => {
     await ctx.db.delete(args.id);
+  },
+});
+
+export const email = query({
+  args: { email: v.string() },
+  handler: async (ctx, args): Promise<Doc<"users"> | null> => {
+    return await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), args.email))
+      .first();
   },
 });

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import Image from "next/image";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -47,13 +47,14 @@ const OrgItem = ({ id, name, imageUrl }: OrgItemProps) => {
       onSelect={onClick}
       className="flex items-center p-2 cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
     >
-      <Image
-        src={imageUrl}
-        alt={name}
-        width={20}
-        height={20}
-        className="mr-2 rounded-sm grayscale"
-      />
+      <Avatar className="w-5 h-5 mr-2">
+        <AvatarImage
+          src={imageUrl}
+          alt={name}
+          className="h-5 w-5 grayscale rounded-sm object-cover"
+        />
+      </Avatar>
+
       <span className="text-sm truncate flex-1">{name}</span>
       {organization?._id === id && (
         <Check className="ml-auto h-3 w-3 opacity-50 flex-shrink-0" />
@@ -98,13 +99,13 @@ export const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
         >
           <div className="flex items-center">
             {selectedOrgImage && (
-              <Image
-                src={selectedOrgImage}
-                alt={selectedOrg || "Organization"}
-                width={20}
-                height={20}
-                className="mr-2 rounded-sm grayscale flex-shrink-0"
-              />
+              <Avatar className="w-5 h-5 mr-2">
+                <AvatarImage
+                  src={selectedOrgImage}
+                  alt={selectedOrg || "Organization"}
+                  className="h-5 w-5 grayscale rounded-sm object-cover"
+                />
+              </Avatar>
             )}
             <span className="truncate flex-1">{selectedOrg}</span>
           </div>

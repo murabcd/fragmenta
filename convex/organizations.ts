@@ -16,11 +16,13 @@ export const create = mutation({
 
     const userId = identity.subject as Id<"users">;
 
+    const defaultImageUrl = `https://avatar.vercel.sh/${encodeURIComponent(args.name)}`;
+
     const orgId = await ctx.db.insert("organizations", {
       name: args.name,
       slug: args.slug,
       ownerId: userId,
-      imageUrl: args.imageUrl || "https://avatar.vercel.sh/organization",
+      imageUrl: args.imageUrl || defaultImageUrl,
     });
 
     await ctx.db.insert("members", { userId, orgId, role: "owner" });
