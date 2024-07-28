@@ -102,7 +102,7 @@ export default defineSchema({
 
   forms: defineTable({
     title: v.string(),
-    userId: v.id("users"),
+    userId: v.string(),
     name: v.string(),
     orgId: v.id("organizations"),
     isPublished: v.boolean(),

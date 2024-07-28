@@ -39,6 +39,8 @@ import {
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { PendingInvites } from "@/components/pending-invites";
+
 import { useOrganization } from "@/hooks/use-organization";
 
 import { useApiMutation } from "@/hooks/use-api-mutation";
@@ -100,7 +102,7 @@ export const InviteButton = () => {
           Invite member
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] flex flex-col">
+      <DialogContent className="flex flex-col">
         <DialogHeader>
           <DialogTitle>Pending</DialogTitle>
           <DialogDescription>View and manage pending invites.</DialogDescription>
@@ -130,7 +132,7 @@ export const InviteButton = () => {
                         />
                       </FormControl>
                       <FormDescription>
-                        The email address of the person you want to invite.
+                        Enter the email address of the person you want to invite.
                       </FormDescription>
                       <FormMessage className="text-xs text-destructive" />
                     </FormItem>
@@ -148,6 +150,9 @@ export const InviteButton = () => {
                             <SelectValue placeholder="Select a role" />
                           </SelectTrigger>
                         </FormControl>
+                        <FormDescription>
+                          Select the role for the person you want to invite.
+                        </FormDescription>
                         <SelectContent>
                           <SelectItem value="admin">Admin</SelectItem>
                           <SelectItem value="member">Member</SelectItem>
@@ -167,8 +172,7 @@ export const InviteButton = () => {
             </Form>
           </TabsContent>
           <TabsContent value="pending">
-            {/* Add your members list here */}
-            <p>Pending members list goes here</p>
+            <PendingInvites />
           </TabsContent>
         </Tabs>
       </DialogContent>

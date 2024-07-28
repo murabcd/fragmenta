@@ -9,8 +9,9 @@ import bcrypt from "bcryptjs";
 export const create = action({
   args: {
     email: v.string(),
-    name: v.optional(v.string()),
+    name: v.string(),
     password: v.string(),
+    role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
     emailVerified: v.optional(v.number()),
   },
   handler: async (ctx, args): Promise<Doc<"users"> | null> => {
@@ -28,6 +29,7 @@ export const create = action({
       email: args.email,
       name: args.name,
       password: hashedPassword,
+      role: args.role,
       emailVerified: args.emailVerified,
     });
 
@@ -61,12 +63,13 @@ export const get = query({
 export const insert = mutation({
   args: {
     email: v.string(),
-    name: v.optional(v.string()),
+    name: v.string(),
     password: v.string(),
     emailVerified: v.optional(v.number()),
+    role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
   },
   handler: async (ctx, args): Promise<Id<"users">> => {
-    return await ctx.db.insert("users", { ...args, role: "admin" });
+    return await ctx.db.insert("users", args);
   },
 });
 

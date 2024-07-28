@@ -39,7 +39,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const passwordHash = await bcrypt.compare(password, user.password);
 
-        if (passwordHash) return user;
+        if (passwordHash) {
+          return {
+            id: user._id,
+            email: user.email,
+            name: user.name,
+          };
+        }
 
         throw new Error("Invalid credentials");
       },
@@ -58,6 +64,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        token.name = user.name;
       }
       return token;
     },
@@ -65,6 +72,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token && session.user) {
         session.user.id = token.id as Id<"users">;
         session.user.email = token.email as string;
+        session.user.name = token.name as string;
       }
 
       const privateKey = await importPKCS8(env.CONVEX_AUTH_PRIVATE_KEY!, "RS256");

@@ -28,7 +28,7 @@ export const create = mutation({
     const form = await ctx.db.insert("forms", {
       title: args.title,
       userId,
-      name: user.name || "Magic user",
+      name: user.name!,
       orgId: args.orgId,
       isPublished: false,
     });

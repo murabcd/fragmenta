@@ -85,6 +85,7 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
         email: data.email,
         name: (data as z.infer<typeof registerSchema>).name,
         password: (data as z.infer<typeof registerSchema>).password,
+        role: "owner",
       });
 
       if (!user) {
