@@ -12,9 +12,9 @@ import { Id } from "../convex/_generated/dataModel";
 type Organization = {
   _id?: Id<"organizations">;
   name?: string;
-  role: string;
+  role: "owner" | "admin" | "member";
   imageUrl?: string;
-  ownerId?: Id<"users">;
+  ownerId?: string;
   _creationTime?: number;
 };
 

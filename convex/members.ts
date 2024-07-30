@@ -13,3 +13,20 @@ export const get = query({
       .collect();
   },
 });
+
+export const add = mutation({
+  args: {
+    userId: v.id("users"),
+    orgId: v.id("organizations"),
+    role: v.union(v.literal("admin"), v.literal("member")),
+  },
+  handler: async (ctx, args) => {
+    const { userId, orgId, role } = args;
+
+    return await ctx.db.insert("members", {
+      userId,
+      orgId,
+      role,
+    });
+  },
+});

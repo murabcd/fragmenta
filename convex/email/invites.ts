@@ -1,23 +1,34 @@
 import { v } from "convex/values";
 
-import { internalAction } from "./_generated/server";
+import { internalAction } from "../_generated/server";
+
+import { InviteEmail } from "./userinvite";
 
 import { Resend } from "resend";
 
 export const sendEmail = internalAction({
   args: {
-    email: v.string(),
     orgId: v.id("organizations"),
+    name: v.string(),
+    email: v.string(),
     role: v.union(v.literal("admin"), v.literal("member")),
+    token: v.string(),
   },
   handler: async (ctx, args) => {
     const resend = new Resend(process.env.RESEND_API_KEY);
 
+    const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/register/invite?token=${args.token}`;
+
     const { error } = await resend.emails.send({
-      from: "murad@fragmenta.ai",
+      from: "Fragmenta, Inc. <murad@fragmenta.ai>",
       to: [args.email],
       subject: "Invitation to join organization",
-      html: `<p>You've been invited to join an organization as a ${args.role}. Click here to accept the invitation.</p>`,
+      react: InviteEmail({
+        name: args.name,
+        email: args.email,
+        role: args.role,
+        inviteLink: inviteUrl,
+      }),
     });
 
     if (error) {

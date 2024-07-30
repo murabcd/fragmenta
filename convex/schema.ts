@@ -96,9 +96,11 @@ export default defineSchema({
     orgId: v.id("organizations"),
     role: v.string(),
     status: v.string(),
+    token: v.string(),
   })
     .index("by_org", ["orgId"])
-    .index("by_email", ["email"]),
+    .index("by_email", ["email"])
+    .index("by_token", ["token"]),
 
   forms: defineTable({
     title: v.string(),

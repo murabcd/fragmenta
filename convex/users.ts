@@ -12,6 +12,7 @@ export const create = action({
     name: v.string(),
     password: v.string(),
     role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
+    inviteToken: v.optional(v.string()),
     emailVerified: v.optional(v.number()),
   },
   handler: async (ctx, args): Promise<Doc<"users"> | null> => {
@@ -32,6 +33,25 @@ export const create = action({
       role: args.role,
       emailVerified: args.emailVerified,
     });
+
+    if (args.inviteToken) {
+      const invitation = await ctx.runQuery(api.invitations.token, {
+        token: args.inviteToken,
+      });
+
+      if (invitation) {
+        await ctx.runMutation(api.members.add, {
+          userId,
+          orgId: invitation.orgId,
+          role: invitation.role as "admin" | "member",
+        });
+
+        await ctx.runMutation(api.invitations.status, {
+          id: invitation._id,
+          status: "accepted",
+        });
+      }
+    }
 
     return await ctx.runQuery(api.users.get, { id: userId });
   },

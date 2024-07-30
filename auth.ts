@@ -11,6 +11,8 @@ import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 import Credentials from "next-auth/providers/credentials";
 
+import { sendMagicLinkEmail } from "./convex/email/magiclink";
+
 import { signInSchema } from "./types/validation/auth";
 
 import { fetchQuery } from "convex/nextjs";
@@ -24,7 +26,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: true,
   providers: [
     Google,
-    Resend({ from: env.EMAIL_FROM }),
+    Resend({
+      from: "Fragmenta, Inc. <murad@fragmenta.ai>",
+      sendVerificationRequest: async ({ identifier, url, provider }) => {
+        await sendMagicLinkEmail(identifier, url, provider, env.AUTH_RESEND_KEY);
+      },
+    }),
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },

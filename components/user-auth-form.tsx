@@ -33,13 +33,19 @@ import { api } from "@/convex/_generated/api";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   mode: "signin" | "signin-email" | "register";
+  inviteToken?: string;
 }
 
 type FormData = z.infer<
   typeof magicLinkSchema | typeof signInSchema | typeof registerSchema
 >;
 
-export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
+export function UserAuthForm({
+  className,
+  mode,
+  inviteToken,
+  ...props
+}: UserAuthFormProps) {
   const router = useRouter();
 
   const {
@@ -86,6 +92,7 @@ export function UserAuthForm({ className, mode, ...props }: UserAuthFormProps) {
         name: (data as z.infer<typeof registerSchema>).name,
         password: (data as z.infer<typeof registerSchema>).password,
         role: "owner",
+        inviteToken: inviteToken,
       });
 
       if (!user) {

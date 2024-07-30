@@ -47,7 +47,7 @@ export const FormItem = ({ orgId }: FormItemProps) => {
             key={form._id}
             id={form._id}
             title={form.title}
-            userId={form.userId}
+            userId={form.userId as Id<"users">}
             name={form.name}
             createdAt={form._creationTime}
             orgId={form.orgId}

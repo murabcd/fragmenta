@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export default auth((req) => {
   const publicPages = ["/"];
-  const authPages = ["/signin", "/signin/email", "/register"];
+  const authPages = ["/signin", "/signin/email", "/register", "/register/invite"];
   const oauthPages = ["/api/auth"];
 
   if (
