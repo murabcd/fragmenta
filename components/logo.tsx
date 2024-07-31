@@ -19,7 +19,7 @@ const Logo = () => {
         width={20}
         className="hidden dark:block mr-2"
       />
-      <Link href="#">
+      <Link href="/">
         <span className="text-lg">fragmenta /ai</span>
       </Link>
     </div>

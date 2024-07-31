@@ -1,13 +1,11 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { GridPattern } from "@/components/grid-pattern";
 
 export const Hero = () => {
   return (
     <div className="w-full">
-      <GridPattern />
-      <div className="max-w-3xl mx-auto text-center pt-50">
+      <div className="max-w-3xl mx-auto text-center">
         <div className="flex flex-col relative">
           <h1 className="text-6xl font-bold mb-4 relative">
             Create{" "}
