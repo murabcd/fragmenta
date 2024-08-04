@@ -42,7 +42,7 @@ export default async function RootLayout({
         <ConvexClientProvider session={session}>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >

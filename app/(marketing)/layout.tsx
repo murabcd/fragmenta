@@ -9,7 +9,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <GridPattern />
       <Header />
       <main className="flex-grow relative z-10">
-        <div className="pt-24 md:pt-32">{children}</div>
+        <div className="py-24 md:py-32">{children}</div>
       </main>
       <Footer />
     </div>

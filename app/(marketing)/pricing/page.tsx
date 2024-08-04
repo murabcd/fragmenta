@@ -12,7 +12,7 @@ export const metadata = {
 const features = [
   "Unlimited forms",
   "Unlimited seats",
-  "Unlimited AI-generated questions",
+  "Unlimited AI credits",
   "Advanced analytics",
   "Google Sheets integration",
   "Discord community",
@@ -48,10 +48,10 @@ const PricingPage = () => {
           <div className="flex flex-col gap-4 text-center">
             <div>
               <h4 className="text-7xl font-bold">$0</h4>
-              <p className="text-sm font-medium text-muted-foreground">Monthly deel</p>
+              <p className="text-sm font-medium text-muted-foreground">monthly</p>
             </div>
             <Button asChild>
-              <Link href="/signin">Get started</Link>
+              <Link href="/register">Get started</Link>
             </Button>
           </div>
         </div>

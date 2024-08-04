@@ -15,20 +15,15 @@ export const Hero = () => {
             with AI-driven insights
           </h1>
           <p className="text-xl text-muted-foreground">
-            Fragmenta is an open-source Typeform alternative.
+            Fragmenta is an open-source Typeform alternative for modern research teams.
           </p>
         </div>
         <div className="flex justify-center items-center mt-10">
-          <Link href="/register" target="_blank" rel="noopener noreferrer">
+          <Link href="/register">
             <Button>Create your form</Button>
           </Link>
           <div className="ml-4">
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href="/about" className="text-muted-foreground hover:text-foreground">
               Learn more <span aria-hidden="true">→</span>
             </Link>
           </div>

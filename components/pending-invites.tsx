@@ -1,3 +1,5 @@
+"use client";
+
 import { useOrganization } from "@/hooks/use-organization";
 
 import { MoreHorizontal } from "lucide-react";
