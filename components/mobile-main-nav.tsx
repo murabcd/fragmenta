@@ -20,13 +20,19 @@ import {
 const menu = [
   {
     title: "Getting started",
-    items: [{ title: "Introduction", href: "/about" }],
+    items: [{ title: "About", href: "/about" }],
   },
   {
     title: "Developers",
     items: [
-      { title: "Open source", href: "https://github.com/fragmenta-ai/fragmenta" },
-      { title: "Discord community", href: "https://discord.gg/fragmenta" },
+      {
+        title: "Open source",
+        href: "https://github.com/muradpm/fragmenta-ai",
+      },
+      {
+        title: "Discord community",
+        href: "https://discord.gg/fragmenta",
+      },
     ],
   },
 ];
@@ -76,6 +82,7 @@ export const MobileMainNav = () => {
                         key={subItem.title}
                         href={subItem.href}
                         className="px-8 py-2 text-base"
+                        target="_blank"
                       >
                         {subItem.title}
                       </Link>

@@ -18,10 +18,10 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
-const components: { title: string; href: string; description: string }[] = [
+const menu: { title: string; href: string; description: string }[] = [
   {
     title: "Open source",
-    href: "https://github.com/fragmenta-ai/fragmenta",
+    href: "https://github.com/muradpm/fragmenta-ai",
     description: "Fragmenta is an open-source form builder, built with love and care",
   },
   {
@@ -61,13 +61,13 @@ export const MainNav = () => {
                     />
                     <div className="mb-2 mt-4 text-lg font-medium">fragmenta / ai</div>
                     <p className="text-sm leading-tight text-muted-foreground">
-                      Proudly open source form builder with AI capabilities.
+                      Proudly open-source form builder with AI capabilities.
                     </p>
                   </a>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/about" title="Introduction">
-                Learn more about Fragmenta
+              <ListItem href="/about" title="About">
+                Learn more about Fragmenta, our mission, and our values
               </ListItem>
             </ul>
           </NavigationMenuContent>
@@ -76,13 +76,14 @@ export const MainNav = () => {
           <NavigationMenuTrigger>Developers</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {components.map((component) => (
+              {menu.map((item) => (
                 <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
+                  key={item.title}
+                  title={item.title}
+                  href={item.href}
+                  target="_blank"
                 >
-                  {component.description}
+                  {item.description}
                 </ListItem>
               ))}
             </ul>
