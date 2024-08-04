@@ -1,10 +1,12 @@
 import Link from "next/link";
-
-import { ModeToggle } from "@/components/theme-toggle-mode";
+import { Icons } from "@/components/icons";
 
 export const Footer = () => {
   return (
     <footer className="flex items-center justify-between w-full px-8 py-6">
+      <div className="text-sm text-muted-foreground">
+        © 2024 Fragmenta, Inc. All rights reserved.
+      </div>
       <div className="flex space-x-4">
         <Link
           href="https://linkedin.com/company/fragmentainc/"
@@ -12,7 +14,7 @@ export const Footer = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          LinkedIn
+          <Icons.linkedin className="h-5 w-5" />
         </Link>
         <Link
           href="https://x.com/fragmentainc"
@@ -20,10 +22,9 @@ export const Footer = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Twitter
+          <Icons.twitter className="h-5 w-5" />
         </Link>
       </div>
-      <ModeToggle />
     </footer>
   );
 };
