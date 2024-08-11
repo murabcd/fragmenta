@@ -51,7 +51,7 @@ const OrgItem = ({ id, name, imageUrl }: OrgItemProps) => {
         <AvatarImage
           src={imageUrl}
           alt={name}
-          className="h-5 w-5 grayscale rounded-sm object-cover"
+          className="h-5 w-5 rounded-sm object-cover"
         />
       </Avatar>
 
@@ -103,7 +103,7 @@ export const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
                 <AvatarImage
                   src={selectedOrgImage}
                   alt={selectedOrg || "Organization"}
-                  className="h-5 w-5 grayscale rounded-sm object-cover"
+                  className="h-5 w-5 rounded-sm object-cover"
                 />
               </Avatar>
             )}

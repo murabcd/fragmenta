@@ -51,3 +51,86 @@ export const get = query({
     );
   },
 });
+
+export const update = mutation({
+  args: {
+    id: v.id("organizations"),
+    name: v.string(),
+    slug: v.string(),
+    imageUrl: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) throw new Error("Unauthorized");
+
+    const userId = identity.subject;
+
+    const org = await ctx.db.get(args.id);
+
+    if (!org) throw new Error("Organization not found");
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .filter((q) => q.eq(q.field("orgId"), args.id))
+      .unique();
+
+    if (!member || (member.role !== "owner" && member.role !== "admin")) {
+      throw new Error("Only the owner or admin can update the organization");
+    }
+
+    await ctx.db.patch(args.id, {
+      name: args.name,
+      slug: args.slug,
+      imageUrl: args.imageUrl,
+    });
+
+    return args.id;
+  },
+});
+
+export const remove = mutation({
+  args: { id: v.id("organizations") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) throw new Error("Unauthorized");
+
+    const userId = identity.subject;
+
+    const org = await ctx.db.get(args.id);
+
+    if (!org) throw new Error("Organization not found");
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .filter((q) => q.eq(q.field("orgId"), args.id))
+      .unique();
+
+    if (!member || member.role !== "owner") {
+      throw new Error("Only the owner can delete the organization");
+    }
+
+    await ctx.db
+      .query("members")
+      .withIndex("by_org", (q) => q.eq("orgId", args.id))
+      .collect()
+      .then((members) => {
+        members.forEach((member) => ctx.db.delete(member._id));
+      });
+
+    await ctx.db
+      .query("forms")
+      .withIndex("by_org", (q) => q.eq("orgId", args.id))
+      .collect()
+      .then((forms) => {
+        forms.forEach((form) => ctx.db.delete(form._id));
+      });
+
+    await ctx.db.delete(args.id);
+
+    return args.id;
+  },
+});

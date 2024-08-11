@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 
@@ -10,6 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import * as z from "zod";
+
+import { cn } from "@/lib/utils";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -42,6 +46,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { useApiMutation } from "@/hooks/use-api-mutation";
+import { useOrganization } from "@/hooks/use-organization";
+
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Organization name must be at least 2 characters.",
@@ -53,22 +64,28 @@ const formSchema = z.object({
 
 type SettingsFormValues = z.infer<typeof formSchema>;
 
-type SettingsFormProps = React.HTMLAttributes<HTMLDivElement>;
+export const OrgForm = () => {
+  const router = useRouter();
+  const { organization, setCurrentOrganization } = useOrganization();
 
-export const OrgForm = ({ className, ...props }: SettingsFormProps) => {
-  const defaultValues: Partial<SettingsFormValues> = {
-    name: "",
-    slug: "",
-  };
+  const { mutate: updateOrg } = useApiMutation(api.organizations.update);
+  const { mutate: getImageUrl } = useApiMutation(api.files.getImageUrl);
+  const { mutate: saveImageUrl } = useApiMutation(api.files.saveImageUrl);
+  const { mutate: deleteOrg } = useApiMutation(api.organizations.remove);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: {
+      name: "",
+      slug: "",
+    },
   });
-
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const generateSlug = (name: string) => {
     return name
@@ -77,9 +94,95 @@ export const OrgForm = ({ className, ...props }: SettingsFormProps) => {
       .replace(/[^a-z0-9-]/g, "");
   };
 
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!organization?._id) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await updateOrg({
+        id: organization._id,
+        name: values.name.trim(),
+        slug: values.slug.trim(),
+        imageUrl: imageUrl || undefined,
+      });
+      if (imageUrl) {
+        await saveImageUrl({ orgId: organization._id, imageUrl });
+      }
+
+      setCurrentOrganization({
+        ...organization,
+        name: values.name.trim(),
+        slug: values.slug.trim(),
+        imageUrl: imageUrl || organization.imageUrl,
+      });
+
+      toast.success("Organization updated");
+    } catch (error) {
+      toast.error("Failed to update organization");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && organization) {
+      setIsUploading(true);
+      try {
+        const uploadUrl = await generateUploadUrl();
+        const result = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": file.type },
+          body: file,
+        });
+        const { storageId } = await result.json();
+        const url = await getImageUrl({ storageId: storageId as Id<"_storage"> });
+        setImageUrl(url);
+
+        setCurrentOrganization({
+          ...organization,
+          imageUrl: url,
+        });
+
+        toast.success("Logo uploaded");
+      } catch (error) {
+        toast.error("Failed to upload logo");
+      } finally {
+        setIsUploading(false);
+      }
+    }
+  };
+
+  const handleDeleteOrganization = async () => {
+    if (!organization?._id) {
+      toast.error("No organization found");
+      return;
+    }
+
+    try {
+      await deleteOrg({ id: organization._id });
+      toast.success("Organization deleted successfully");
+      router.push("/"); // Redirect to home page or appropriate route
+    } catch (error) {
+      toast.error("Failed to delete organization");
+    }
+  };
+
+  useEffect(() => {
+    if (organization) {
+      form.reset({
+        name: organization.name || "",
+        slug: organization.slug || "",
+      });
+      setImageUrl(organization.imageUrl || null);
+    }
+  }, [organization, form]);
+
   return (
     <Form {...form}>
-      <form className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <Card>
           <CardHeader>
             <CardTitle className="text-lg font-medium">Organization</CardTitle>
@@ -87,7 +190,12 @@ export const OrgForm = ({ className, ...props }: SettingsFormProps) => {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="col-span-full flex items-center gap-x-8 mb-6">
-              <div className="w-24 h-24 flex-none rounded-lg overflow-hidden bg-gray-800 flex items-center justify-center">
+              <div
+                className={cn(
+                  "w-24 h-24 flex items-center justify-center flex-none rounded-lg overflow-hidden",
+                  imageUrl ? "bg-transparent" : "bg-muted/40 border-2 border-dashed"
+                )}
+              >
                 {imageUrl ? (
                   <Image
                     src={imageUrl}
@@ -106,9 +214,9 @@ export const OrgForm = ({ className, ...props }: SettingsFormProps) => {
                   type="button"
                   variant="outline"
                   onClick={() => document.getElementById("file-upload")?.click()}
-                  disabled={isLoading}
+                  disabled={isUploading}
                 >
-                  {isLoading ? (
+                  {isUploading ? (
                     <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
                   ) : (
                     <Upload className="w-4 h-4 mr-2" />
@@ -120,7 +228,8 @@ export const OrgForm = ({ className, ...props }: SettingsFormProps) => {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  disabled={isLoading}
+                  onChange={handleImageUpload}
+                  disabled={isUploading}
                 />
                 <p className="mt-1 text-xs text-muted-foreground">
                   Recommend size 1:1, JPEG or PNG, up to 5MB.
@@ -132,7 +241,7 @@ export const OrgForm = ({ className, ...props }: SettingsFormProps) => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel htmlFor="org-name">Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Your organization name"
@@ -175,8 +284,10 @@ export const OrgForm = ({ className, ...props }: SettingsFormProps) => {
             />
           </CardContent>
           <CardFooter className="border-t px-6 py-2 bg-muted/50 justify-end">
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? <LoaderCircle className="mr-2 h-4 w-4 animate-spin" /> : null}
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
               Update
             </Button>
           </CardFooter>
@@ -202,18 +313,12 @@ export const OrgForm = ({ className, ...props }: SettingsFormProps) => {
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
                       This action cannot be undone. This will permanently delete your
-                      organization and remove all associated data from our servers.
+                      organization and remove your data from our servers.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        // Implement organization deletion logic here
-                        toast.error("Organization deletion is not implemented yet.");
-                      }}
-                    >
+                    <Button variant="destructive" onClick={handleDeleteOrganization}>
                       Delete
                     </Button>
                   </AlertDialogFooter>
