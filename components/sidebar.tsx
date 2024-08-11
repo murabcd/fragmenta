@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 
 import Logo from "@/components/logo";
 
+import Link from "next/link";
+
 import { SearchToggleCommand } from "@/components/search-toggle-command";
 
 import { UpgradePro } from "@/components/upgrade-card";
@@ -19,25 +21,21 @@ const routes = [
     label: "Home",
     href: "/home",
     icon: Home,
-    pro: false,
   },
   {
     label: "Forms",
     href: "/forms",
     icon: Workflow,
-    pro: false,
   },
   {
     label: "Recent",
     href: "/recent",
     icon: History,
-    pro: false,
   },
   {
     label: "Settings",
     href: "/settings",
     icon: Settings,
-    pro: true,
   },
 ];
 
@@ -53,13 +51,13 @@ export const Sidebar = () => {
       <SearchToggleCommand />
       <nav className="mt-5 grid items-start px-2 text-sm text-muted-foreground">
         {routes.map((route) => (
-          <div
+          <Link
             key={route.href}
-            onClick={() => route.href}
+            href={route.href}
             className={cn(
               "text-sm group flex p-3 w-full justify-start cursor-pointer hover:text-foreground rounded-lg transition",
               {
-                "bg-primary/10 text-foreground": pathname === route.href,
+                "bg-primary/10 text-foreground": pathname.startsWith(route.href),
               }
             )}
           >
@@ -67,7 +65,7 @@ export const Sidebar = () => {
               <route.icon className="mr-2 h-5 w-5" />
               {route.label}
             </div>
-          </div>
+          </Link>
         ))}
       </nav>
       <div className="mt-auto p-3">

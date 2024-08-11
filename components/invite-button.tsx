@@ -104,8 +104,8 @@ export const InviteButton = () => {
       </DialogTrigger>
       <DialogContent className="flex flex-col">
         <DialogHeader>
-          <DialogTitle>Pending</DialogTitle>
-          <DialogDescription>View and manage pending invites.</DialogDescription>
+          <DialogTitle>Invite</DialogTitle>
+          <DialogDescription>Invite a new member to your organization.</DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="invitations" className="w-full">
           <TabsList className="grid w-full grid-cols-2">

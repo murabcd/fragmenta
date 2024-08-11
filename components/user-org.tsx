@@ -188,7 +188,7 @@ export const UserOrg = () => {
                   <FormLabel htmlFor="org-name">Name</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Organization"
+                      placeholder="Your organization name"
                       {...field}
                       autoComplete="organization-name"
                       autoFocus
