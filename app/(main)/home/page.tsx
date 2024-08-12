@@ -13,14 +13,14 @@ const HomePage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex-1 h-[calc(100%-80px)] flex items-center justify-center">
+      <div className="flex-1 h-[calc(100vh-80px)] flex items-center justify-center">
         <Loader className="h-6 w-6 text-muted-foreground animate-spin duration-700" />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 h-[calc(100%-80px)] p-6">
+    <div className="flex-1 h-[calc(100vh-80px)] p-6">
       {!organization?._id ? <EmptyOrgState /> : <FormItem orgId={organization._id} />}
     </div>
   );
