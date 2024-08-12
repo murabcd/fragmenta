@@ -100,7 +100,7 @@ export const OrgForm = () => {
     }
 
     setIsSubmitting(true);
-    try {
+    const promise = (async () => {
       await updateOrg({
         id: organization._id,
         name: values.name.trim(),
@@ -117,10 +117,16 @@ export const OrgForm = () => {
         slug: values.slug.trim(),
         imageUrl: imageUrl || organization.imageUrl,
       });
+    })();
 
-      toast.success("Organization updated");
-    } catch (error) {
-      toast.error("Failed to update organization");
+    toast.promise(promise, {
+      loading: "Updating...",
+      success: "Organization updated",
+      error: "Failed to update organization",
+    });
+
+    try {
+      await promise;
     } finally {
       setIsSubmitting(false);
     }
@@ -130,7 +136,7 @@ export const OrgForm = () => {
     const file = event.target.files?.[0];
     if (file && organization) {
       setIsUploading(true);
-      try {
+      const promise = (async () => {
         const uploadUrl = await generateUploadUrl();
         const result = await fetch(uploadUrl, {
           method: "POST",
@@ -145,13 +151,15 @@ export const OrgForm = () => {
           ...organization,
           imageUrl: url,
         });
+      })();
 
-        toast.success("Logo uploaded");
-      } catch (error) {
-        toast.error("Failed to upload logo");
-      } finally {
-        setIsUploading(false);
-      }
+      toast.promise(promise, {
+        loading: "Uploading...",
+        success: "Image uploaded",
+        error: "Failed to upload image",
+      });
+
+      promise.finally(() => setIsUploading(false));
     }
   };
 
@@ -161,13 +169,15 @@ export const OrgForm = () => {
       return;
     }
 
-    try {
-      await deleteOrg({ id: organization._id });
-      toast.success("Organization deleted successfully");
-      router.push("/"); // Redirect to home page or appropriate route
-    } catch (error) {
-      toast.error("Failed to delete organization");
-    }
+    const promise = deleteOrg({ id: organization._id }).then(() => {
+      router.push("/");
+    });
+
+    toast.promise(promise, {
+      loading: "Deleting...",
+      success: "Organization deleted",
+      error: "Failed to delete organization",
+    });
   };
 
   useEffect(() => {

@@ -60,6 +60,7 @@ export const UserOrg = () => {
   const [open, setOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,7 +78,8 @@ export const UserOrg = () => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
+    setIsSubmitting(true);
+    const promise = (async () => {
       const orgId = await createOrg({
         name: values.name.trim(),
         slug: values.slug.trim(),
@@ -86,12 +88,21 @@ export const UserOrg = () => {
       if (imageUrl) {
         await saveImageUrl({ orgId, imageUrl });
       }
-      toast.success("Organization created");
       form.reset();
       setImageUrl(null);
       setOpen(false);
-    } catch (error) {
-      toast.error("Failed to create organization");
+    })();
+
+    toast.promise(promise, {
+      loading: "Creating...",
+      success: "Organization created",
+      error: "Failed to create organization",
+    });
+
+    try {
+      await promise;
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -99,7 +110,7 @@ export const UserOrg = () => {
     const file = event.target.files?.[0];
     if (file) {
       setIsUploading(true);
-      try {
+      const promise = (async () => {
         const uploadUrl = await generateUploadUrl();
         const result = await fetch(uploadUrl, {
           method: "POST",
@@ -109,9 +120,16 @@ export const UserOrg = () => {
         const { storageId } = await result.json();
         const url = await getImageUrl({ storageId: storageId as Id<"_storage"> });
         setImageUrl(url);
-        toast.success("Logo uploaded");
-      } catch (error) {
-        toast.error("Failed to upload logo");
+      })();
+
+      toast.promise(promise, {
+        loading: "Uploading...",
+        success: "Image uploaded",
+        error: "Failed to upload image",
+      });
+
+      try {
+        await promise;
       } finally {
         setIsUploading(false);
       }
@@ -134,7 +152,7 @@ export const UserOrg = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <FormLabel htmlFor="org-logo">Logo</FormLabel>
+              <FormLabel htmlFor="org-image">Image</FormLabel>
               <div className="mt-1 flex items-center space-x-2">
                 <div
                   className={cn(
@@ -145,7 +163,7 @@ export const UserOrg = () => {
                   {imageUrl ? (
                     <Image
                       src={imageUrl}
-                      alt="Logo"
+                      alt="Image"
                       width={64}
                       height={64}
                       className="h-16 w-16 object-cover"
@@ -225,7 +243,12 @@ export const UserOrg = () => {
               )}
             />
             <div className="flex justify-end">
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                Create
+              </Button>
             </div>
           </form>
         </Form>
