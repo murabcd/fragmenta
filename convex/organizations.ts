@@ -25,7 +25,17 @@ export const create = mutation({
       imageUrl: args.imageUrl || defaultImageUrl,
     });
 
-    await ctx.db.insert("members", { userId, orgId, role: "owner" });
+    const user = await ctx.db.get(userId);
+
+    if (!user) throw new Error("User not found");
+
+    await ctx.db.insert("members", {
+      userId,
+      orgId,
+      role: "owner",
+      name: user.name || "",
+      email: user.email,
+    });
     return orgId;
   },
 });
@@ -64,7 +74,7 @@ export const update = mutation({
 
     if (!identity) throw new Error("Unauthorized");
 
-    const userId = identity.subject;
+    const userId = identity.subject as Id<"users">;
 
     const org = await ctx.db.get(args.id);
 
@@ -97,7 +107,7 @@ export const remove = mutation({
 
     if (!identity) throw new Error("Unauthorized");
 
-    const userId = identity.subject;
+    const userId = identity.subject as Id<"users">;
 
     const org = await ctx.db.get(args.id);
 

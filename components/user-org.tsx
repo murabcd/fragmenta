@@ -151,9 +151,9 @@ export const UserOrg = () => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div>
+            <div className="space-y-2">
               <FormLabel htmlFor="org-image">Image</FormLabel>
-              <div className="mt-1 flex items-center space-x-2">
+              <div className="mt-1 flex items-center space-x-4">
                 <div
                   className={cn(
                     "w-16 h-16 flex items-center justify-center overflow-hidden rounded-lg",
@@ -172,19 +172,24 @@ export const UserOrg = () => {
                     <ImagePlus className="w-6 h-6 text-muted-foreground" />
                   )}
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => document.getElementById("file-upload")?.click()}
-                  disabled={isUploading}
-                >
-                  {isUploading ? (
-                    <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <Upload className="w-4 h-4 mr-2" />
-                  )}
-                  Upload
-                </Button>
+                <div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById("file-upload")?.click()}
+                    disabled={isUploading}
+                  >
+                    {isUploading ? (
+                      <LoaderCircle className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Upload className="w-4 h-4 mr-2" />
+                    )}
+                    Upload
+                  </Button>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Recommend size 1:1, JPEG or PNG, up to 5MB.
+                  </p>
+                </div>
                 <input
                   id="file-upload"
                   type="file"
@@ -194,9 +199,6 @@ export const UserOrg = () => {
                   disabled={isUploading}
                 />
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Recommend size 1:1, JPEG or PNG, up to 5MB.
-              </p>
             </div>
             <FormField
               control={form.control}

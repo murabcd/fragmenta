@@ -44,6 +44,8 @@ export const create = action({
           userId,
           orgId: invitation.orgId,
           role: invitation.role as "admin" | "member",
+          name: args.name,
+          email: args.email,
         });
 
         await ctx.runMutation(api.invitations.status, {

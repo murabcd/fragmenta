@@ -16,17 +16,21 @@ export const get = query({
 
 export const add = mutation({
   args: {
-    userId: v.id("users"),
+    userId: v.string(),
     orgId: v.id("organizations"),
-    role: v.union(v.literal("admin"), v.literal("member")),
+    role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
+    name: v.string(),
+    email: v.string(),
   },
   handler: async (ctx, args) => {
-    const { userId, orgId, role } = args;
+    const { userId, orgId, role, name, email } = args;
 
     return await ctx.db.insert("members", {
       userId,
       orgId,
       role,
+      name,
+      email,
     });
   },
 });

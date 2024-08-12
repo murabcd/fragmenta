@@ -87,9 +87,12 @@ export default defineSchema({
     userId: v.string(),
     orgId: v.id("organizations"),
     role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
+    name: v.string(),
+    email: v.string(),
   })
     .index("by_user", ["userId"])
-    .index("by_org", ["orgId"]),
+    .index("by_org", ["orgId"])
+    .index("by_email", ["email"]),
 
   invitations: defineTable({
     email: v.string(),

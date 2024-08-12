@@ -9,6 +9,8 @@ import * as z from "zod";
 
 import { LoaderCircle } from "lucide-react";
 
+import { toast } from "sonner";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TabsTrigger, TabsList, Tabs, TabsContent } from "@/components/ui/tabs";
@@ -44,80 +46,116 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { useApiMutation } from "@/hooks/use-api-mutation";
+
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
+import { useOrganization } from "@/hooks/use-organization";
+
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  role: z.enum(["Member", "Admin"], {
+  role: z.enum(["member", "admin"], {
     required_error: "You need to select a role",
   }),
 });
 
 export const MembersForm = () => {
+  const { organization } = useOrganization();
+
   const [isLoading, setIsLoading] = useState(false);
+
+  const pending = useQuery(
+    api.invitations.get,
+    organization?._id ? { orgId: organization._id } : "skip"
+  );
+  const existing = useQuery(
+    api.members.get,
+    organization?._id ? { orgId: organization._id } : "skip"
+  );
+
+  const { mutate: sendInvite } = useApiMutation(api.invitations.send);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      role: "Member",
+      role: "member",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!organization) {
+      return;
+    }
+
     setIsLoading(true);
-    // Implement invitation logic here
-    console.log("Inviting:", values.email, "with role:", values.role);
-    // Reset form
-    form.reset();
-    setIsLoading(false);
+
+    try {
+      await sendInvite({
+        email: values.email,
+        orgId: organization._id!,
+        role: values.role,
+      });
+
+      toast.success("Invitation sent");
+      form.reset();
+    } catch (error) {
+      toast.error("Failed to send invitation");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <Card>
         <CardHeader>
           <CardTitle className="text-lg font-medium">Members</CardTitle>
           <CardDescription>
-            Invite new members to your organization by email address.
+            Invite new members to your organization by email.
           </CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardContent>
-              <div className="flex items-end space-x-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="flex-grow">
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Email address" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem className="w-[180px]">
-                      <FormLabel>Role</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <div className="flex flex-col space-y-4">
+                <div className="flex items-start space-x-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="flex-grow">
+                        <FormLabel>Email address</FormLabel>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select role" />
-                          </SelectTrigger>
+                          <Input placeholder="Email address" {...field} />
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Member">Member</SelectItem>
-                          <SelectItem value="Admin">Admin</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage className="absolute text-xs mt-1" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem className="w-[180px]">
+                        <FormLabel>Role</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="member">Member</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="absolute text-xs mt-1" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-2 bg-muted/50 justify-end">
@@ -144,7 +182,18 @@ export const MembersForm = () => {
                 <TableHead />
               </TableRow>
             </TableHeader>
-            <TableBody>{/* Add table rows for existing members here */}</TableBody>
+            <TableBody>
+              {existing?.map((member) => (
+                <TableRow key={member._id}>
+                  <TableCell className="font-medium truncate">{member.name}</TableCell>
+                  <TableCell className="text-muted-foreground">{member.email}</TableCell>
+                  <TableCell className="capitalize text-muted-foreground">
+                    {member.role}
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </TabsContent>
         <TabsContent value="pending" className="space-y-4">
@@ -158,7 +207,23 @@ export const MembersForm = () => {
                 <TableHead />
               </TableRow>
             </TableHeader>
-            <TableBody>{/* Add table rows for pending invitations here */}</TableBody>
+            <TableBody>
+              {pending?.map((invite) => (
+                <TableRow key={invite._id}>
+                  <TableCell className="font-medium truncate">{invite.email}</TableCell>
+                  <TableCell className="capitalize text-muted-foreground">
+                    {invite.role}
+                  </TableCell>
+                  <TableCell className="capitalize text-muted-foreground">
+                    {invite.status}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {new Date(invite._creationTime).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </TabsContent>
       </Tabs>
