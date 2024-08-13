@@ -7,7 +7,9 @@ import { useForm } from "react-hook-form";
 
 import * as z from "zod";
 
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, MoreHorizontal } from "lucide-react";
+
+import { MemberActions } from "@/components/member-actions";
 
 import { toast } from "sonner";
 
@@ -190,7 +192,13 @@ export const MembersForm = () => {
                   <TableCell className="capitalize text-muted-foreground">
                     {member.role}
                   </TableCell>
-                  <TableCell />
+                  <TableCell className="text-right">
+                    <MemberActions id={member._id} type="member">
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </MemberActions>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -220,7 +228,13 @@ export const MembersForm = () => {
                   <TableCell className="text-muted-foreground">
                     {new Date(invite._creationTime).toLocaleDateString()}
                   </TableCell>
-                  <TableCell />
+                  <TableCell>
+                    <MemberActions id={invite._id} type="invitation">
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </MemberActions>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

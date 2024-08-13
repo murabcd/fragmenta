@@ -34,3 +34,11 @@ export const add = mutation({
     });
   },
 });
+
+export const remove = mutation({
+  args: { id: v.id("members") },
+  handler: async (ctx, args) => {
+    const { id } = args;
+    await ctx.db.delete(id);
+  },
+});

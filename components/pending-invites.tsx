@@ -4,6 +4,8 @@ import { useOrganization } from "@/hooks/use-organization";
 
 import { MoreHorizontal } from "lucide-react";
 
+import { MemberActions } from "./member-actions";
+
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -51,10 +53,12 @@ export const PendingInvites = () => {
                 <TableCell className="truncate capitalize text-muted-foreground">
                   {invite.status}
                 </TableCell>
-                <TableCell>
-                  <Button variant="ghost" size="sm">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                <TableCell className="text-right">
+                  <MemberActions id={invite._id} type="invitation">
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </MemberActions>
                 </TableCell>
               </TableRow>
             ))}

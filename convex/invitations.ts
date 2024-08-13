@@ -89,3 +89,11 @@ export const status = mutation({
     await ctx.db.patch(id, { status });
   },
 });
+
+export const remove = mutation({
+  args: { id: v.id("invitations") },
+  handler: async (ctx, args) => {
+    const { id } = args;
+    await ctx.db.delete(id);
+  },
+});
