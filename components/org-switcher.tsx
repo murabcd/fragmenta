@@ -28,18 +28,24 @@ interface OrgItemProps {
   id: Id<"organizations">;
   name: string;
   imageUrl: string;
+  onSelect: () => void;
 }
 
 interface OrgSwitcherProps {
   className?: string;
 }
 
-const OrgItem = ({ id, name, imageUrl }: OrgItemProps) => {
+const OrgItem = ({ id, name, imageUrl, onSelect }: OrgItemProps) => {
   const { organization, setCurrentOrganization } = useOrganization();
 
   const onClick = () => {
     if (!setCurrentOrganization) return;
-    setCurrentOrganization({ _id: id, name, role: "member" });
+
+    if (organization?._id !== id) {
+      setCurrentOrganization({ _id: id, name, imageUrl, role: "member" });
+    }
+
+    onSelect();
   };
 
   return (
@@ -124,6 +130,7 @@ export const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
                   id={org._id!}
                   name={org.name ?? ""}
                   imageUrl={org.imageUrl ?? ""}
+                  onSelect={() => setOpen(false)}
                 />
               ))}
             </CommandGroup>
