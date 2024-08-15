@@ -7,6 +7,7 @@ export interface Question {
   position: number;
   response?: string | string[];
   formId: string;
+  isRequired: boolean;
 }
 
 export enum QuestionType {

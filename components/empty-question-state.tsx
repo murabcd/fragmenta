@@ -26,6 +26,7 @@ export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
       type: QuestionType.Short,
       choices: [],
       position: 0,
+      isRequired: false,
     })
       .then(() => {
         toast.success("Question created");

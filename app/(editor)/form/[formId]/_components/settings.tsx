@@ -12,14 +12,16 @@ import { Question, QuestionType } from "@/types/canvas";
 
 interface SettingsProps {
   selectedQuestion: Question | null;
-  handleTypeChange: (id: string, newType: QuestionType) => void;
   newType: QuestionType;
+  handleTypeChange: (id: string, newType: QuestionType) => void;
+  handleRequiredChange: (id: string, isRequired: boolean) => void;
 }
 
 export const Settings = ({
   selectedQuestion,
-  handleTypeChange,
   newType,
+  handleTypeChange,
+  handleRequiredChange,
 }: SettingsProps) => {
   return (
     <div className="flex flex-col h-full w-64 ml-auto border rounded-tl-md bg-background">
@@ -37,6 +39,7 @@ export const Settings = ({
             question={selectedQuestion}
             newType={newType}
             handleTypeChange={handleTypeChange}
+            handleRequiredChange={handleRequiredChange}
           />
         )}
       </div>

@@ -30,6 +30,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
   const { mutate: updateTitle } = useApiMutation(api.questions.title);
   const { mutate: updateDescription } = useApiMutation(api.questions.description);
   const { mutate: updateChoices } = useApiMutation(api.questions.choices);
+  const { mutate: updateRequired } = useApiMutation(api.questions.required);
 
   const [newTitle, setNewTitle] = useState<string>("");
   const [newDescription, setNewDescription] = useState<string>("");
@@ -94,6 +95,25 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
   if (!questions) return null;
 
+  const handleRequiredChange = (id: string, isRequired: boolean) => {
+    if (selectedQuestion) {
+      const previousQuestion = { ...selectedQuestion };
+      setSelectedQuestion({ ...selectedQuestion, isRequired });
+
+      const promise = updateRequired({ id, isRequired });
+
+      toast.promise(promise, {
+        loading: "Updating...",
+        success: isRequired ? "Question required" : "Question optional",
+        error: "Failed to update question requirement",
+      });
+
+      promise.catch(() => {
+        setSelectedQuestion(previousQuestion);
+      });
+    }
+  };
+
   return (
     <main className="h-screen w-full overflow-hidden relative bg-muted/40 touch-none flex flex-col">
       <Info formId={formId} />
@@ -123,6 +143,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
             selectedQuestion={selectedQuestion}
             newType={newType}
             handleTypeChange={handleTypeChange}
+            handleRequiredChange={handleRequiredChange}
           />
         </div>
       </div>

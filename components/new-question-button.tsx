@@ -33,6 +33,7 @@ export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
       type: QuestionType.Short,
       choices: [],
       position,
+      isRequired: false,
     })
       .then(() => {
         toast.success("Question created");

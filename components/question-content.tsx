@@ -12,7 +12,7 @@ import { RatingScore } from "./form-elements/rating-score";
 
 import { StartButton } from "./start-button";
 import { CompleteButton } from "./complete-button";
-import { NavigationButtons } from "./nav-button";
+import { NavigationButtons } from "./nav-buttons";
 
 import { usePreviewSize } from "@/hooks/use-preview";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize";
@@ -39,6 +39,8 @@ interface QuestionContentProps {
   isForwardDisabled?: boolean;
   isPreviewMode?: boolean;
   isPublished?: boolean;
+  isRequired?: boolean;
+  error?: string | null;
 }
 
 export const QuestionContent = ({
@@ -58,6 +60,8 @@ export const QuestionContent = ({
   isForwardDisabled,
   isPreviewMode = false,
   isPublished,
+  isRequired,
+  error,
 }: QuestionContentProps) => {
   const { previewSize } = usePreviewSize();
 
@@ -178,19 +182,22 @@ export const QuestionContent = ({
       )}
     >
       <div className={cn("w-full", isScreen && "flex flex-col items-center")}>
-        <textarea
-          id="question-title"
-          name="question-title"
-          ref={titleRef}
-          className={cn(
-            "bg-transparent w-full text-2xl focus-visible:outline-none resize-none",
-            isScreen ? "text-center" : ""
-          )}
-          value={newTitle}
-          placeholder="Title"
-          onChange={handleTitleChange}
-          readOnly={isPublished}
-        />
+        <div className="flex items-center">
+          <textarea
+            id="question-title"
+            name="question-title"
+            ref={titleRef}
+            className={cn(
+              "bg-transparent w-full text-2xl focus-visible:outline-none resize-none",
+              isScreen ? "text-center" : ""
+            )}
+            value={newTitle}
+            placeholder="Title"
+            onChange={handleTitleChange}
+            readOnly={isPublished}
+          />
+          {question.isRequired && <span className="text-red-500 ml-1">*</span>}
+        </div>
         {(!isPublished || newDescription) && (
           <textarea
             id="question-description"
@@ -208,6 +215,7 @@ export const QuestionContent = ({
         )}
       </div>
       {renderQuestionContent()}
+      {error && <div className="text-red-500 text-xs mt-2 w-full text-left">{error}</div>}
       {renderButtons()}
     </Card>
   );

@@ -3,16 +3,14 @@
 import { useState } from "react";
 
 import { useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { Progress } from "@/components/ui/progress";
+import { QuestionContent } from "@/components/question-content";
 
 import { useDebounce, useDebouncedCallback } from "use-debounce";
 
-import { QuestionContent } from "@/components/question-content";
-
 import { Question } from "@/types/canvas";
-
-import { notFound } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
@@ -30,13 +28,14 @@ interface FormIdPagePublishedProps {
 }
 
 const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
-  const { mutate: updateResponse } = useApiMutation(api.questions.response);
-
   const router = useRouter();
+
+  const { mutate: updateResponse } = useApiMutation(api.questions.response);
 
   const [positionIndex, setPositionIndex] = useState(0);
   const [debouncedPositionIndex] = useDebounce(positionIndex, 300);
   const [responses, setResponses] = useState<Record<string, string | string[]>>({});
+  const [error, setError] = useState<string | null>(null);
 
   const form = useQuery(api.forms.get, {
     id: params.formId as Id<"forms">,
@@ -50,15 +49,33 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
     notFound();
   }
 
+  const isQuestionAnswered = (question: Question) => {
+    const response = responses[question._id];
+    if (question.isRequired) {
+      if (Array.isArray(response)) {
+        return response.length > 0;
+      }
+      return !!response;
+    }
+    return true;
+  };
+
   const handleBack = () => {
     if (questions && positionIndex > 0) {
       setPositionIndex(positionIndex - 1);
+      setError(null);
     }
   };
 
   const handleForward = () => {
     if (questions && positionIndex < questions.length - 1) {
-      setPositionIndex(positionIndex + 1);
+      const currentQuestion = questions[positionIndex];
+      if (isQuestionAnswered(currentQuestion)) {
+        setPositionIndex(positionIndex + 1);
+        setError(null);
+      } else {
+        setError("Please fill this in");
+      }
     }
   };
 
@@ -129,6 +146,7 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
             isForwardDisabled={positionIndex === questions.length - 1}
             isPreviewMode={true}
             isPublished={true}
+            error={error}
           />
         </div>
       </div>

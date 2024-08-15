@@ -12,6 +12,7 @@ export const create = mutation({
     choices: v.array(v.string()),
     position: v.number(),
     formId: v.string(),
+    isRequired: v.boolean(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -35,6 +36,7 @@ export const create = mutation({
       choices: args.choices,
       position: newPosition,
       formId: args.formId,
+      isRequired: args.isRequired,
     });
 
     return question;
@@ -75,6 +77,7 @@ export const duplicate = mutation({
       choices: question.choices,
       position: question.position,
       formId: question.formId,
+      isRequired: question.isRequired,
     });
 
     return duplicate;
@@ -225,6 +228,26 @@ export const response = mutation({
   },
 });
 
+export const required = mutation({
+  args: {
+    id: v.id("questions"),
+    isRequired: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const question = await ctx.db.patch(args.id, {
+      isRequired: args.isRequired,
+    });
+
+    return question;
+  },
+});
+
 // Multiple question operations
 
 export const get = query({
@@ -301,7 +324,10 @@ export const generate = mutation({
     }));
 
     for (const question of generated) {
-      await ctx.db.insert("questions", question);
+      await ctx.db.insert("questions", {
+        ...question,
+        isRequired: false,
+      });
     }
 
     return generated;

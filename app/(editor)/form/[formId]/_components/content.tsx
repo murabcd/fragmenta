@@ -45,6 +45,7 @@ export const Content = ({
           onDescriptionChange={onDescriptionChange}
           onResponseChange={onResponseChange}
           updateChoices={updateChoices}
+          isRequired={selectedQuestion.isRequired}
         />
       ) : (
         <p className="text-sm text-muted-foreground">Select a question to edit</p>

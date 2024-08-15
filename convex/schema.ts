@@ -122,6 +122,7 @@ export default defineSchema({
     choices: v.optional(v.array(v.string())),
     position: v.number(),
     formId: v.string(),
+    isRequired: v.boolean(),
   }).index("by_form", ["formId", "position"]),
 
   responses: defineTable({

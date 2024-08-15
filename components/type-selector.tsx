@@ -44,9 +44,7 @@ export const TypeSelector = ({
 
   return (
     <div className="grid gap-2">
-      <Label className="px-3 mt-5" htmlFor="type-selector">
-        Type
-      </Label>
+      <Label htmlFor="type-selector">Type</Label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
