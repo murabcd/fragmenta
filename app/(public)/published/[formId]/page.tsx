@@ -114,40 +114,42 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <div className="w-full h-2.5 p-3">
         <Progress
           className="h-2 rounded-full transition-all duration-300"
           value={progress}
         />
       </div>
-      <div className="max-w-[720px] mx-auto">
-        <div
-          className={cn(
-            "transition-opacity duration-300",
-            debouncedPositionIndex !== positionIndex ? "opacity-0" : "opacity-100"
-          )}
-        >
-          <QuestionContent
-            question={questions[debouncedPositionIndex]}
-            key={questions[debouncedPositionIndex]._id}
-            newTitle={questions[debouncedPositionIndex].title}
-            newDescription={questions[debouncedPositionIndex].description || ""}
-            newResponse={responses[questions[debouncedPositionIndex]._id] || ""}
-            onTitleChange={() => {}}
-            onDescriptionChange={() => {}}
-            onResponseChange={handleResponseChange}
-            updateChoices={() => Promise.resolve()}
-            onStart={handleForward}
-            onComplete={handleComplete}
-            onBack={handleBack}
-            onForward={handleForward}
-            isBackDisabled={positionIndex === 0}
-            isForwardDisabled={positionIndex === questions.length - 1}
-            isPreviewMode={true}
-            isPublished={true}
-            error={error}
-          />
+      <div className="flex-grow flex items-center justify-center px-4">
+        <div className="w-full max-w-[720px]">
+          <div
+            className={cn(
+              "transition-opacity duration-300",
+              debouncedPositionIndex !== positionIndex ? "opacity-0" : "opacity-100"
+            )}
+          >
+            <QuestionContent
+              question={questions[debouncedPositionIndex]}
+              key={questions[debouncedPositionIndex]._id}
+              newTitle={questions[debouncedPositionIndex].title}
+              newDescription={questions[debouncedPositionIndex].description || ""}
+              newResponse={responses[questions[debouncedPositionIndex]._id] || ""}
+              onTitleChange={() => {}}
+              onDescriptionChange={() => {}}
+              onResponseChange={handleResponseChange}
+              updateChoices={() => Promise.resolve()}
+              onStart={handleForward}
+              onComplete={handleComplete}
+              onBack={handleBack}
+              onForward={handleForward}
+              isBackDisabled={positionIndex === 0}
+              isForwardDisabled={positionIndex === questions.length - 1}
+              isPreview={true}
+              isPublished={true}
+              error={error}
+            />
+          </div>
         </div>
       </div>
     </div>

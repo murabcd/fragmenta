@@ -37,7 +37,7 @@ interface QuestionContentProps {
   onForward?: () => void;
   isBackDisabled?: boolean;
   isForwardDisabled?: boolean;
-  isPreviewMode?: boolean;
+  isPreview?: boolean;
   isPublished?: boolean;
   isRequired?: boolean;
   error?: string | null;
@@ -58,7 +58,7 @@ export const QuestionContent = ({
   onForward,
   isBackDisabled,
   isForwardDisabled,
-  isPreviewMode = false,
+  isPreview = false,
   isPublished,
   isRequired,
   error,
@@ -177,8 +177,9 @@ export const QuestionContent = ({
   return (
     <Card
       className={cn(
-        "flex flex-col items-center justify-center w-full min-h-[600px] px-4 bg-background border shadow-none space-y-4",
-        isPreviewMode ? previewSize : ""
+        "flex flex-col items-center justify-center w-full min-h-[calc(100vh-120px)] px-4 bg-background space-y-4",
+        isPreview ? previewSize : "",
+        isPublished ? "border-none shadow-none" : "border shadow-sm"
       )}
     >
       <div className={cn("w-full", isScreen && "flex flex-col items-center")}>
@@ -196,7 +197,7 @@ export const QuestionContent = ({
             onChange={handleTitleChange}
             readOnly={isPublished}
           />
-          {question.isRequired && <span className="text-red-500 ml-1">*</span>}
+          {isRequired && <span className="text-red-500 ml-1">*</span>}
         </div>
         {(!isPublished || newDescription) && (
           <textarea
