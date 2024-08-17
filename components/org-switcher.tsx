@@ -29,6 +29,7 @@ import { Id } from "@/convex/_generated/dataModel";
 interface OrgItemProps {
   id: Id<"organizations">;
   name: string;
+  slug: string;
   imageUrl: string;
   onSelect: () => void;
 }
@@ -37,14 +38,20 @@ interface OrgSwitcherProps {
   className?: string;
 }
 
-const OrgItem = ({ id, name, imageUrl, onSelect }: OrgItemProps) => {
+const OrgItem = ({ id, name, slug, imageUrl, onSelect }: OrgItemProps) => {
   const { organization, setCurrentOrganization } = useOrganization();
 
   const onClick = () => {
     if (!setCurrentOrganization) return;
 
     if (organization?._id !== id) {
-      setCurrentOrganization({ _id: id, name, imageUrl, role: "member" });
+      setCurrentOrganization({
+        _id: id,
+        name,
+        slug,
+        imageUrl,
+        role: "member",
+      });
     }
 
     onSelect();
@@ -134,6 +141,7 @@ export const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
                     id={org._id!}
                     name={org.name ?? ""}
                     imageUrl={org.imageUrl ?? ""}
+                    slug={org.slug ?? ""}
                     onSelect={() => setOpen(false)}
                   />
                 ))}
