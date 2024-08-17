@@ -9,7 +9,7 @@ import * as z from "zod";
 
 import Image from "next/image";
 
-import { Plus, ImagePlus, Upload, LoaderCircle } from "lucide-react";
+import { ImagePlus, Upload, LoaderCircle } from "lucide-react";
 
 import { toast } from "sonner";
 
@@ -32,7 +32,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
 import { useApiMutation } from "@/hooks/use-api-mutation";
@@ -50,14 +49,18 @@ const formSchema = z.object({
   }),
 });
 
-export const UserOrg = () => {
+interface UserOrgProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
   const { mutate: createOrg } = useApiMutation(api.organizations.create);
   const { mutate: getImageUrl } = useApiMutation(api.files.getImageUrl);
   const { mutate: saveImageUrl } = useApiMutation(api.files.saveImageUrl);
 
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
 
-  const [open, setOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -90,7 +93,7 @@ export const UserOrg = () => {
       }
       form.reset();
       setImageUrl(null);
-      setOpen(false);
+      onOpenChange(false);
     })();
 
     toast.promise(promise, {
@@ -137,13 +140,7 @@ export const UserOrg = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Create organization
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create organization</DialogTitle>

@@ -14,9 +14,11 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
+  CommandSeparator,
 } from "@/components/ui/command";
+import { UserOrg } from "@/components/user-org";
 
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -71,6 +73,7 @@ const OrgItem = ({ id, name, imageUrl, onSelect }: OrgItemProps) => {
 
 export const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
   const [open, setOpen] = useState(false);
+  const [isUserOrgOpen, setIsUserOrgOpen] = useState(false);
   const { organization, userMemberships } = useOrganization();
 
   if (!organization) {
@@ -91,52 +94,70 @@ export const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
   const selectedOrgImage = organization?.imageUrl;
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          aria-label="Select an organization"
-          className={cn(
-            "mx-auto w-[230px] mt-5 p-3 justify-between shadow-sm font-normal text-muted-foreground hover:bg-transparent",
-            className
-          )}
-        >
-          <div className="flex items-center">
-            {selectedOrgImage && (
-              <Avatar className="w-5 h-5 mr-2">
-                <AvatarImage
-                  src={selectedOrgImage}
-                  alt={selectedOrg || "Organization"}
-                  className="h-5 w-5 rounded-sm object-cover"
-                />
-              </Avatar>
+    <>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            aria-label="Select an organization"
+            className={cn(
+              "mx-auto w-[230px] mt-5 p-2 justify-between shadow-sm font-normal text-muted-foreground hover:bg-transparent",
+              className
             )}
-            <span className="truncate flex-1">{selectedOrg}</span>
-          </div>
-          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[230px] p-0">
-        <Command>
-          <CommandInput placeholder="Search organization..." />
-          <CommandList>
-            <CommandEmpty>No organization found.</CommandEmpty>
-            <CommandGroup>
-              {userMemberships.data?.map((org) => (
-                <OrgItem
-                  key={org._id}
-                  id={org._id!}
-                  name={org.name ?? ""}
-                  imageUrl={org.imageUrl ?? ""}
-                  onSelect={() => setOpen(false)}
-                />
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+          >
+            <div className="flex items-center">
+              {selectedOrgImage && (
+                <Avatar className="w-5 h-5 mr-2">
+                  <AvatarImage
+                    src={selectedOrgImage}
+                    alt={selectedOrg || "Organization"}
+                    className="h-5 w-5 rounded-sm object-cover"
+                  />
+                </Avatar>
+              )}
+              <span className="truncate flex-1">{selectedOrg}</span>
+            </div>
+            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[230px] p-0">
+          <Command>
+            <CommandInput placeholder="Search organization..." />
+            <CommandList>
+              <CommandEmpty>No organization found.</CommandEmpty>
+              <CommandGroup>
+                {userMemberships.data?.map((org) => (
+                  <OrgItem
+                    key={org._id}
+                    id={org._id!}
+                    name={org.name ?? ""}
+                    imageUrl={org.imageUrl ?? ""}
+                    onSelect={() => setOpen(false)}
+                  />
+                ))}
+              </CommandGroup>
+            </CommandList>
+            <CommandSeparator />
+            <CommandList>
+              <CommandGroup>
+                <CommandItem
+                  onSelect={() => {
+                    setOpen(false);
+                    setIsUserOrgOpen(true);
+                  }}
+                  className="flex items-center p-2 cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  <span className="text-sm">Create new organization</span>
+                </CommandItem>
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      <UserOrg isOpen={isUserOrgOpen} onOpenChange={setIsUserOrgOpen} />
+    </>
   );
 };
