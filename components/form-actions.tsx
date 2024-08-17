@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
@@ -13,6 +14,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { ConfirmModal } from "./confirm-modal";
 
 import { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
 
@@ -40,6 +43,7 @@ export const FormActions = ({
   const router = useRouter();
   const { mutate, pending } = useApiMutation(api.forms.remove);
   const { onOpen } = useRenameModal();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const onCopyLink = () => {
     navigator.clipboard
@@ -63,20 +67,31 @@ export const FormActions = ({
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent
-        onClick={(event) => event.stopPropagation()}
-        align={align}
-        side={side}
-        sideOffset={sideOffset}
-        className="w-[160px]"
-      >
-        <DropdownMenuItem onClick={() => onOpen(id, title)}>Rename</DropdownMenuItem>
-        <DropdownMenuItem onClick={onCopyLink}>Copy link</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+        <DropdownMenuContent
+          onClick={(event) => event.stopPropagation()}
+          align={align}
+          side={side}
+          sideOffset={sideOffset}
+          className="w-[160px]"
+        >
+          <DropdownMenuItem onClick={() => onOpen(id, title)}>Rename</DropdownMenuItem>
+          <DropdownMenuItem onClick={onCopyLink}>Copy link</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onSelect={() => setIsDeleteModalOpen(true)}>
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmModal
+        header="Delete Form"
+        description="Are you sure you want to delete this form? This action cannot be undone."
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={onDelete}
+      />
+    </>
   );
 };

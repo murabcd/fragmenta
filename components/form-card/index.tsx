@@ -46,30 +46,31 @@ export const FormCard = ({
   const createdAtLabel = formatDistanceToNow(createdAt, { addSuffix: true });
 
   return (
-    <Link href={`/form/${id}`}>
-      <div className="group aspect-[100/127] border shadow-sm rounded-lg flex flex-col justify-between overflow-hidden relative">
+    <div className="group aspect-[100/127] border shadow-sm rounded-lg flex flex-col justify-between overflow-hidden relative">
+      <Link href={`/form/${id}`} className="flex-1">
         <div className="relative flex-1 bg-background">
-          {/* TODO: Try to add images to the overlay */}
           <FormCardOverlay />
-          <FormActions id={id} title={title} align="end" side="right">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-2 outline-none"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </FormActions>
         </div>
+      </Link>
+      <FormActions id={id} title={title} align="end" side="right">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-2 outline-none"
+        >
+          <MoreHorizontal className="h-4 w-4" />
+          <span className="sr-only">Open menu</span>
+        </Button>
+      </FormActions>
+      <Link href={`/form/${id}`}>
         <FormCardFooter
           title={title}
           authorLabel={authorLabel}
           createdAtLabel={createdAtLabel}
           onClick={() => {}}
         />
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 
