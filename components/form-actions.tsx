@@ -86,8 +86,8 @@ export const FormActions = ({
         </DropdownMenuContent>
       </DropdownMenu>
       <ConfirmModal
-        header="Delete Form"
-        description="Are you sure you want to delete this form? This action cannot be undone."
+        header="Are you absolutely sure?"
+        description="This action cannot be undone. This will permanently delete your form and remove your data from our servers."
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={onDelete}

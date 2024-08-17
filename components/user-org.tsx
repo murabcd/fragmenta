@@ -230,6 +230,7 @@ export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
                   <FormControl>
                     <Input
                       {...field}
+                      placeholder="organization-slug"
                       autoComplete="organization-slug"
                       onChange={(e) => field.onChange(e.target.value.toLowerCase())}
                     />

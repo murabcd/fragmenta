@@ -47,7 +47,7 @@ export const FormCard = ({
 
   return (
     <div className="group aspect-[100/127] border shadow-sm rounded-lg flex flex-col justify-between overflow-hidden relative">
-      <Link href={`/form/${id}`} className="flex-1">
+      <Link href={`/form/${id}`} className="flex-1 bg-background">
         <div className="relative flex-1 bg-background">
           <FormCardOverlay />
         </div>
