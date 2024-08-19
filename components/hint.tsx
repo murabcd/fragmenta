@@ -32,7 +32,7 @@ export const Hint = React.forwardRef<HTMLDivElement, HintProps>(
             sideOffset={sideOffset}
             alignOffset={alignOffset}
           >
-            <p className="text-sm capitalize">{label}</p>
+            <p className="text-sm">{label}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

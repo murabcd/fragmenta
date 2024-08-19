@@ -1,9 +1,9 @@
-import { IntegrationForm } from "./integration-form";
+import { IntegrationsForm } from "./integrations-form";
 
 export default function IntegrationsPage() {
   return (
     <div className="space-y-6">
-      <IntegrationForm />
+      <IntegrationsForm />
     </div>
   );
 }
