@@ -78,10 +78,10 @@ export const GoogleSheets = ({ className, ...props }: IntegrationFormProps) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       setIsConnected(true);
-      toast.success("Connected to Google Sheets");
+      toast.success("Connected");
       setOpen(false);
     } catch (error) {
-      toast.error("Failed to connect to Google Sheets");
+      toast.error("Failed to connect");
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +89,7 @@ export const GoogleSheets = ({ className, ...props }: IntegrationFormProps) => {
 
   const handleDisconnect = () => {
     setIsConnected(false);
-    toast.success("Disconnected from Google Sheets");
+    toast.success("Disconnected");
   };
 
   return (

@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Zap } from "lucide-react";
+import Link from "next/link";
 
 export const UpgradePro = () => {
   return (
@@ -20,10 +21,12 @@ export const UpgradePro = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button variant="premium" className="w-full">
-          <Zap className="mr-2 h-4 w-4" />
-          Upgrade
-        </Button>
+        <Link href="/settings/billing">
+          <Button variant="premium" className="w-full">
+            <Zap className="mr-2 h-4 w-4" />
+            Upgrade
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );
