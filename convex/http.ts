@@ -6,7 +6,7 @@ import { cors } from "hono/cors";
 import { api } from "./_generated/api";
 
 import { openai } from "@ai-sdk/openai";
-import { StreamData, StreamingTextResponse, streamText } from "ai";
+import { streamText } from "ai";
 
 const app: HonoWithConvex<ActionCtx> = new Hono();
 
@@ -16,7 +16,7 @@ app.post("/api/generate", async (c) => {
   const { prompt, formId } = await c.req.json();
 
   const result = await streamText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     maxTokens: 2000,
     prompt: `Generate a list of 5 questions based on the following input.
     
@@ -32,25 +32,16 @@ app.post("/api/generate", async (c) => {
     Input: ${prompt}
     
     Output the result as a JSON array only, with no additional text.`,
-  });
-
-  const data = new StreamData();
-
-  data.append("Call started");
-
-  const stream = result.toAIStream({
-    async onFinal(completion) {
-      const parsed = JSON.parse(completion);
+    onFinish: async ({ text }) => {
+      const parsed = JSON.parse(text);
       await c.env.runMutation(api.questions.generate, {
         questions: parsed,
         formId,
       });
-      data.append("Call completed");
-      data.close();
     },
   });
 
-  return new StreamingTextResponse(stream, {}, data);
+  return result.toDataStreamResponse();
 });
 
 app.get("/.well-known/openid-configuration", async (c) => {
