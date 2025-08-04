@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import * as CheckboxCardsPrimitive from "@radix-ui/react-checkbox";
+import { Checkbox as CheckboxCardsPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/utils";
 

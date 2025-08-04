@@ -9,9 +9,9 @@ import type {
   VerificationToken,
 } from "@auth/core/adapters";
 import { fetchMutation, fetchQuery } from "convex/nextjs";
-import { FunctionArgs, FunctionReference } from "convex/server";
+import type { FunctionArgs, FunctionReference } from "convex/server";
 import { api } from "../convex/_generated/api";
-import { Doc, Id } from "../convex/_generated/dataModel";
+import type { Doc, Id } from "../convex/_generated/dataModel";
 
 type User = AdapterUser & { id: Id<"users"> };
 type Session = AdapterSession & { userId: Id<"users"> };

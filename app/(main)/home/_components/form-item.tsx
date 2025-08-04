@@ -10,7 +10,7 @@ import { EmptyHomeState } from "./empty-home-state";
 
 import { NewFormButton } from "@/components/new-form-button";
 
-import { Id } from "@/convex/_generated/dataModel";
+import type { Id } from "@/convex/_generated/dataModel";
 
 interface FormItemProps {
   orgId: Id<"organizations">;

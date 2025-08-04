@@ -19,83 +19,88 @@ import { QuestionDrawer } from "@/components/question-drawer";
 import { useQuery } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import type { Id } from "@/convex/_generated/dataModel";
 
 interface InfoProps {
-  formId: string;
+	formId: string;
 }
 
 interface Question {
-  _id: Id<"questions">;
+	_id: Id<"questions">;
 }
 
 const TabSeparator = () => {
-  return <div className="text-neutral-300 px-1">|</div>;
+	return <div className="w-px h-4 bg-border mx-2" />;
 };
 
 export const Info = ({ formId }: InfoProps) => {
-  const { onOpen } = useRenameModal();
+	const { onOpen } = useRenameModal();
 
-  const data = useQuery(api.forms.get, {
-    id: formId as Id<"forms">,
-  });
+	const data = useQuery(api.forms.get, {
+		id: formId as Id<"forms">,
+	});
 
-  const questions = useQuery(api.questions.get, { formId }) as Question[];
+	const questions = useQuery(api.questions.get, { formId }) as Question[];
 
-  if (!data) return;
+	if (!data) return;
 
-  const hasQuestions = questions && questions.length > 0;
+	const hasQuestions = questions && questions.length > 0;
 
-  return (
-    <div className="flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16">
-      <div className="flex items-center space-x-2 flex-shrink-0">
-        <Hint label="Back to forms" side="bottom" sideOffset={10}>
-          <Link href="/home">
-            <Button variant="outline" size="icon">
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-        </Hint>
-        <TabSeparator />
-        <Hint label="Rename" side="bottom" sideOffset={10}>
-          <Button
-            variant="ghost"
-            className="text-base font-medium px-1 max-w-[150px] sm:max-w-[300px]"
-            onClick={() => onOpen(data._id, data.title)}
-          >
-            <span className="truncate">{data.title}</span>
-          </Button>
-        </Hint>
-        <TabSeparator />
-        <div className="hidden sm:block">
-          <FormActions id={data._id} title={data.title} side="bottom" sideOffset={10}>
-            <div>
-              <Hint label="Main menu" align="end" side="bottom" sideOffset={10}>
-                <Button variant="outline" size="icon">
-                  <Menu className="h-4 w-4" />
-                </Button>
-              </Hint>
-            </div>
-          </FormActions>
-        </div>
-      </div>
-      <div className="flex items-center space-x-2 flex-shrink-0">
-        <div className="sm:hidden">
-          <QuestionDrawer formId={formId} />
-        </div>
-        <div className="hidden sm:block">
-          {hasQuestions ? (
-            <FormPreview formId={formId} />
-          ) : (
-            <Hint label="Preview" side="bottom" sideOffset={10}>
-              <Button variant="outline" size="icon" disabled>
-                <Eye className="h-4 w-4" />
-              </Button>
-            </Hint>
-          )}
-        </div>
-        <Publish formId={data._id} />
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16">
+			<div className="flex items-center space-x-2 flex-shrink-0">
+				<Hint label="Back to forms" side="bottom" sideOffset={10}>
+					<Link href="/home">
+						<Button variant="outline" size="icon">
+							<ChevronLeft className="h-4 w-4" />
+						</Button>
+					</Link>
+				</Hint>
+				<TabSeparator />
+				<Hint label="Rename" side="bottom" sideOffset={10}>
+					<Button
+						variant="ghost"
+						className="text-base font-medium px-1 max-w-[150px] sm:max-w-[300px]"
+						onClick={() => onOpen(data._id, data.title)}
+					>
+						<span className="truncate">{data.title}</span>
+					</Button>
+				</Hint>
+				<TabSeparator />
+				<div className="hidden sm:block">
+					<FormActions
+						id={data._id}
+						title={data.title}
+						side="bottom"
+						sideOffset={10}
+					>
+						<div>
+							<Hint label="Main menu" align="end" side="bottom" sideOffset={10}>
+								<Button variant="outline" size="icon">
+									<Menu className="h-4 w-4" />
+								</Button>
+							</Hint>
+						</div>
+					</FormActions>
+				</div>
+			</div>
+			<div className="flex items-center space-x-2 flex-shrink-0">
+				<div className="sm:hidden">
+					<QuestionDrawer formId={formId} />
+				</div>
+				<div className="hidden sm:block">
+					{hasQuestions ? (
+						<FormPreview formId={formId} />
+					) : (
+						<Hint label="Preview" side="bottom" sideOffset={10}>
+							<Button variant="outline" size="icon" disabled>
+								<Eye className="h-4 w-4" />
+							</Button>
+						</Hint>
+					)}
+				</div>
+				<Publish formId={data._id} />
+			</div>
+		</div>
+	);
 };

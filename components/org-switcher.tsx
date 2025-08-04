@@ -1,171 +1,143 @@
-"use client";
+"use client"
 
-import { useState } from "react";
+import * as React from "react"
+import { ChevronsUpDown, Plus } from "lucide-react"
 
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
-  Command,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandSeparator,
-} from "@/components/ui/command";
-import { UserOrg } from "@/components/user-org";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { useOrganization } from "@/hooks/use-organization"
+import { Id } from "@/convex/_generated/dataModel"
+import { UserOrg } from "@/components/user-org"
 
-import { ChevronDown, Check, Plus } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-
-import { useOrganization } from "@/hooks/use-organization";
-
-import { Id } from "@/convex/_generated/dataModel";
-
-interface OrgItemProps {
-  id: Id<"organizations">;
-  name: string;
-  slug: string;
-  imageUrl: string;
-  onSelect: () => void;
+interface Organization {
+  name: string
+  logo: React.ElementType
+  plan: string
+  id?: Id<"organizations">
+  imageUrl?: string
 }
 
-interface OrgSwitcherProps {
-  className?: string;
-}
+export function OrganizationSwitcher({ organizations }: { organizations: Organization[] }) {
+  const { isMobile } = useSidebar()
+  const { organization, setCurrentOrganization } = useOrganization()
+  const [isUserOrgOpen, setIsUserOrgOpen] = React.useState(false)
+  
+  // Set active organization based on current organization or first organization
+  const [activeOrganization, setActiveOrganization] = React.useState<Organization | null>(null)
 
-const OrgItem = ({ id, name, slug, imageUrl, onSelect }: OrgItemProps) => {
-  const { organization, setCurrentOrganization } = useOrganization();
-
-  const onClick = () => {
-    if (!setCurrentOrganization) return;
-
-    if (organization?._id !== id) {
-      setCurrentOrganization({
-        _id: id,
-        name,
-        slug,
-        imageUrl,
-        role: "member",
-      });
+  React.useEffect(() => {
+    if (organizations.length > 0) {
+      const currentOrg = organizations.find(org => org.id === organization?._id) || organizations[0]
+      setActiveOrganization(currentOrg)
     }
+  }, [organizations, organization?._id])
 
-    onSelect();
-  };
-
-  return (
-    <CommandItem
-      onSelect={onClick}
-      className="flex items-center p-2 cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
-    >
-      <Avatar className="w-5 h-5 mr-2">
-        <AvatarImage
-          src={imageUrl}
-          alt={name}
-          className="h-5 w-5 rounded-sm object-cover"
-        />
-      </Avatar>
-
-      <span className="text-sm truncate flex-1">{name}</span>
-      {organization?._id === id && (
-        <Check className="ml-auto h-3 w-3 opacity-50 flex-shrink-0" />
-      )}
-    </CommandItem>
-  );
-};
-
-export const OrgSwitcher = ({ className }: OrgSwitcherProps) => {
-  const [open, setOpen] = useState(false);
-  const [isUserOrgOpen, setIsUserOrgOpen] = useState(false);
-  const { organization, userMemberships } = useOrganization();
-
-  if (!organization) {
-    return (
-      <div
-        className={cn(
-          "mx-auto w-[230px] mt-5 p-2.5 flex justify-between items-center border rounded-md",
-          className
-        )}
-      >
-        <Skeleton className="h-5 w-[150px]" />
-        <Skeleton className="h-5 w-5 rounded-full" />
-      </div>
-    );
+  const handleOrganizationSelect = (org: Organization) => {
+    setActiveOrganization(org)
+    if (org.id && setCurrentOrganization) {
+      setCurrentOrganization({
+        _id: org.id,
+        name: org.name,
+        slug: org.name.toLowerCase().replace(/\s+/g, '-'),
+        imageUrl: org.imageUrl,
+        role: org.plan === "Pro" ? "owner" : "member",
+      })
+    }
   }
 
-  const selectedOrg = organization?.name;
-  const selectedOrgImage = organization?.imageUrl;
+  if (!organizations.length || !activeOrganization) {
+    return null
+  }
 
   return (
     <>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            aria-label="Select an organization"
-            className={cn(
-              "mx-auto w-[230px] mt-5 p-2 justify-between shadow-sm font-normal text-muted-foreground hover:bg-transparent",
-              className
-            )}
-          >
-            <div className="flex items-center">
-              {selectedOrgImage && (
-                <Avatar className="w-5 h-5 mr-2">
-                  <AvatarImage
-                    src={selectedOrgImage}
-                    alt={selectedOrg || "Organization"}
-                    className="h-5 w-5 rounded-sm object-cover"
-                  />
-                </Avatar>
-              )}
-              <span className="truncate flex-1">{selectedOrg}</span>
-            </div>
-            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[230px] p-0">
-          <Command>
-            <CommandInput placeholder="Search organization..." />
-            <CommandList>
-              <CommandEmpty>No organization found.</CommandEmpty>
-              <CommandGroup>
-                {userMemberships.data?.map((org) => (
-                  <OrgItem
-                    key={org._id}
-                    id={org._id!}
-                    name={org.name ?? ""}
-                    imageUrl={org.imageUrl ?? ""}
-                    slug={org.slug ?? ""}
-                    onSelect={() => setOpen(false)}
-                  />
-                ))}
-              </CommandGroup>
-            </CommandList>
-            <CommandSeparator />
-            <CommandList>
-              <CommandGroup>
-                <CommandItem
-                  onSelect={() => {
-                    setOpen(false);
-                    setIsUserOrgOpen(true);
-                  }}
-                  className="flex items-center p-2 cursor-pointer text-muted-foreground hover:text-foreground hover:bg-accent"
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              >
+                {activeOrganization.imageUrl ? (
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src={activeOrganization.imageUrl} alt={activeOrganization.name} />
+                    <AvatarFallback className="rounded-lg">
+                      <activeOrganization.logo className="size-4" />
+                    </AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg border">
+                    <activeOrganization.logo className="size-4" />
+                  </div>
+                )}
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{activeOrganization.name}</span>
+                  <span className="truncate text-xs">{activeOrganization.plan}</span>
+                </div>
+                <ChevronsUpDown className="ml-auto" />
+              </SidebarMenuButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+              align="start"
+              side={isMobile ? "bottom" : "right"}
+              sideOffset={4}
+            >
+              <DropdownMenuLabel className="text-muted-foreground text-xs">
+                Organizations
+              </DropdownMenuLabel>
+              {organizations.map((org, index) => (
+                <DropdownMenuItem
+                  key={org.id || org.name}
+                  onClick={() => handleOrganizationSelect(org)}
+                  className="gap-2 p-2"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  <span className="text-sm">Create new organization</span>
-                </CommandItem>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+                  {org.imageUrl ? (
+                    <Avatar className="h-6 w-6 rounded-lg">
+                      <AvatarImage src={org.imageUrl} alt={org.name} />
+                      <AvatarFallback className="rounded-lg">
+                        <org.logo className="size-3.5 shrink-0" />
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <div className="flex size-6 items-center justify-center rounded-lg border">
+                      <org.logo className="size-3.5 shrink-0" />
+                    </div>
+                  )}
+                  {org.name}
+                  <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                className="gap-2 p-2"
+                onClick={() => setIsUserOrgOpen(true)}
+              >
+                <div className="flex size-6 items-center justify-center rounded-lg border bg-transparent">
+                  <Plus className="size-4" />
+                </div>
+                <div className="text-muted-foreground font-medium">Add organization</div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
       <UserOrg isOpen={isUserOrgOpen} onOpenChange={setIsUserOrgOpen} />
     </>
-  );
-};
+  )
+} 

@@ -1,22 +1,74 @@
-import { Navbar } from "@/components/navbar";
-import { Sidebar } from "@/components/sidebar";
-import { SearchCommand } from "@/components/search-command";
+"use client";
 
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="min-h-screen bg-muted/40">
-      <main className="h-full">
-        <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
-          <Sidebar />
-        </div>
-        <div className="md:pl-64 min-h-screen">
-          <Navbar />
-          <SearchCommand />
-          {children}
-        </div>
-      </main>
-    </div>
-  );
+import { AppSidebar } from "@/components/app-sidebar";
+import { SearchCommand } from "@/components/search-command";
+import {
+	SidebarInset,
+	SidebarProvider,
+	SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Toaster } from "@/components/ui/sonner";
+import { ModalProvider } from "@/providers/modal-provider";
+import { useSelectedLayoutSegment } from "next/navigation";
+
+const HomeLayout = ({ children }: { children: React.ReactNode }) => {
+	const segment = useSelectedLayoutSegment();
+
+	const getBreadcrumbTitle = () => {
+		switch (segment) {
+			case "home":
+				return "Home";
+			case "settings":
+				return "Settings";
+			case "forms":
+				return "Forms";
+			case "recent":
+				return "Recent";
+			default:
+				return "Home";
+		}
+	};
+
+	return (
+		<>
+			<SidebarProvider>
+				<AppSidebar />
+				<SidebarInset>
+					<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+						<div className="flex items-center gap-2 px-4">
+							<SidebarTrigger className="-ml-1" />
+							<Separator
+								orientation="vertical"
+								className="mr-2 data-[orientation=vertical]:h-4"
+							/>
+							<Breadcrumb>
+								<BreadcrumbList>
+									<BreadcrumbItem>
+										<BreadcrumbPage>{getBreadcrumbTitle()}</BreadcrumbPage>
+									</BreadcrumbItem>
+								</BreadcrumbList>
+							</Breadcrumb>
+						</div>
+					</header>
+					<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+						<SearchCommand />
+						{children}
+					</div>
+				</SidebarInset>
+			</SidebarProvider>
+			<Toaster />
+			<ModalProvider />
+		</>
+	);
 };
 
-export default DashboardLayout;
+export default HomeLayout;
