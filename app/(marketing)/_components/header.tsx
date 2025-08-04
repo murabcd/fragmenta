@@ -31,7 +31,7 @@ export const Header = () => {
 				</div>
 				<div className="hidden md:flex space-x-4">
 					<Button variant="ghost" asChild>
-						<Link href="/signin">Sign in</Link>
+						<Link href="/signin">Log in</Link>
 					</Button>
 					<Button asChild>
 						<Link href="/register">Sign up</Link>

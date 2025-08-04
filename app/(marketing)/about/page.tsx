@@ -25,7 +25,7 @@ const AboutPage = () => {
 						<Button size="lg">
 							<Link href="mailto:murad@fragmenta.ai">Talk to us</Link>
 						</Button>
-						<Button variant="outline" size="lg">
+						<Button variant="ghost" size="lg">
 							<Link href="https://github.com/muradpm/fragmenta" target="_blank">
 								View on Github
 							</Link>

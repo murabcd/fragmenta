@@ -3,15 +3,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 
-import { ChevronLeft } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
 import { UserAuthForm } from "@/components/user-auth-form";
 
 export const metadata: Metadata = {
-	title: "Sign in with email",
-	description: "Sign in to your account",
+	title: "Log in with email",
+	description: "Log in to your account",
 };
 
 export default function SignInEmailPage() {
@@ -38,10 +34,10 @@ export default function SignInEmailPage() {
 						/>
 					</Link>
 					<h1 className="text-2xl font-semibold tracking-tight">
-						Sign in to your account
+						Log in to your account
 					</h1>
 					<p className="text-sm text-muted-foreground">
-						Enter your email and password to sign in
+						Enter your email and password to log in
 					</p>
 				</div>
 				<UserAuthForm mode="signin-email" />

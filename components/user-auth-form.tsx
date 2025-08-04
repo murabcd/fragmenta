@@ -9,7 +9,7 @@ import { signIn } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import * as z from "zod";
+import type * as z from "zod";
 
 import { toast } from "sonner";
 
@@ -189,8 +189,8 @@ export function UserAuthForm({
 						{isLoading && (
 							<LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
 						)}
-						{mode === "signin" && "Sign in with magic link"}
-						{mode === "signin-email" && "Sign in"}
+						{mode === "signin" && "Log in with magic link"}
+						{mode === "signin-email" && "Log in"}
 						{mode === "register" && "Sign up"}
 					</Button>
 				</div>
@@ -234,7 +234,7 @@ export function UserAuthForm({
 							<Button variant="ghost" asChild>
 								<Link href="/signin/email">
 									<Mail className="mr-2 h-4 w-4" />
-									Sign in with email
+									Log in with email
 								</Link>
 							</Button>
 						</>

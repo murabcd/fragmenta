@@ -67,7 +67,7 @@ export default function RegisterPage() {
 					variant="ghost"
 					className="absolute right-4 top-4 md:right-8 md:top-6"
 				>
-					Sign in
+					Log in
 				</Button>
 			</Link>
 		</div>

@@ -102,7 +102,7 @@ export const MobileMainNav = () => {
 					<div className="mt-4">
 						<Button asChild className="w-full">
 							<Link href="/register" onClick={() => setOpen(false)}>
-								Sign Up
+								Sign up
 							</Link>
 						</Button>
 					</div>

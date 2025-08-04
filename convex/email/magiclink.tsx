@@ -1,29 +1,29 @@
 interface MagicLinkEmailProps {
-  email: string;
-  magicLink: string;
-  host: string;
+	email: string;
+	magicLink: string;
+	host: string;
 }
 
-function html({ email, magicLink, host }: MagicLinkEmailProps): string {
-  const escapedHost = host.replace(/\./g, "&#8203;.");
+function html({ magicLink, host }: Omit<MagicLinkEmailProps, "email">): string {
+	const escapedHost = host.replace(/\./g, "&#8203;.");
 
-  const color = {
-    background: "white",
-    text: "black",
-    mainBackground: "white",
-    buttonBackground: "#000000",
-    buttonBorder: "#000000",
-    buttonText: "white",
-  };
+	const color = {
+		background: "white",
+		text: "black",
+		mainBackground: "white",
+		buttonBackground: "#000000",
+		buttonBorder: "#000000",
+		buttonText: "white",
+	};
 
-  return `
+	return `
 <body style="background: ${color.background};">
   <table width="100%" border="0" cellspacing="20" cellpadding="0"
     style="background: ${color.mainBackground}; max-width: 600px; margin: auto; border-radius: 10px;">
     <tr>
       <td align="center"
         style="padding: 10px 0px; font-size: 22px; font-family: sans-serif; color: ${color.text};">
-        Sign in to <strong>${escapedHost}</strong>
+        Log in to <strong>${escapedHost}</strong>
       </td>
     </tr>
     <tr>
@@ -49,36 +49,42 @@ function html({ email, magicLink, host }: MagicLinkEmailProps): string {
 `;
 }
 
-function text({ magicLink, host }: { magicLink: string; host: string }): string {
-  return `Sign in to ${host}\n${magicLink}\n\n`;
+function text({
+	magicLink,
+	host,
+}: {
+	magicLink: string;
+	host: string;
+}): string {
+	return `Log in to ${host}\n${magicLink}\n\n`;
 }
 
 export async function sendMagicLinkEmail(
-  email: string,
-  url: string,
-  provider: { from: string },
-  resendApiKey: string
+	email: string,
+	url: string,
+	provider: { from: string },
+	resendApiKey: string,
 ) {
-  const { host } = new URL(url);
-  const emailHtml = html({ email, magicLink: url, host });
-  const emailText = text({ magicLink: url, host });
+	const { host } = new URL(url);
+	const emailHtml = html({ magicLink: url, host });
+	const emailText = text({ magicLink: url, host });
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${resendApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: provider.from,
-      to: email,
-      subject: `Sign in to ${host}`,
-      html: emailHtml,
-      text: emailText,
-    }),
-  });
+	const res = await fetch("https://api.resend.com/emails", {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${resendApiKey}`,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			from: provider.from,
+			to: email,
+			subject: `Log in to ${host}`,
+			html: emailHtml,
+			text: emailText,
+		}),
+	});
 
-  if (!res.ok) {
-    throw new Error("Failed to send verification email");
-  }
+	if (!res.ok) {
+		throw new Error("Failed to send verification email");
+	}
 }

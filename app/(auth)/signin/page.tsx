@@ -3,13 +3,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
-
 import { UserAuthForm } from "@/components/user-auth-form";
 
 export const metadata: Metadata = {
-	title: "Sign in",
-	description: "Sign in to your account",
+	title: "Log in",
+	description: "Log in to your account",
 };
 
 export default function SignInPage() {
@@ -39,7 +37,7 @@ export default function SignInPage() {
 						Welcome back
 					</h1>
 					<p className="text-sm text-muted-foreground">
-						Enter your email to sign in to your account
+						Enter your email to log in to your account
 					</p>
 				</div>
 				<UserAuthForm mode="signin" />
