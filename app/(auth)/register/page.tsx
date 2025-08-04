@@ -17,22 +17,24 @@ export default function RegisterPage() {
 			<div className="w-full lg:w-1/2 flex items-center justify-center p-8">
 				<div className="w-full max-w-[350px] space-y-6">
 					<div className="flex flex-col items-center space-y-2 text-center">
-						<Image
-							src="/logo.svg"
-							alt="Logo"
-							width={32}
-							height={32}
-							className="dark:hidden"
-							priority
-						/>
-						<Image
-							src="/logo-dark.svg"
-							alt="Logo"
-							width={32}
-							height={32}
-							className="hidden dark:block"
-							priority
-						/>
+						<Link href="/">
+							<Image
+								src="/logo.svg"
+								alt="Logo"
+								width={32}
+								height={32}
+								className="dark:hidden cursor-pointer"
+								priority
+							/>
+							<Image
+								src="/logo-dark.svg"
+								alt="Logo"
+								width={32}
+								height={32}
+								className="hidden dark:block cursor-pointer"
+								priority
+							/>
+						</Link>
 						<h1 className="text-2xl font-semibold tracking-tight">
 							Create an account
 						</h1>

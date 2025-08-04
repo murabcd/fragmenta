@@ -7,13 +7,11 @@
   Modern Form Builder Built With Next.js, Convex, and AI SDK.
 </p>
 
-- Intuitive form builder with drag-and-drop interface, customizable appearance and behavior, and form preview before publishing
-- Multiple question types including text, multiple choice, checkboxes, and more, with conditional logic and required field validation
-- Form publishing features to share forms, generate shareable links, and embed forms on websites
-- Response collection with tools to gather, analyze, and export data, plus real-time response notifications
-- Organization management for creating and managing forms within organizations, role-based access control, and team workspaces
-- User authentication with secure login, OAuth integration, and password protection
-- Team collaboration features such as inviting team members, managing permissions and roles, and activity tracking
+- Drag-and-drop form builder with live preview and customization
+- Supports multiple question types, validation, and conditional logic
+- Easy form sharing, embedding, and real-time response collection
+- Organization and team management with roles and permissions
+- Secure authentication with OAuth and password protection
 
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
@@ -40,7 +38,7 @@
   - Unified API for generating text, structured objects, and tool calls with LLMs
   - Hooks for building dynamic chat and generative user interfaces
   - Supports OpenAI (default), Anthropic, Cohere, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
+- [Shadcn/ui](https://ui.shadcn.com)
   - Styling with [Tailwind CSS](https://tailwindcss.com)
   - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
 

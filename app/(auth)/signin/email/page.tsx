@@ -38,7 +38,7 @@ export default function SignInEmailPage() {
 						/>
 					</Link>
 					<h1 className="text-2xl font-semibold tracking-tight">
-						Sign in to Fragmenta
+						Sign in to your account
 					</h1>
 					<p className="text-sm text-muted-foreground">
 						Enter your email and password to sign in
