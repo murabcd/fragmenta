@@ -68,15 +68,8 @@ export default async function RootLayout({
 			<body className={`${geistSans.variable} ${geistMono.variable}`}>
 				<ConvexAuthNextjsServerProvider>
 					<ConvexClientProvider>
-						<ThemeProvider
-							attribute="class"
-							defaultTheme="dark"
-							enableSystem
-							disableTransitionOnChange
-						>
-							{children}
-							<Toaster />
-						</ThemeProvider>
+						{children}
+						<Toaster />
 					</ConvexClientProvider>
 				</ConvexAuthNextjsServerProvider>
 			</body>

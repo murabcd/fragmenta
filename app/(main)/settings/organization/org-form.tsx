@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import Image from "next/image";
-
 import { LoaderCircle, ImagePlus, Upload } from "lucide-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,6 +46,7 @@ import {
 
 import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useOrganization } from "@/hooks/use-organization";
+import { Icons } from "@/components/icons";
 
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -221,16 +220,13 @@ export const OrgForm = () => {
 								)}
 							>
 								{imageUrl ? (
-									<Image
+									<img
 										src={imageUrl}
 										alt="Logo"
 										className="h-24 w-24 object-cover"
-										width={96}
-										height={96}
-										priority
 									/>
 								) : (
-									<ImagePlus className="w-6 h-6 text-muted-foreground" />
+									<Icons.fragmenta className="w-12 h-12 text-muted-foreground" />
 								)}
 							</div>
 							<div>

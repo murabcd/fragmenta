@@ -1,9 +1,9 @@
 import Link from "next/link";
-import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 
 import { UserAuthForm } from "@/components/user-auth-form";
+import { Icons } from "@/components/icons";
 
 export const metadata = {
 	title: "Create an account",
@@ -18,22 +18,7 @@ export default function RegisterPage() {
 				<div className="w-full max-w-sm space-y-6">
 					<div className="flex flex-col items-center space-y-2 text-center">
 						<Link href="/">
-							<Image
-								src="/logo.svg"
-								alt="Logo"
-								width={32}
-								height={32}
-								className="dark:hidden cursor-pointer"
-								priority
-							/>
-							<Image
-								src="/logo-dark.svg"
-								alt="Logo"
-								width={32}
-								height={32}
-								className="hidden dark:block cursor-pointer"
-								priority
-							/>
+							<Icons.fragmenta className="h-8 w-8 cursor-pointer" />
 						</Link>
 						<h1 className="text-2xl font-semibold tracking-tight">
 							Create an account

@@ -1,18 +1,18 @@
 import { ThemeProvider } from "@/components/theme-provider";
 
-interface AuthLayoutProps {
+interface EditorLayoutProps {
 	children: React.ReactNode;
 }
 
-export default function AuthLayout({ children }: AuthLayoutProps) {
+export default function EditorLayout({ children }: EditorLayoutProps) {
 	return (
 		<ThemeProvider
 			attribute="class"
-			defaultTheme="dark"
+			defaultTheme="light"
 			enableSystem
 			disableTransitionOnChange
 		>
-			<div className="min-h-screen">{children}</div>
+			{children}
 		</ThemeProvider>
 	);
 }

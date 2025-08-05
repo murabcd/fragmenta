@@ -25,19 +25,16 @@
 
 - [Next.js](https://nextjs.org) App Router
   - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
+  - React Server Components for server-side rendering and increased performance
 - [Convex](https://www.convex.dev/)
   - Real-time database for storing form data and responses
   - Backend functions for form logic and processing
-  - File storage for uploads and assets
-- [NextAuth.js](https://next-auth.js.org)
-  - Authentication with multiple providers
-  - Session management
-  - User profiles
+- [Convex Auth](https://labs.convex.dev/auth)
+  - Simple and secure authentication without external services
+  - Built-in support for magic links, OTPs, OAuth, and password authentication
 - [AI SDK](https://sdk.vercel.ai/docs)
   - Unified API for generating text, structured objects, and tool calls with LLMs
   - Hooks for building dynamic chat and generative user interfaces
-  - Supports OpenAI (default), Anthropic, Cohere, and other model providers
 - [Shadcn/ui](https://ui.shadcn.com)
   - Styling with [Tailwind CSS](https://tailwindcss.com)
   - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
@@ -50,7 +47,7 @@ This app ships with [Openai](https://openai.com/) provider as the default. Howev
 
 You can deploy your own version of Fragmenta to Vercel with one click:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fforms&env=CONVEX_DEPLOY_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL&envDescription=Learn%20more%20about%20how%20to%20get%20the%20API%20Keys%20for%20the%20application&envLink=https%3A%2F%2Fgithub.com%2Fyourusername%2Fforms%2Fblob%2Fmain%2F.env.example&demo-title=Fragmenta&demo-description=A%20modern%20form%20builder%20application%20built%20with%20Next.js%2C%20Convex%2C%20and%20Tailwind%20CSS.&demo-url=https%3A%2F%2Fforms-demo.vercel.app)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Ffragmenta&env=CONVEX_DEPLOY_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL&envDescription=Learn%20more%20about%20how%20to%20get%20the%20API%20Keys%20for%20the%20application&envLink=https%3A%2F%2Fgithub.com%2Fyourusername%2Ffragmenta%2Fblob%2Fmain%2F.env.example&demo-title=Fragmenta&demo-description=A%20modern%20form%20builder%20application%20built%20with%20Next.js%2C%20Convex%2C%20and%20Tailwind%20CSS.&demo-url=https%3A%2F%2Ffragmenta.vercel.app)
 
 ## Running locally
 

@@ -1,7 +1,9 @@
-import { Header } from "./_components/header";
-import { Footer } from "./_components/footer";
+"use client";
 
 import { GridPattern } from "@/components/grid-pattern";
+import { HeaderSection } from "./_components/header-section";
+import { Footer } from "./_components/footer";
+import { ThemeProvider } from "next-themes";
 
 export default function MarketingLayout({
 	children,
@@ -9,13 +11,19 @@ export default function MarketingLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-col min-h-screen relative">
-			<GridPattern />
-			<Header />
-			<main className="flex-grow relative z-10">
-				<div className="py-24 md:py-32">{children}</div>
-			</main>
-			<Footer />
-		</div>
+		<ThemeProvider
+			attribute="class"
+			defaultTheme="dark"
+			forcedTheme="dark"
+			enableSystem={false}
+			disableTransitionOnChange
+		>
+			<div className="flex flex-col min-h-screen relative">
+				<GridPattern />
+				<HeaderSection />
+				<main className="flex-grow relative z-10">{children}</main>
+				<Footer />
+			</div>
+		</ThemeProvider>
 	);
 }

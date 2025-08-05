@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 
 import Link from "next/link";
-import Image from "next/image";
 
 import { UserAuthForm } from "@/components/user-auth-form";
+import { Icons } from "@/components/icons";
 
 export const metadata: Metadata = {
 	title: "Welcome to Fragmenta",
@@ -21,22 +21,7 @@ export default async function InviteRegisterPage({
 		<div className="container flex h-screen w-screen flex-col items-center justify-center">
 			<div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
 				<div className="flex flex-col items-center space-y-2 text-center">
-					<Image
-						src="/logo.svg"
-						alt="Logo"
-						width={32}
-						height={32}
-						className="dark:hidden"
-						priority
-					/>
-					<Image
-						src="/logo-dark.svg"
-						alt="Logo"
-						width={32}
-						height={32}
-						className="hidden dark:block"
-						priority
-					/>
+					<Icons.fragmenta className="h-8 w-8" />
 					<h1 className="text-2xl font-semibold tracking-tight">
 						Welcome to Fragmenta
 					</h1>

@@ -16,6 +16,10 @@ const nextConfig = {
 				protocol: "https",
 				hostname: "brilliant-cobra-27.convex.cloud",
 			},
+			{
+				protocol: "https",
+				hostname: "giddy-ladybug-159.convex.cloud",
+			},
 		],
 	},
 	pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],

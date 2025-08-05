@@ -15,6 +15,7 @@ import {
 	BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
@@ -36,7 +37,12 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 	};
 
 	return (
-		<>
+		<ThemeProvider
+			attribute="class"
+			defaultTheme="dark"
+			enableSystem
+			disableTransitionOnChange
+		>
 			<SidebarProvider>
 				<AppSidebar />
 				<SidebarInset>
@@ -63,7 +69,7 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 				</SidebarInset>
 			</SidebarProvider>
 			<Toaster />
-		</>
+		</ThemeProvider>
 	);
 };
 
