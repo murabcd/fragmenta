@@ -21,9 +21,7 @@
 		"@dnd-kit/sortable": "^10.0.0",
 		"@dnd-kit/utilities": "^3.2.2",
 		"@hookform/resolvers": "^5.2.1",
-		"@mdx-js/loader": "^3.1.0",
-		"@mdx-js/react": "^3.1.0",
-		"@next/mdx": "^14.2.31",
+
 		"@radix-ui/react-progress": "^1.1.7",
 		"@radix-ui/react-select": "^2.2.5",
 		"@radix-ui/react-slot": "^1.2.3",
@@ -32,7 +30,7 @@
 		"@react-email/components": "0.0.22",
 		"@react-email/render": "^1.1.4",
 		"@t3-oss/env-nextjs": "^0.10.1",
-		"@types/mdx": "^2.0.13",
+
 		"@xixixao/uploadstuff": "^0.0.5",
 		"ai": "^5.0.2",
 		"class-variance-authority": "^0.7.1",
