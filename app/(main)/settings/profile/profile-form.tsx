@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { useSession, signOut } from "next-auth/react";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 import Image from "next/image";
 
@@ -59,11 +59,10 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 
 const profileFormSchema = z.object({
 	name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-	email: z.string().email({ message: "Invalid email address" }),
+	email: z.email({ message: "Invalid email address" }),
 	role: z.enum(["owner", "admin", "member"]),
 });
 
@@ -88,7 +87,7 @@ type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 export const ProfileForm = () => {
 	const router = useRouter();
 
-	const { data: session } = useSession();
+	const { signOut } = useAuthActions();
 
 	const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 	const [isUploading, setIsUploading] = useState(false);
@@ -100,15 +99,12 @@ export const ProfileForm = () => {
 
 	const generateUploadUrl = useMutation(api.files.generateUploadUrl);
 
-	const { mutate: getImageUrl } = useApiMutation(api.files.getImageUrl);
-	const { mutate: saveImageUrl } = useApiMutation(api.users.avatar);
-	const { mutate: updateUser } = useApiMutation(api.users.profile);
-	const { mutate: updatePassword } = useApiMutation(api.users.password);
-	const { mutate: deleteUser } = useApiMutation(api.users.remove);
+	const { mutate: getImageUrl } = useApiMutation(api.files.getStorageUrl);
+	const { mutate: saveImageUrl } = useApiMutation(api.users.updateUserAvatar);
+	const { mutate: updateUser } = useApiMutation(api.users.updateUserProfile);
+	const { mutate: deleteUser } = useApiMutation(api.users.deleteUserById);
 
-	const user = useQuery(api.users.get, {
-		id: session?.user?.id as Id<"users">,
-	});
+	const user = useQuery(api.users.getCurrentUser);
 
 	const profileForm = useForm<ProfileFormValues>({
 		resolver: zodResolver(profileFormSchema),
@@ -132,7 +128,7 @@ export const ProfileForm = () => {
 		event: React.ChangeEvent<HTMLInputElement>,
 	) => {
 		const file = event.target.files?.[0];
-		if (file && session?.user?.id) {
+		if (file && user?._id) {
 			setIsUploading(true);
 			const promise = (async () => {
 				const uploadUrl = await generateUploadUrl();
@@ -144,7 +140,7 @@ export const ProfileForm = () => {
 				const { storageId } = await result.json();
 				const url = await getImageUrl({ storageId });
 				setAvatarUrl(url);
-				await saveImageUrl({ userId: session?.user?.id ?? "", imageUrl: url });
+				await saveImageUrl({ userId: user?._id ?? "", imageUrl: url });
 			})();
 
 			toast.promise(promise, {
@@ -158,13 +154,13 @@ export const ProfileForm = () => {
 	};
 
 	const onSubmitProfile = async (values: ProfileFormValues) => {
-		if (!session?.user?.id) {
+		if (!user?._id) {
 			return;
 		}
 
 		setIsSubmittingProfile(true);
 		const promise = updateUser({
-			id: session.user.id,
+			id: user._id,
 			name: values.name,
 			email: values.email,
 			role: values.role !== "owner" ? values.role : undefined,
@@ -181,18 +177,16 @@ export const ProfileForm = () => {
 	};
 
 	const onSubmitPassword = async (values: PasswordFormValues) => {
-		if (!session?.user?.id) {
+		if (!user?._id) {
 			toast.error("User session not found");
 			return;
 		}
 
 		setIsSubmittingPassword(true);
-		const promise = updatePassword({
-			userId: session.user.id,
+		const promise = updateUser({
+			userId: user._id,
 			currentPassword: values.currentPassword,
 			newPassword: values.newPassword,
-		}).then(() => {
-			passwordForm.reset();
 		});
 
 		toast.promise(promise, {
@@ -206,13 +200,13 @@ export const ProfileForm = () => {
 	};
 
 	const handleDeleteUser = async () => {
-		if (!session?.user?.id) {
+		if (!user?._id) {
 			toast.error("User session not found");
 			return;
 		}
 
-		const promise = deleteUser({ id: session.user.id }).then(() => {
-			signOut({ callbackUrl: "/" });
+		const promise = deleteUser({ id: user._id }).then(() => {
+			signOut();
 			router.push("/");
 		});
 

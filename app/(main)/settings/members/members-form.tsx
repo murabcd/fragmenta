@@ -56,7 +56,7 @@ import { api } from "@/convex/_generated/api";
 import { useOrganization } from "@/hooks/use-organization";
 
 const formSchema = z.object({
-	email: z.string().email({ message: "Invalid email address" }),
+	email: z.email({ message: "Invalid email address" }),
 	role: z.enum(["member", "admin"]),
 });
 
@@ -66,15 +66,15 @@ export const MembersForm = () => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const pending = useQuery(
-		api.invitations.get,
+		api.invitations.getInvitationsByOrganization,
 		organization?._id ? { orgId: organization._id } : "skip",
 	);
 	const existing = useQuery(
-		api.members.get,
+		api.members.getMembersByOrganization,
 		organization?._id ? { orgId: organization._id } : "skip",
 	);
 
-	const { mutate: sendInvite } = useApiMutation(api.invitations.send);
+	const { mutate: sendInvite } = useApiMutation(api.invitations.sendInvitation);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),

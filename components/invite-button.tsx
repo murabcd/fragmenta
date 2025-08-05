@@ -48,12 +48,12 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 import { api } from "@/convex/_generated/api";
 
 const formSchema = z.object({
-	email: z.string().email({ message: "Invalid email address" }),
+	email: z.email({ message: "Invalid email address" }),
 	role: z.enum(["admin", "member"]),
 });
 
 export const InviteButton = () => {
-	const { mutate: sendInvite } = useApiMutation(api.invitations.send);
+	const { mutate: sendInvite } = useApiMutation(api.invitations.sendInvitation);
 
 	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);

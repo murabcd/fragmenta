@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 	description: "Expired verification link",
 };
 
-export default function Error() {
+export default function ErrorPage() {
 	return (
 		<div className="flex h-screen w-full items-center justify-center bg-muted/40">
 			<div className="h-full flex flex-col items-center justify-center">
@@ -24,7 +24,7 @@ export default function Error() {
 				</p>
 				<div className="mt-6">
 					<Button asChild>
-						<Link href="/signin">
+						<Link href="/login">
 							<ChevronLeft className="w-4 h-4 mr-2" />
 							Back
 						</Link>

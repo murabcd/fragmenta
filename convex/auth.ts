@@ -1,36 +1,19 @@
-import { Auth } from "convex/server";
-import { Id } from "./_generated/dataModel";
+import { convexAuth } from "@convex-dev/auth/server";
+import Google from "@auth/core/providers/google";
+import Resend from "@auth/core/providers/resend";
+import { Password } from "@convex-dev/auth/providers/Password";
+import type { DataModel } from "./_generated/dataModel";
 
-import { v } from "convex/values";
-import { query } from "./_generated/server";
+const CustomPassword = Password<DataModel>({
+	profile(params) {
+		return {
+			email: params.email as string,
+			name: params.name as string,
+			role: params.role as "owner" | "admin" | "member",
+		};
+	},
+});
 
-export async function getViewerId(ctx: { auth: Auth }) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (identity === null) {
-    return null;
-  }
-  return identity.subject as Id<"users">;
-}
-
-export const getUser = query({
-  args: {
-    email: v.string(),
-    name: v.optional(v.string()),
-    image: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Unauthorized");
-    }
-
-    const questions = await ctx.db
-      .query("users")
-      .withIndex("email", (query) => query.eq("email", args.email))
-      .order("asc")
-      .collect();
-
-    return questions;
-  },
+export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
+	providers: [Google, Resend, CustomPassword],
 });

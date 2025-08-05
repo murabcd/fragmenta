@@ -1,23 +1,19 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
 import { query, mutation } from "./_generated/server";
 
-import type { Id } from "./_generated/dataModel";
-
-// Single form operations
-
-export const create = mutation({
+export const createForm = mutation({
 	args: {
 		title: v.string(),
 		orgId: v.id("organizations"),
 	},
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await getAuthUserId(ctx);
 
-		if (!identity) {
+		if (!userId) {
 			throw new Error("Unauthorized");
 		}
-		const userId = identity.subject as Id<"users">;
 
 		const user = await ctx.db.get(userId);
 
@@ -28,7 +24,7 @@ export const create = mutation({
 		const form = await ctx.db.insert("forms", {
 			title: args.title,
 			userId,
-			name: user.name!,
+			name: user.name || "",
 			orgId: args.orgId,
 			isPublished: false,
 		});
@@ -37,12 +33,12 @@ export const create = mutation({
 	},
 });
 
-export const remove = mutation({
+export const deleteForm = mutation({
 	args: { id: v.id("forms") },
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await getAuthUserId(ctx);
 
-		if (!identity) {
+		if (!userId) {
 			throw new Error("Unauthorized");
 		}
 
@@ -59,12 +55,12 @@ export const remove = mutation({
 	},
 });
 
-export const update = mutation({
+export const updateFormTitle = mutation({
 	args: { id: v.id("forms"), title: v.string() },
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await getAuthUserId(ctx);
 
-		if (!identity) {
+		if (!userId) {
 			throw new Error("Unauthorized");
 		}
 
@@ -86,7 +82,7 @@ export const update = mutation({
 	},
 });
 
-export const get = query({
+export const getFormById = query({
 	args: { id: v.id("forms") },
 	handler: async (ctx, args) => {
 		const form = await ctx.db.get(args.id);
@@ -99,9 +95,9 @@ export const get = query({
 			return form;
 		}
 
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await getAuthUserId(ctx);
 
-		if (!identity) {
+		if (!userId) {
 			return null;
 		}
 
@@ -109,12 +105,12 @@ export const get = query({
 	},
 });
 
-export const publish = mutation({
+export const updateFormPublishStatus = mutation({
 	args: { id: v.id("forms"), isPublished: v.boolean() },
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await getAuthUserId(ctx);
 
-		if (!identity) {
+		if (!userId) {
 			throw new Error("Unauthorized");
 		}
 
@@ -126,16 +122,14 @@ export const publish = mutation({
 	},
 });
 
-// Multiple form operations
-
-export const getAll = query({
+export const getFormsByOrganization = query({
 	args: {
 		orgId: v.id("organizations"),
 	},
 	handler: async (ctx, args) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await getAuthUserId(ctx);
 
-		if (!identity) {
+		if (!userId) {
 			throw new Error("Unauthorized");
 		}
 
@@ -149,15 +143,13 @@ export const getAll = query({
 	},
 });
 
-export const search = query({
+export const getUserForms = query({
 	handler: async (ctx) => {
-		const identity = await ctx.auth.getUserIdentity();
+		const userId = await getAuthUserId(ctx);
 
-		if (!identity) {
+		if (!userId) {
 			throw new Error("Unauthorized");
 		}
-
-		const userId = identity.subject as Id<"users">;
 
 		const forms = await ctx.db
 			.query("forms")
@@ -166,5 +158,32 @@ export const search = query({
 			.collect();
 
 		return forms;
+	},
+});
+
+export const search = query({
+	args: {
+		searchTerm: v.optional(v.string()),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("Unauthorized");
+		}
+
+		const forms = await ctx.db
+			.query("forms")
+			.withIndex("by_user", (query) => query.eq("userId", userId))
+			.order("desc")
+			.collect();
+
+		if (!args.searchTerm) {
+			return forms;
+		}
+
+		return forms.filter((form) =>
+			form.title.toLowerCase().includes(args.searchTerm!.toLowerCase()),
+		);
 	},
 });

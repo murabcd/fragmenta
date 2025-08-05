@@ -1,33 +1,42 @@
-import { auth } from "@/auth";
+import {
+	convexAuthNextjsMiddleware,
+	createRouteMatcher,
+	nextjsMiddlewareRedirect,
+} from "@convex-dev/auth/nextjs/server";
 
-import { NextResponse } from "next/server";
+const isSignInPage = createRouteMatcher([
+	"/login",
+	"/login/email",
+	"/register",
+	"/register/invite",
+]);
+const isPublicPage = createRouteMatcher(["/", "/about", "/pricing"]);
+const isPublishedFormPage = createRouteMatcher(["/published(.*)"]);
+const isOAuthPage = createRouteMatcher(["/api/auth(.*)"]);
+const isProtectedRoute = createRouteMatcher([
+	"/home(.*)",
+	"/form(.*)",
+	"/settings(.*)",
+]);
 
-export default auth((req) => {
-	const publicPages = ["/", "/about", "/pricing"];
-	const authPages = [
-		"/signin",
-		"/signin/email",
-		"/register",
-		"/register/invite",
-	];
-	const oauthPages = ["/api/auth"];
-	const publishedFormPages = ["/published"];
-
+export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
 	if (
-		publicPages.includes(req.nextUrl.pathname) ||
-		authPages.includes(req.nextUrl.pathname) ||
-		req.nextUrl.pathname.startsWith(oauthPages[0]) ||
-		req.nextUrl.pathname.startsWith(publishedFormPages[0])
+		isPublicPage(request) ||
+		isOAuthPage(request) ||
+		isPublishedFormPage(request)
 	) {
-		return NextResponse.next();
+		return;
 	}
 
-	if (!req.auth) {
-		const newUrl = new URL("/signin", req.nextUrl.origin);
-		return NextResponse.redirect(newUrl);
+	if (isSignInPage(request) && (await convexAuth.isAuthenticated())) {
+		return nextjsMiddlewareRedirect(request, "/home");
+	}
+
+	if (isProtectedRoute(request) && !(await convexAuth.isAuthenticated())) {
+		return nextjsMiddlewareRedirect(request, "/login");
 	}
 });
 
 export const config = {
-	matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+	matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };

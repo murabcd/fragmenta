@@ -14,7 +14,7 @@ export const sendEmail = internalAction({
 		role: v.union(v.literal("admin"), v.literal("member")),
 		token: v.string(),
 	},
-	handler: async (ctx, args) => {
+	handler: async (_ctx, args) => {
 		const resend = new Resend(process.env.RESEND_API_KEY);
 
 		const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/register/invite?token=${args.token}`;

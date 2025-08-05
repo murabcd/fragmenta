@@ -25,9 +25,10 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { useSession, signOut } from "next-auth/react";
+import { useAuthActions } from "@convex-dev/auth/react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
 	user,
@@ -40,8 +41,11 @@ export function NavUser({
 }) {
 	const { isMobile } = useSidebar();
 	const { theme, setTheme } = useTheme();
+	const { signOut } = useAuthActions();
+	const router = useRouter();
 	const handleSignOut = () => {
-		void signOut({ callbackUrl: "/" });
+		void signOut();
+		router.push("/");
 	};
 
 	return (

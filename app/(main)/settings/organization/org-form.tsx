@@ -68,10 +68,16 @@ export const OrgForm = () => {
 	const router = useRouter();
 	const { organization, setCurrentOrganization } = useOrganization();
 
-	const { mutate: updateOrg } = useApiMutation(api.organizations.update);
-	const { mutate: getImageUrl } = useApiMutation(api.files.getImageUrl);
-	const { mutate: saveImageUrl } = useApiMutation(api.files.saveImageUrl);
-	const { mutate: deleteOrg } = useApiMutation(api.organizations.remove);
+	const { mutate: updateOrg } = useApiMutation(
+		api.organizations.updateOrganization,
+	);
+	const { mutate: getImageUrl } = useApiMutation(api.files.getStorageUrl);
+	const { mutate: saveImageUrl } = useApiMutation(
+		api.files.updateOrganizationImage,
+	);
+	const { mutate: deleteOrg } = useApiMutation(
+		api.organizations.deleteOrganization,
+	);
 
 	const generateUploadUrl = useMutation(api.files.generateUploadUrl);
 

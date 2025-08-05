@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-import { useDebouncedCallback } from "use-debounce";
-
 import { toast } from "sonner";
 
 import { Info } from "./info";
@@ -13,26 +11,134 @@ import { Settings } from "./settings";
 
 import { type Question, QuestionType } from "@/types/canvas";
 
-import { useQuery } from "convex/react";
-
-import { useApiMutation } from "@/hooks/use-api-mutation";
+import { useQuery, useMutation } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 
 interface CanvasProps {
-	formId: string;
+	formId: Id<"forms">;
 }
 
 export const Canvas = ({ formId }: CanvasProps) => {
-	const questions = useQuery(api.questions.get, { formId }) as Question[];
+	const questions = useQuery(api.questions.getQuestionsByForm, {
+		formId,
+	}) as Question[];
 
-	const { mutate: updateType } = useApiMutation(api.questions.type);
-	const { mutate: updateTitle } = useApiMutation(api.questions.title);
-	const { mutate: updateDescription } = useApiMutation(
-		api.questions.description,
-	);
-	const { mutate: updateChoices } = useApiMutation(api.questions.choices);
-	const { mutate: updateRequired } = useApiMutation(api.questions.required);
+	const updateType = useMutation(
+		api.questions.updateQuestionType,
+	).withOptimisticUpdate((localStore, args) => {
+		const currentQuestions = localStore.getQuery(
+			api.questions.getQuestionsByForm,
+			{ formId },
+		);
+		if (currentQuestions !== undefined) {
+			const updatedQuestions = currentQuestions.map((question) =>
+				question._id === args.id
+					? { ...question, type: args.type, choices: [] }
+					: question,
+			);
+			localStore.setQuery(
+				api.questions.getQuestionsByForm,
+				{ formId },
+				updatedQuestions,
+			);
+		}
+	});
+
+	const updateTitle = useMutation(
+		api.questions.updateQuestionTitle,
+	).withOptimisticUpdate((localStore, args) => {
+		const currentQuestions = localStore.getQuery(
+			api.questions.getQuestionsByForm,
+			{ formId },
+		);
+		if (currentQuestions !== undefined) {
+			const updatedQuestions = currentQuestions.map((question) =>
+				question._id === args.id
+					? { ...question, title: args.title }
+					: question,
+			);
+			localStore.setQuery(
+				api.questions.getQuestionsByForm,
+				{ formId },
+				updatedQuestions,
+			);
+		}
+	});
+
+	const updateDescription = useMutation(
+		api.questions.updateQuestionDescription,
+	).withOptimisticUpdate((localStore, args) => {
+		const currentQuestions = localStore.getQuery(
+			api.questions.getQuestionsByForm,
+			{ formId },
+		);
+		if (currentQuestions !== undefined) {
+			const updatedQuestions = currentQuestions.map((question) =>
+				question._id === args.id
+					? { ...question, description: args.description }
+					: question,
+			);
+			localStore.setQuery(
+				api.questions.getQuestionsByForm,
+				{ formId },
+				updatedQuestions,
+			);
+		}
+	});
+
+	const updateChoices = useMutation(
+		api.questions.updateQuestionChoices,
+	).withOptimisticUpdate((localStore, args) => {
+		const currentQuestions = localStore.getQuery(
+			api.questions.getQuestionsByForm,
+			{ formId },
+		);
+		if (currentQuestions !== undefined) {
+			const updatedQuestions = currentQuestions.map((question) =>
+				question._id === args.id
+					? { ...question, choices: args.choices }
+					: question,
+			);
+			localStore.setQuery(
+				api.questions.getQuestionsByForm,
+				{ formId },
+				updatedQuestions,
+			);
+		}
+	});
+
+	const updateRequired = useMutation(
+		api.questions.updateQuestionRequired,
+	).withOptimisticUpdate((localStore, args) => {
+		const currentQuestions = localStore.getQuery(
+			api.questions.getQuestionsByForm,
+			{ formId },
+		);
+		if (currentQuestions !== undefined) {
+			const updatedQuestions = currentQuestions.map((question) =>
+				question._id === args.id
+					? { ...question, isRequired: args.isRequired }
+					: question,
+			);
+			localStore.setQuery(
+				api.questions.getQuestionsByForm,
+				{ formId },
+				updatedQuestions,
+			);
+		}
+	});
+
+	const handleUpdateChoices = async (choices: {
+		id: Id<"questions">;
+		choices: string[];
+	}) => {
+		await updateChoices({
+			id: choices.id as Id<"questions">,
+			choices: choices.choices,
+		});
+	};
 
 	const [newTitle, setNewTitle] = useState<string>("");
 	const [newDescription, setNewDescription] = useState<string>("");
@@ -43,28 +149,17 @@ export const Canvas = ({ formId }: CanvasProps) => {
 		null,
 	);
 
-	const debouncedSaveTitle = useDebouncedCallback((id, newTitle) => {
-		updateTitle({ id, title: newTitle });
-	}, 500);
-
-	const debouncedSaveDescription = useDebouncedCallback(
-		(id, newDescription) => {
-			updateDescription({ id, description: newDescription });
-		},
-		500,
-	);
-
 	const handleTitleChange = (id: string, title: string) => {
 		setNewTitle(title);
-		debouncedSaveTitle(id, title);
+		updateTitle({ id: id as Id<"questions">, title });
 	};
 
 	const handleDescriptionChange = (id: string, description: string) => {
 		setNewDescription(description);
-		debouncedSaveDescription(id, description);
+		updateDescription({ id: id as Id<"questions">, description });
 	};
 
-	const handleResponseChange = (id: string, response: string | string[]) => {
+	const handleResponseChange = (_id: string, response: string | string[]) => {
 		setNewResponse(response);
 	};
 
@@ -82,8 +177,8 @@ export const Canvas = ({ formId }: CanvasProps) => {
 			setNewType(newType);
 
 			const promise = Promise.all([
-				updateType({ id, type: newType }),
-				updateChoices({ id, choices: [] }),
+				updateType({ id: id as Id<"questions">, type: newType }),
+				updateChoices({ id: id as Id<"questions">, choices: [] }),
 			]);
 
 			toast.promise(promise, {
@@ -94,7 +189,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
 
 			try {
 				await promise;
-			} catch (error) {
+			} catch (_error) {
 				setSelectedQuestion(previousQuestion);
 			}
 		}
@@ -107,7 +202,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
 			const previousQuestion = { ...selectedQuestion };
 			setSelectedQuestion({ ...selectedQuestion, isRequired });
 
-			const promise = updateRequired({ id, isRequired });
+			const promise = updateRequired({ id: id as Id<"questions">, isRequired });
 
 			toast.promise(promise, {
 				loading: "Updating...",
@@ -143,7 +238,7 @@ export const Canvas = ({ formId }: CanvasProps) => {
 					onTitleChange={handleTitleChange}
 					onDescriptionChange={handleDescriptionChange}
 					onResponseChange={handleResponseChange}
-					updateChoices={updateChoices}
+					updateChoices={handleUpdateChoices}
 				/>
 				<div className="hidden sm:block">
 					<Settings

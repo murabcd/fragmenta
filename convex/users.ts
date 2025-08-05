@@ -1,119 +1,27 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
+import type { Doc } from "./_generated/dataModel";
+import { mutation, query } from "./_generated/server";
 
-import { mutation, query, action } from "./_generated/server";
-import { api } from "./_generated/api";
-import { Doc, Id } from "./_generated/dataModel";
-
-import bcrypt from "bcryptjs";
-
-export const create = action({
-	args: {
-		email: v.string(),
-		name: v.string(),
-		password: v.string(),
-		role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
-		inviteToken: v.optional(v.string()),
-		emailVerified: v.optional(v.number()),
-	},
-	handler: async (ctx, args): Promise<Doc<"users"> | null> => {
-		const existingUser = await ctx.runQuery(api.users.email, {
-			email: args.email,
-		});
-
-		if (existingUser) {
-			throw new Error("User with this email already exists");
+export const getCurrentUser = query({
+	args: {},
+	handler: async (ctx): Promise<Doc<"users"> | null> => {
+		const userId = await getAuthUserId(ctx);
+		if (!userId) {
+			return null;
 		}
-
-		const hashedPassword = await bcrypt.hash(args.password, 10);
-
-		const userId = await ctx.runMutation(api.users.insert, {
-			email: args.email,
-			name: args.name,
-			password: hashedPassword,
-			role: args.role,
-			emailVerified: args.emailVerified,
-		});
-
-		if (args.inviteToken) {
-			const invitation = await ctx.runQuery(api.invitations.token, {
-				token: args.inviteToken,
-			});
-
-			if (invitation) {
-				await ctx.runMutation(api.members.add, {
-					userId,
-					orgId: invitation.orgId,
-					role: invitation.role as "admin" | "member",
-					name: args.name,
-					email: args.email,
-				});
-
-				await ctx.runMutation(api.invitations.status, {
-					id: invitation._id,
-					status: "accepted",
-				});
-			}
-		}
-
-		return await ctx.runQuery(api.users.get, { id: userId });
+		return await ctx.db.get(userId);
 	},
 });
 
-export const verify = action({
-	args: {
-		email: v.string(),
-		password: v.string(),
-	},
-	handler: async (ctx, args): Promise<boolean> => {
-		const user = await ctx.runQuery(api.users.email, { email: args.email });
-
-		if (!user || !user.password) {
-			return false;
-		}
-
-		return await bcrypt.compare(args.password, user.password);
-	},
-});
-
-export const get = query({
+export const getUserById = query({
 	args: { id: v.id("users") },
 	handler: async (ctx, args): Promise<Doc<"users"> | null> => {
 		return await ctx.db.get(args.id);
 	},
 });
 
-export const insert = mutation({
-	args: {
-		email: v.string(),
-		name: v.string(),
-		password: v.string(),
-		emailVerified: v.optional(v.number()),
-		role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
-	},
-	handler: async (ctx, args): Promise<Id<"users">> => {
-		return await ctx.db.insert("users", args);
-	},
-});
-
-export const update = mutation({
-	args: {
-		id: v.id("users"),
-		name: v.optional(v.string()),
-		email: v.optional(v.string()),
-		password: v.optional(v.string()),
-	},
-	handler: async (ctx, args): Promise<void> => {
-		const updates: Partial<typeof args> = {};
-		if (args.name !== undefined) updates.name = args.name;
-		if (args.email !== undefined) updates.email = args.email;
-		if (args.password !== undefined) {
-			updates.password = await bcrypt.hash(args.password, 10);
-		}
-		await ctx.db.patch(args.id, updates);
-	},
-});
-
-export const email = query({
+export const getUserByEmail = query({
 	args: { email: v.string() },
 	handler: async (ctx, args): Promise<Doc<"users"> | null> => {
 		return await ctx.db
@@ -123,9 +31,60 @@ export const email = query({
 	},
 });
 
-// Profile settings
+export const deleteCurrentUser = mutation({
+	args: {},
+	handler: async (ctx) => {
+		const userId = await getAuthUserId(ctx);
+		if (!userId) {
+			throw new Error("User not authenticated");
+		}
 
-export const avatar = mutation({
+		await ctx.db.delete(userId);
+
+		return { success: true };
+	},
+});
+
+export const updateCurrentUserProfile = mutation({
+	args: {
+		name: v.string(),
+		email: v.string(),
+		avatarStorageId: v.optional(v.id("_storage")),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+		if (!userId) {
+			throw new Error("User not authenticated");
+		}
+
+		let avatarUrlToStore: string | undefined;
+
+		if (args.avatarStorageId) {
+			const urlFromResult = await ctx.storage.getUrl(args.avatarStorageId);
+			if (urlFromResult) {
+				avatarUrlToStore = urlFromResult;
+			} else {
+				console.warn(
+					`Could not get URL for storageId: ${args.avatarStorageId}. Avatar URL will not be updated.`,
+				);
+				avatarUrlToStore = undefined;
+			}
+		}
+
+		await ctx.db.patch(userId, {
+			name: args.name,
+			email: args.email,
+			...(args.avatarStorageId !== undefined && {
+				avatarStorageId: args.avatarStorageId,
+			}),
+			image: args.avatarStorageId ? avatarUrlToStore : undefined,
+		});
+
+		return { success: true };
+	},
+});
+
+export const updateUserAvatar = mutation({
 	args: { userId: v.id("users"), imageUrl: v.string() },
 	handler: async (ctx, args) => {
 		const { userId, imageUrl } = args;
@@ -133,14 +92,11 @@ export const avatar = mutation({
 	},
 });
 
-export const profile = mutation({
+export const updateUserProfile = mutation({
 	args: {
 		id: v.id("users"),
 		name: v.optional(v.string()),
 		email: v.optional(v.string()),
-		role: v.optional(
-			v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
-		),
 	},
 	handler: async (ctx, args) => {
 		const { id, ...updates } = args;
@@ -148,50 +104,9 @@ export const profile = mutation({
 	},
 });
 
-export const password = mutation({
-	args: {
-		userId: v.id("users"),
-		currentPassword: v.string(),
-		newPassword: v.string(),
-	},
-	handler: async (ctx, args) => {
-		const user = await ctx.db.get(args.userId);
-		if (!user || !user.password) {
-			throw new Error("User not found or password not set");
-		}
-
-		const isCurrentPasswordValid = await bcrypt.compare(
-			args.currentPassword,
-			user.password,
-		);
-		if (!isCurrentPasswordValid) {
-			throw new Error("Current password is incorrect");
-		}
-
-		const hashedNewPassword = await bcrypt.hash(args.newPassword, 10);
-		await ctx.db.patch(args.userId, { password: hashedNewPassword });
-	},
-});
-
-export const remove = mutation({
+export const deleteUserById = mutation({
 	args: { id: v.id("users") },
 	handler: async (ctx, args): Promise<void> => {
 		await ctx.db.delete(args.id);
-
-		const sessions = await ctx.db
-			.query("sessions")
-			.withIndex("userId", (q) => q.eq("userId", args.id))
-			.collect();
-		for (const session of sessions) {
-			await ctx.db.delete(session._id);
-		}
-
-		const accounts = await ctx.db
-			.query("accounts")
-			.withIndex("userId", (q) => q.eq("userId", args.id))
-			.collect();
-		for (const account of accounts) {
-			await ctx.db.delete(account._id);
-		}
 	},
 });

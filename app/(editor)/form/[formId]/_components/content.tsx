@@ -6,8 +6,10 @@ import { QuestionContent } from "@/components/question-content";
 
 import { EmptyQuestionState } from "@/components/empty-question-state";
 
+import type { Id } from "@/convex/_generated/dataModel";
+
 interface ContentProps {
-	formId: string;
+	formId: Id<"forms">;
 	questions: Question[];
 	selectedQuestion: Question | null;
 	newTitle: string;
@@ -16,7 +18,10 @@ interface ContentProps {
 	onTitleChange: (id: string, title: string) => void;
 	onDescriptionChange: (id: string, description: string) => void;
 	onResponseChange: (id: string, response: string | string[]) => void;
-	updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
+	updateChoices: (choices: {
+		id: Id<"questions">;
+		choices: string[];
+	}) => Promise<void>;
 }
 
 export const Content = ({

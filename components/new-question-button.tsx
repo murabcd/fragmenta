@@ -3,55 +3,92 @@
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
-import { Hint } from "@/components/hint";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { Plus, LoaderCircle } from "lucide-react";
 
 import { QuestionType } from "@/types/canvas";
 
-import { useQuery } from "convex/react";
-
-import { useApiMutation } from "@/hooks/use-api-mutation";
+import { useQuery, useMutation } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
 
+import type { Id } from "@/convex/_generated/dataModel";
+
 interface NewQuestionButtonProps {
-  formId: string;
+	formId: Id<"forms">;
 }
 
 export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
-  const data = useQuery(api.questions.count, { formId });
-  const { mutate, pending } = useApiMutation(api.questions.create);
+	const data = useQuery(api.questions.getQuestionCount, { formId });
+	const createQuestion = useMutation(
+		api.questions.createQuestion,
+	).withOptimisticUpdate((localStore, args) => {
+		const currentQuestions = localStore.getQuery(
+			api.questions.getQuestionsByForm,
+			{ formId },
+		);
+		if (currentQuestions !== undefined) {
+			const optimisticQuestion = {
+				_id: `temp-${Date.now()}` as Id<"questions">,
+				_creationTime: Date.now(),
+				title: args.title,
+				description: args.description,
+				type: args.type,
+				choices: args.choices,
+				position: args.position,
+				isRequired: args.isRequired,
+				formId: args.formId,
+			};
+			localStore.setQuery(api.questions.getQuestionsByForm, { formId }, [
+				...currentQuestions,
+				optimisticQuestion,
+			]);
+		}
+	});
 
-  const onClick = () => {
-    const position = data ?? 0;
+	const onClick = () => {
+		const position = data ?? 0;
 
-    mutate({
-      formId,
-      title: "Untitled",
-      description: "",
-      type: QuestionType.Short,
-      choices: [],
-      position,
-      isRequired: false,
-    })
-      .then(() => {
-        toast.success("Question created");
-      })
-      .catch(() => toast.error("Failed to create question"));
-  };
+		createQuestion({
+			formId,
+			title: "Untitled",
+			description: "",
+			type: QuestionType.Short,
+			choices: [],
+			position,
+			isRequired: false,
+		})
+			.then(() => {
+				toast.success("Question created");
+			})
+			.catch(() => toast.error("Failed to create question"));
+	};
 
-  return (
-    <div>
-      <Hint label="Add question" side="bottom" sideOffset={10}>
-        <Button variant="outline" size="icon" onClick={onClick} disabled={pending}>
-          {pending ? (
-            <LoaderCircle className="animate-spin w-4 h-4" />
-          ) : (
-            <Plus className="w-4 h-4" />
-          )}
-        </Button>
-      </Hint>
-    </div>
-  );
+	return (
+		<div>
+			<TooltipProvider>
+				<Tooltip delayDuration={0}>
+					<TooltipTrigger asChild>
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={onClick}
+							className="cursor-pointer"
+						>
+							<Plus className="w-4 h-4" />
+						</Button>
+					</TooltipTrigger>
+					<TooltipContent side="bottom" sideOffset={10}>
+						Add question
+					</TooltipContent>
+				</Tooltip>
+			</TooltipProvider>
+		</div>
+	);
 };

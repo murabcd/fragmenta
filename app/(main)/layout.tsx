@@ -11,13 +11,10 @@ import { Separator } from "@/components/ui/separator";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
-	BreadcrumbLink,
 	BreadcrumbList,
 	BreadcrumbPage,
-	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Toaster } from "@/components/ui/sonner";
-import { ModalProvider } from "@/providers/modal-provider";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
@@ -66,7 +63,6 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 				</SidebarInset>
 			</SidebarProvider>
 			<Toaster />
-			<ModalProvider />
 		</>
 	);
 };

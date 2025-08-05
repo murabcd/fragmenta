@@ -93,7 +93,7 @@ export const MobileMainNav = () => {
 						Pricing
 					</Link>
 					<Link
-						href="/signin"
+						href="/login"
 						className="py-2 text-sm"
 						onClick={() => setOpen(false)}
 					>

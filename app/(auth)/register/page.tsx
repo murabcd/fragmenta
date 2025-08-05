@@ -12,10 +12,10 @@ export const metadata = {
 
 export default function RegisterPage() {
 	return (
-		<div className="flex h-screen">
+		<div className="flex min-h-screen w-full">
 			<div className="hidden w-1/2 bg-muted/40 lg:block" />
-			<div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-				<div className="w-full max-w-[350px] space-y-6">
+			<div className="w-full lg:w-1/2 flex items-center justify-center p-4">
+				<div className="w-full max-w-sm space-y-6">
 					<div className="flex flex-col items-center space-y-2 text-center">
 						<Link href="/">
 							<Image
@@ -62,7 +62,7 @@ export default function RegisterPage() {
 					</p>
 				</div>
 			</div>
-			<Link href="/signin">
+			<Link href="/login">
 				<Button
 					variant="ghost"
 					className="absolute right-4 top-4 md:right-8 md:top-6"

@@ -50,8 +50,8 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const formSchema = z.object({
-	email: z.string().email({ message: "Invalid email address" }),
-	path: z.string().url({ message: "Invalid URL" }),
+	email: z.email({ message: "Invalid email address" }),
+	path: z.url({ message: "Invalid URL" }),
 });
 
 interface IntegrationFormProps extends React.HTMLAttributes<HTMLDivElement> {}

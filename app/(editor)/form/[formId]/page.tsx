@@ -4,9 +4,11 @@ import { Canvas } from "./_components/canvas";
 
 import Loading from "./loading";
 
+import type { Id } from "@/convex/_generated/dataModel";
+
 interface FormIdPageProps {
 	params: Promise<{
-		formId: string;
+		formId: Id<"forms">;
 	}>;
 }
 

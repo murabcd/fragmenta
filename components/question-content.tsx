@@ -18,6 +18,7 @@ import { usePreviewSize } from "@/hooks/use-preview";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize";
 
 import { cn } from "@/lib/utils";
+import type { Id } from "@/convex/_generated/dataModel";
 
 import { Question, QuestionType } from "@/types/canvas";
 import { Card } from "@/components/ui/card";
@@ -30,7 +31,10 @@ interface QuestionContentProps {
 	onTitleChange: (id: string, title: string) => void;
 	onDescriptionChange: (id: string, description: string) => void;
 	onResponseChange: (id: string, response: string | string[]) => void;
-	updateChoices: (choices: { id: string; choices: string[] }) => Promise<void>;
+	updateChoices: (choices: {
+		id: Id<"questions">;
+		choices: string[];
+	}) => Promise<void>;
 	onStart?: () => void;
 	onComplete?: () => void;
 	onBack?: () => void;

@@ -8,22 +8,17 @@ import { notFound } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { QuestionContent } from "@/components/question-content";
 
-import { useDebounce, useDebouncedCallback } from "use-debounce";
-
 import { Question } from "@/types/canvas";
 
 import { cn } from "@/lib/utils";
 
-import { useQuery } from "convex/react";
-
-import { useApiMutation } from "@/hooks/use-api-mutation";
-
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import type { Id } from "@/convex/_generated/dataModel";
 
 interface FormIdPagePublishedProps {
 	params: Promise<{
-		formId: string;
+		formd: Id<"forms">;
 	}>;
 }
 
@@ -31,41 +26,27 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
 	const router = useRouter();
 	const [formId, setFormId] = useState<string | null>(null);
 
-	const { mutate: updateResponse } = useApiMutation(api.questions.response);
+	const updateResponse = useMutation(api.questions.submitQuestionResponse);
 
 	const [positionIndex, setPositionIndex] = useState(0);
-	const [debouncedPositionIndex] = useDebounce(positionIndex, 300);
 	const [responses, setResponses] = useState<Record<string, string | string[]>>(
 		{},
 	);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		params.then(({ formId }) => setFormId(formId));
+		params.then(({ formd }) => setFormId(formd));
 	}, [params]);
 
-	const form = useQuery(api.forms.get, {
-		id: formId as Id<"forms">,
-	});
-
-	const questions = useQuery(api.questions.published, {
-		formId: formId as Id<"forms">,
-	}) as Question[];
-
-	const debouncedUpdateResponse = useDebouncedCallback(
-		(
-			questionId: Id<"questions">,
-			formId: Id<"forms">,
-			response: string | string[],
-		) => {
-			updateResponse({
-				questionId,
-				formId,
-				response,
-			});
-		},
-		500,
+	const form = useQuery(
+		api.forms.getFormById,
+		formId ? { id: formId as Id<"forms"> } : "skip",
 	);
+
+	const questions = useQuery(
+		api.questions.getPublishedQuestions,
+		formId ? { formId: formId as Id<"forms"> } : "skip",
+	) as Question[];
 
 	if (!formId) {
 		return null;
@@ -112,11 +93,11 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
 	const handleResponseChange = (id: string, response: string | string[]) => {
 		setResponses((prev) => ({ ...prev, [id]: response }));
 
-		debouncedUpdateResponse(
-			id as Id<"questions">,
-			formId as Id<"forms">,
+		updateResponse({
+			questionId: id as Id<"questions">,
+			formId: formId as Id<"forms">,
 			response,
-		);
+		});
 	};
 
 	const progress =
@@ -138,24 +119,13 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
 			</div>
 			<div className="flex-grow flex items-center justify-center px-4">
 				<div className="w-full max-w-[720px]">
-					<div
-						className={cn(
-							"transition-opacity duration-300",
-							debouncedPositionIndex !== positionIndex
-								? "opacity-0"
-								: "opacity-100",
-						)}
-					>
+					<div className={cn("transition-opacity duration-300", "opacity-100")}>
 						<QuestionContent
-							question={questions[debouncedPositionIndex]}
-							key={questions[debouncedPositionIndex]._id}
-							newTitle={questions[debouncedPositionIndex].title}
-							newDescription={
-								questions[debouncedPositionIndex].description || ""
-							}
-							newResponse={
-								responses[questions[debouncedPositionIndex]._id] || ""
-							}
+							question={questions[positionIndex]}
+							key={questions[positionIndex]._id}
+							newTitle={questions[positionIndex].title}
+							newDescription={questions[positionIndex].description || ""}
+							newResponse={responses[questions[positionIndex]._id] || ""}
 							onTitleChange={() => {}}
 							onDescriptionChange={() => {}}
 							onResponseChange={handleResponseChange}

@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 
 export default function SignInEmailPage() {
 	return (
-		<div className="container flex h-screen w-screen flex-col items-center justify-center">
-			<div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+		<div className="flex min-h-screen w-full items-center justify-center p-4">
+			<div className="w-full max-w-sm space-y-6">
 				<div className="flex flex-col items-center space-y-2 text-center">
 					<Link href="/">
 						<Image
@@ -40,8 +40,8 @@ export default function SignInEmailPage() {
 						Enter your email and password to log in
 					</p>
 				</div>
-				<UserAuthForm mode="signin-email" />
-				<p className="px-8 text-center text-sm text-muted-foreground">
+				<UserAuthForm mode="login-email" />
+				<p className="text-center text-sm text-muted-foreground">
 					<Link
 						href="/register"
 						className="hover:text-brand underline underline-offset-4"

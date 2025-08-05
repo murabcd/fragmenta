@@ -1,44 +1,39 @@
 "use client";
 
 import { useState } from "react";
-
 import { useRouter } from "next/navigation";
-
-import { signIn } from "next-auth/react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
-import type * as z from "zod";
-
+import { z } from "zod";
 import { toast } from "sonner";
-
 import Link from "next/link";
-
 import { LoaderCircle, Mail } from "lucide-react";
-
-import {
-	magicLinkSchema,
-	signInSchema,
-	registerSchema,
-} from "@/types/validation/auth";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { Icons } from "@/components/icons";
-
 import { cn } from "@/lib/utils";
-
-import { useAction } from "convex/react";
-
-import { api } from "@/convex/_generated/api";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
-	mode: "signin" | "signin-email" | "register";
+	mode: "login" | "login-email" | "register";
 	inviteToken?: string;
 }
+
+export const magicLinkSchema = z.object({
+	email: z.email("Invalid email address"),
+});
+
+export const signInSchema = z.object({
+	email: z.email("Invalid email address"),
+	password: z.string().min(8, "Password must be at least 8 characters long"),
+});
+
+export const registerSchema = z.object({
+	name: z.string().min(1, "Name is required"),
+	email: z.email("Invalid email address"),
+	password: z.string().min(8, "Password must be at least 8 characters long"),
+});
 
 type FormData = z.infer<
 	typeof magicLinkSchema | typeof signInSchema | typeof registerSchema
@@ -51,6 +46,7 @@ export function UserAuthForm({
 	...props
 }: UserAuthFormProps) {
 	const router = useRouter();
+	const { signIn } = useAuthActions();
 
 	const {
 		register,
@@ -58,9 +54,9 @@ export function UserAuthForm({
 		formState: { errors },
 	} = useForm<FormData>({
 		resolver: zodResolver(
-			mode === "signin"
+			mode === "login"
 				? magicLinkSchema
-				: mode === "signin-email"
+				: mode === "login-email"
 					? signInSchema
 					: registerSchema,
 		),
@@ -69,64 +65,63 @@ export function UserAuthForm({
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
 
-	const createUser = useAction(api.users.create);
-
 	async function onSubmit(data: FormData) {
 		setIsLoading(true);
 
-		if (mode === "signin" || mode === "signin-email") {
-			const signInResult = await signIn(
-				mode === "signin" ? "resend" : "credentials",
-				{
-					email: data.email.toLowerCase(),
-					password: (data as z.infer<typeof signInSchema>).password,
-					redirect: false,
-					callbackUrl: "/home",
-				},
-			);
+		try {
+			if (mode === "login") {
+				// Magic link sign in
+				const formData = new FormData();
+				formData.append("email", data.email.toLowerCase());
 
-			if (signInResult?.error) {
-				toast.error(signInResult.error);
-			} else if (signInResult?.ok) {
-				if (mode === "signin") {
-					toast.success("We sent you a link, check your email");
-				}
+				await signIn("resend", formData);
+				toast.success("We sent you a link, check your email");
+			} else if (mode === "login-email") {
+				// Password sign in
+				const formData = new FormData();
+				formData.append("email", data.email.toLowerCase());
+				formData.append(
+					"password",
+					(data as z.infer<typeof signInSchema>).password,
+				);
+				formData.append("flow", "signIn");
+
+				await signIn("password", formData);
+				router.push("/home");
+			} else if (mode === "register") {
+				// Register with password - Convex Auth will create the user automatically
+				const formData = new FormData();
+				formData.append("email", data.email.toLowerCase());
+				formData.append(
+					"password",
+					(data as z.infer<typeof registerSchema>).password,
+				);
+				formData.append("flow", "signUp");
+				formData.append("name", (data as z.infer<typeof registerSchema>).name);
+				formData.append("role", "owner");
+
+				await signIn("password", formData);
+				toast.success("Account created successfully");
 				router.push("/home");
 			}
-		} else if (mode === "register") {
-			const user = await createUser({
-				email: data.email,
-				name: (data as z.infer<typeof registerSchema>).name,
-				password: (data as z.infer<typeof registerSchema>).password,
-				role: "owner",
-				inviteToken: inviteToken,
-			});
-
-			if (!user) {
-				toast.error("Sign up failed");
-				return;
-			}
-
-			const signInResult = await signIn("credentials", {
-				email: data.email,
-				password: (data as z.infer<typeof signInSchema>).password,
-				redirect: false,
-			});
-
-			if (signInResult?.error) {
-				toast.error(signInResult.error);
-			} else if (signInResult?.ok) {
-				toast.success("Signed up");
-				router.push("/home");
-			}
+		} catch (error) {
+			console.error("Auth error:", error);
+			toast.error("Authentication failed. Please try again.");
+		} finally {
+			setIsLoading(false);
 		}
-
-		setIsLoading(false);
 	}
 
-	const handleGoogleSignIn = () => {
+	const handleGoogleSignIn = async () => {
 		setIsGoogleLoading(true);
-		signIn("google", { callbackUrl: "/home" });
+		try {
+			await signIn("google", { redirectTo: "/home" });
+		} catch (error) {
+			console.error("Google sign in error:", error);
+			toast.error("Google sign in failed. Please try again.");
+		} finally {
+			setIsGoogleLoading(false);
+		}
 	};
 
 	return (
@@ -167,7 +162,7 @@ export function UserAuthForm({
 							<p className="text-xs text-destructive">{errors.email.message}</p>
 						)}
 					</div>
-					{(mode === "signin-email" || mode === "register") && (
+					{(mode === "login-email" || mode === "register") && (
 						<div className="grid gap-2">
 							<Label htmlFor="password">Password</Label>
 							<Input
@@ -189,13 +184,13 @@ export function UserAuthForm({
 						{isLoading && (
 							<LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
 						)}
-						{mode === "signin" && "Log in with magic link"}
-						{mode === "signin-email" && "Log in"}
+						{mode === "login" && "Log in with magic link"}
+						{mode === "login-email" && "Log in"}
 						{mode === "register" && "Sign up"}
 					</Button>
 				</div>
 			</form>
-			{(mode === "signin" || mode === "register") && (
+			{(mode === "login" || mode === "register") && (
 				<>
 					<div className="relative">
 						<div className="absolute inset-0 flex items-center">
@@ -219,7 +214,7 @@ export function UserAuthForm({
 						)}
 						Google
 					</Button>
-					{mode === "signin" && (
+					{mode === "login" && (
 						<>
 							<div className="relative">
 								<div className="absolute inset-0 flex items-center">
@@ -232,7 +227,7 @@ export function UserAuthForm({
 								</div>
 							</div>
 							<Button variant="ghost" asChild>
-								<Link href="/signin/email">
+								<Link href="/login/email">
 									<Mail className="mr-2 h-4 w-4" />
 									Log in with email
 								</Link>

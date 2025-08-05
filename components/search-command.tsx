@@ -33,7 +33,7 @@ import { Label } from "@/components/ui/label";
 // The main search dialog component
 export const SearchCommand = () => {
 	const router = useRouter();
-	const data = useQuery(api.forms.search);
+	const data = useQuery(api.forms.search, { searchTerm: undefined });
 	const [isMounted, setIsMounted] = useState(false);
 
 	const isOpen = useSearch((store) => store.isOpen);
