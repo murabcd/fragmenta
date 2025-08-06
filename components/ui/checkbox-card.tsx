@@ -6,16 +6,10 @@ import { Checkbox as CheckboxCardsPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
 
 const CheckboxCard = React.forwardRef<
-	React.ElementRef<typeof CheckboxCardsPrimitive.Root>,
-	React.ComponentPropsWithoutRef<typeof CheckboxCardsPrimitive.Root>
+	HTMLDivElement,
+	React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-	return (
-		<CheckboxCardsPrimitive.Root
-			className={cn("grid gap-4", className)}
-			{...props}
-			ref={ref}
-		/>
-	);
+	return <div className={cn("grid gap-4", className)} {...props} ref={ref} />;
 });
 CheckboxCard.displayName = "CheckboxCard";
 

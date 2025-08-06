@@ -94,13 +94,7 @@ export const YesNoChoice = ({
 										className="bg-transparent border-none focus:outline-none"
 									/>
 								) : (
-									<button
-										type="button"
-										onClick={() => handleOptionClick(option.value)}
-										className="text-left w-full"
-									>
-										{option.label}
-									</button>
+									option.label
 								)
 							}
 							checked={isPublished && value === option.value}

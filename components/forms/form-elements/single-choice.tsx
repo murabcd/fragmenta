@@ -162,22 +162,33 @@ export const SingleChoice = ({
 										className="bg-transparent border-none focus:outline-none"
 									/>
 								) : (
-									<button
-										type="button"
-										onClick={() => handleOptionClick(option.value)}
-										className="text-left w-full"
-									>
-										{option.label}
-									</button>
+									option.label
 								)
 							}
 							checked={isPublished && value === option.value}
 							onClick={() => handleOptionClick(option.value)}
 						>
 							{!isPublished && (
-								<button type="button" onClick={() => handleDeleteChoice(index)}>
+								// biome-ignore lint/a11y/useSemanticElements: Cannot use button due to nested button structure
+								<div
+									role="button"
+									tabIndex={0}
+									onClick={(e) => {
+										e.stopPropagation();
+										handleDeleteChoice(index);
+									}}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" || e.key === " ") {
+											e.preventDefault();
+											e.stopPropagation();
+											handleDeleteChoice(index);
+										}
+									}}
+									className="cursor-pointer p-1 rounded hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
+									aria-label="Delete choice"
+								>
 									<X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-								</button>
+								</div>
 							)}
 						</RadioCardItem>
 					))}
