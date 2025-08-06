@@ -2,7 +2,7 @@
 
 import { useWorkspace } from "@/hooks/use-workspace";
 
-import { SidebarSettings } from "./sidebar-settings";
+import { SidebarSettings } from "@/components/settings/sidebar-settings";
 
 import { Loader } from "lucide-react";
 

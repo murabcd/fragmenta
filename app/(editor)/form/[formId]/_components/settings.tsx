@@ -11,7 +11,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { QuestionSettings } from "@/components/question-settings";
+import { QuestionSettings } from "@/components/questions/question-settings";
 
 import type { Question, QuestionType } from "@/types/canvas";
 

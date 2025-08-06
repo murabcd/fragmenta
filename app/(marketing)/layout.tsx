@@ -1,8 +1,8 @@
 "use client";
 
 import { GridPattern } from "@/components/grid-pattern";
-import { HeaderSection } from "./_components/header-section";
-import { Footer } from "./_components/footer";
+import { HeaderSection } from "@/components/marketing/header-section";
+import { Footer } from "@/components/marketing/footer";
 import { ThemeProvider } from "next-themes";
 
 export default function MarketingLayout({

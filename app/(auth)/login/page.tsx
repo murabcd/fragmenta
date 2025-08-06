@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import Link from "next/link";
 
-import { UserAuthForm } from "@/components/user-auth-form";
+import { UserAuthForm } from "@/components/auth/user-auth-form";
 import { Icons } from "@/components/icons";
 
 export const metadata: Metadata = {

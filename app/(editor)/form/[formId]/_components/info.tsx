@@ -14,12 +14,12 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { FormActions } from "@/components/form-actions";
-import { RenameModal } from "@/components/rename-modal";
+import { FormActions } from "@/components/forms/form-actions";
+import { RenameModal } from "@/components/modals/rename-modal";
 
-import { FormPreview } from "@/components/form-preview";
-import { Publish } from "@/components/publish";
-import { QuestionDrawer } from "@/components/question-drawer";
+import { FormPreview } from "@/components/forms/form-preview";
+import { Publish } from "@/components/forms/publish";
+import { QuestionDrawer } from "@/components/questions/question-drawer";
 
 import { useQuery } from "convex/react";
 
@@ -60,7 +60,7 @@ export const Info = ({ formId }: InfoProps) => {
 					<TooltipProvider>
 						<Tooltip delayDuration={0}>
 							<TooltipTrigger asChild>
-								<Link href="/home">
+								<Link href="/forms">
 									<Button
 										variant="outline"
 										size="icon"

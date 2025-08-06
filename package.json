@@ -21,7 +21,6 @@
 		"@dnd-kit/sortable": "^10.0.0",
 		"@dnd-kit/utilities": "^3.2.2",
 		"@hookform/resolvers": "^5.2.1",
-
 		"@radix-ui/react-progress": "^1.1.7",
 		"@radix-ui/react-select": "^2.2.5",
 		"@radix-ui/react-slot": "^1.2.3",
@@ -30,7 +29,7 @@
 		"@react-email/components": "0.0.22",
 		"@react-email/render": "^1.1.4",
 		"@t3-oss/env-nextjs": "^0.10.1",
-
+		"@tanstack/react-table": "^8.21.3",
 		"@xixixao/uploadstuff": "^0.0.5",
 		"ai": "^5.0.2",
 		"class-variance-authority": "^0.7.1",
@@ -51,6 +50,7 @@
 		"react-dom": "^19.1.1",
 		"react-email": "2.1.6",
 		"react-hook-form": "^7.62.0",
+		"recharts": "2.15.4",
 		"resend": "^4.8.0",
 		"sonner": "^2.0.7",
 		"tailwind-merge": "^3.3.1",

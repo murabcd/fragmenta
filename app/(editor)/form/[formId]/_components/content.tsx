@@ -2,9 +2,9 @@
 
 import type { Question } from "@/types/canvas";
 
-import { QuestionContent } from "@/components/question-content";
+import { QuestionContent } from "@/components/questions/question-content";
 
-import { EmptyQuestionState } from "@/components/empty-question-state";
+import { EmptyQuestionState } from "@/components/questions/empty-question-state";
 
 import type { Id } from "@/convex/_generated/dataModel";
 

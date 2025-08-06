@@ -157,7 +157,7 @@ const sections = [
 	},
 ];
 
-const PricingPage = () => {
+export default function PricingPage() {
 	const [frequency, setFrequency] = useState("annually");
 
 	return (
@@ -321,6 +321,4 @@ const PricingPage = () => {
 			</div>
 		</div>
 	);
-};
-
-export default PricingPage;
+}

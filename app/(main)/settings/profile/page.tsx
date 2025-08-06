@@ -1,9 +1,9 @@
-import { ProfileForm } from "./profile-form";
+import { ProfileForm } from "@/components/settings/profile-form";
 
 export default function SettingsProfilePage() {
-  return (
-    <div className="space-y-6">
-      <ProfileForm />
-    </div>
-  );
+	return (
+		<div className="space-y-6">
+			<ProfileForm />
+		</div>
+	);
 }

@@ -187,3 +187,46 @@ export const search = query({
 		);
 	},
 });
+
+export const getFormResponseStats = query({
+	args: {
+		orgId: v.id("workspaces"),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("Unauthorized");
+		}
+
+		// Get all forms for this workspace
+		const forms = await ctx.db
+			.query("forms")
+			.withIndex("by_org", (query) => query.eq("orgId", args.orgId))
+			.collect();
+
+		const responseStats: Record<string, Record<string, number>> = {};
+
+		for (const form of forms) {
+			const formResponses = await ctx.db
+				.query("responses")
+				.withIndex("by_form", (query) => query.eq("formId", form._id))
+				.collect();
+
+			const dailyResponses: Record<string, number> = {};
+			formResponses.forEach((response) => {
+				const date = new Date(response._creationTime)
+					.toISOString()
+					.split("T")[0];
+				dailyResponses[date] = (dailyResponses[date] || 0) + 1;
+			});
+
+			responseStats[form._id] = dailyResponses;
+		}
+
+		return {
+			forms,
+			responseStats,
+		};
+	},
+});

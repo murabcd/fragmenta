@@ -1,4 +1,4 @@
-import { WorkspaceForm } from "./workspace-form";
+import { WorkspaceForm } from "@/components/settings/workspace-form";
 
 export const revalidate = 0;
 

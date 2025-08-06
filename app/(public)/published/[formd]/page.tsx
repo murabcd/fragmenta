@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
 
 import { Progress } from "@/components/ui/progress";
-import { QuestionContent } from "@/components/question-content";
+import { QuestionContent } from "@/components/questions/question-content";
 
-import { Question } from "@/types/canvas";
+import type { Question } from "@/types/canvas";
 
 import { cn } from "@/lib/utils";
 
@@ -110,16 +110,21 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
 	}
 
 	return (
-		<div className="min-h-screen flex flex-col">
+		<div className="min-h-screen flex flex-col bg-background">
 			<div className="w-full h-2.5 p-3">
 				<Progress
 					className="h-2 rounded-full transition-all duration-300"
 					value={progress}
 				/>
 			</div>
-			<div className="flex-grow flex items-center justify-center px-4">
-				<div className="w-full max-w-[720px]">
-					<div className={cn("transition-opacity duration-300", "opacity-100")}>
+			<div className="flex-grow flex items-center justify-center w-full">
+				<div className="w-full h-full flex items-center justify-center px-8">
+					<div
+						className={cn(
+							"transition-opacity duration-300 w-full max-w-4xl",
+							"opacity-100",
+						)}
+					>
 						<QuestionContent
 							question={questions[positionIndex]}
 							key={questions[positionIndex]._id}

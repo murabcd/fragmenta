@@ -1,9 +1,9 @@
-import { Hero } from "./_components/hero";
-import { FeaturesSection } from "./_components/features-section";
-import { StatsSection } from "./_components/stats-section";
-import { CTASection } from "./_components/cta-section";
+import { Hero } from "@/components/marketing/hero";
+import { FeaturesSection } from "@/components/marketing/features-section";
+import { StatsSection } from "@/components/marketing/stats-section";
+import { CTASection } from "@/components/marketing/cta-section";
 
-const MarketingPage = () => {
+export default function MarketingPage() {
 	return (
 		<>
 			<Hero />
@@ -12,6 +12,4 @@ const MarketingPage = () => {
 			<CTASection />
 		</>
 	);
-};
-
-export default MarketingPage;
+}

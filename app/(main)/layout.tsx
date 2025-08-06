@@ -1,7 +1,7 @@
 "use client";
 
-import { AppSidebar } from "@/components/app-sidebar";
-import { SearchCommand } from "@/components/search-command";
+import { AppSidebar } from "@/components/navigation/app-sidebar";
+import { SearchCommand } from "@/components/navigation/search-command";
 import {
 	SidebarInset,
 	SidebarProvider,
@@ -15,7 +15,7 @@ import {
 	BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
@@ -29,8 +29,6 @@ const HomeLayout = ({ children }: { children: React.ReactNode }) => {
 				return "Settings";
 			case "forms":
 				return "Forms";
-			case "recent":
-				return "Recent";
 			default:
 				return "Home";
 		}

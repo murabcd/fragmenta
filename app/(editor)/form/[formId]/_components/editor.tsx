@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import {
 	DndContext,
-	DragEndEvent,
+	type DragEndEvent,
 	closestCenter,
 	KeyboardSensor,
 	PointerSensor,
@@ -18,9 +18,9 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { NewQuestionButton } from "@/components/new-question-button";
+import { NewQuestionButton } from "@/components/buttons/new-question-button";
 
-import { QuestionItem } from "@/components/question-item";
+import { QuestionItem } from "@/components/questions/question-item";
 
 import type { Question } from "@/types/canvas";
 
@@ -130,9 +130,8 @@ export const Editor = ({
 						strategy={verticalListSortingStrategy}
 					>
 						<ol>
-							{questions.map((question, index) => (
+							{questions.map((question) => (
 								<QuestionItem
-									index={index}
 									key={question._id}
 									question={question}
 									formId={formId}
