@@ -15,7 +15,7 @@ import type { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 
 interface NewFormButtonProps {
-	orgId: Id<"workspaces">;
+	orgId: Id<"workspaces"> | undefined;
 	disabled?: boolean;
 }
 
@@ -24,6 +24,8 @@ export const NewFormButton = ({ orgId, disabled }: NewFormButtonProps) => {
 	const { mutate, pending } = useApiMutation(api.forms.createForm);
 
 	const onClick = () => {
+		if (!orgId) return;
+
 		mutate({
 			orgId,
 			title: "Untitled",
@@ -38,9 +40,9 @@ export const NewFormButton = ({ orgId, disabled }: NewFormButtonProps) => {
 	return (
 		<Button
 			onClick={onClick}
-			disabled={pending || disabled}
+			disabled={pending || disabled || !orgId}
 			className={cn(
-				(pending || disabled) &&
+				(pending || disabled || !orgId) &&
 					"opacity-75 hover:bg-gray-600 cursor-not-allowed",
 			)}
 		>

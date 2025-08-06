@@ -22,7 +22,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const userData = useQuery(api.users.getCurrentUser);
 
 	const workspaces =
-		userMemberships.data?.map((ws: any) => ({
+		userMemberships.data?.map((ws) => ({
 			name: ws.name,
 			logo: FolderOpen,
 			plan: ws.role === "owner" ? "Pro" : "Free",
@@ -54,11 +54,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarContent>
 			<SidebarFooter>
 				<NavUser
-					user={{
-						name: userData?.name || "User",
-						email: userData?.email || "user@example.com",
-						avatar: userData?.image || "",
-					}}
+					user={
+						userData
+							? {
+									name: userData.name,
+									email: userData.email,
+									avatar: userData.image || "",
+								}
+							: undefined
+					}
 				/>
 			</SidebarFooter>
 			<SidebarRail />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { Info } from "./info";
 import { Editor } from "./editor";
@@ -195,7 +196,9 @@ export const Canvas = ({ formId }: CanvasProps) => {
 		}
 	};
 
-	if (!questions) return null;
+	if (questions === undefined) {
+		return <Canvas.Skeleton />;
+	}
 
 	const handleRequiredChange = (id: string, isRequired: boolean) => {
 		if (selectedQuestion) {
@@ -247,6 +250,106 @@ export const Canvas = ({ formId }: CanvasProps) => {
 						handleTypeChange={handleTypeChange}
 						handleRequiredChange={handleRequiredChange}
 					/>
+				</div>
+			</div>
+		</main>
+	);
+};
+
+Canvas.Skeleton = function CanvasSkeleton() {
+	return (
+		<main className="h-screen w-full overflow-hidden relative touch-none flex flex-col">
+			{/* Info skeleton - top bar */}
+			<div className="flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16">
+				<div className="flex items-center space-x-2 flex-shrink-0">
+					<Skeleton className="h-9 w-9" /> {/* Back button */}
+					<div className="w-px h-4 bg-border mx-2" />
+					<Skeleton className="h-8 w-32" /> {/* Form title */}
+					<div className="w-px h-4 bg-border mx-2" />
+					<div className="hidden sm:block">
+						<Skeleton className="h-9 w-9" /> {/* Menu button */}
+					</div>
+				</div>
+				<div className="flex items-center space-x-2 flex-shrink-0">
+					<div className="sm:hidden">
+						<Skeleton className="h-9 w-9" /> {/* Mobile menu */}
+					</div>
+					<div className="hidden sm:block">
+						<Skeleton className="h-9 w-9" /> {/* Preview button */}
+					</div>
+					<Skeleton className="h-9 w-20" /> {/* Publish button */}
+				</div>
+			</div>
+
+			<div className="flex flex-1 overflow-hidden">
+				{/* Editor sidebar skeleton - left panel */}
+				<div className="hidden sm:block">
+					<div className="flex flex-col h-full w-64 border rounded-tr-md bg-sidebar">
+						<div className="flex items-center justify-between p-2 border-b">
+							<Skeleton className="h-5 w-16" /> {/* "Questions" title */}
+							<Skeleton className="h-8 w-8 rounded" />{" "}
+							{/* Add question button */}
+						</div>
+						<div className="flex-1 p-2 space-y-2">
+							{Array.from({ length: 3 }, (_, i) => i).map((questionIndex) => (
+								<div
+									key={`skeleton-question-${questionIndex}`}
+									className="p-2 rounded border"
+								>
+									<Skeleton className="h-4 w-24 mb-2" /> {/* Question type */}
+									<Skeleton className="h-3 w-full mb-1" />{" "}
+									{/* Question title */}
+									<Skeleton className="h-3 w-3/4" />{" "}
+									{/* Question description */}
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+
+				{/* Content skeleton - main center area */}
+				<div className="flex flex-1 flex-col items-center justify-center h-full p-4">
+					<div className="w-full max-w-2xl space-y-6">
+						<div className="text-center space-y-4">
+							<Skeleton className="h-8 w-64 mx-auto" /> {/* Question title */}
+							<Skeleton className="h-4 w-96 mx-auto" />{" "}
+							{/* Question description */}
+						</div>
+						<div className="space-y-3">
+							<Skeleton className="h-10 w-full" /> {/* Input field */}
+							<div className="flex gap-2">
+								<Skeleton className="h-6 w-16" /> {/* Required label */}
+								<Skeleton className="h-6 w-6" /> {/* Required toggle */}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{/* Settings sidebar skeleton - right panel */}
+				<div className="hidden sm:block">
+					<div className="flex flex-col h-full w-64 ml-auto border rounded-tl-md bg-sidebar">
+						<div className="flex items-center justify-between p-2 border-b">
+							<Skeleton className="h-5 w-16" /> {/* "Settings" title */}
+							<Skeleton className="h-8 w-8 rounded" /> {/* Hide button */}
+						</div>
+						<div className="flex-1 p-4 space-y-4">
+							<div>
+								<Skeleton className="h-4 w-20 mb-2" /> {/* Type label */}
+								<Skeleton className="h-10 w-full" /> {/* Type selector */}
+							</div>
+							<div>
+								<Skeleton className="h-4 w-16 mb-2" /> {/* Required label */}
+								<Skeleton className="h-6 w-12" /> {/* Required switch */}
+							</div>
+							<div>
+								<Skeleton className="h-4 w-24 mb-2" /> {/* Options label */}
+								<div className="space-y-2">
+									<Skeleton className="h-9 w-full" /> {/* Option input */}
+									<Skeleton className="h-9 w-full" /> {/* Option input */}
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</main>

@@ -26,6 +26,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableTabs } from "./data-table-tabs";
@@ -33,7 +34,6 @@ import { columns, type schema } from "./data-table-columns";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useWorkspace } from "@/hooks/use-workspace";
-import { Loader } from "lucide-react";
 
 // Remove DraggableRow, use normal TableRow
 function DataTableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
@@ -152,11 +152,7 @@ export function DataTable() {
 	const draftCount = data.filter((form) => !form.isPublished).length;
 
 	if (forms === undefined) {
-		return (
-			<div className="flex items-center justify-center h-64">
-				<Loader className="h-6 w-6 animate-spin" />
-			</div>
-		);
+		return <DataTable.Skeleton />;
 	}
 
 	return (
@@ -299,3 +295,95 @@ export function DataTable() {
 		</Tabs>
 	);
 }
+
+DataTable.Skeleton = function DataTableSkeleton() {
+	return (
+		<Tabs defaultValue="all" className="w-full flex-col justify-start gap-6">
+			{/* Skeleton for tabs */}
+			<div className="flex items-center justify-between px-4 lg:px-6">
+				<div className="flex items-center gap-2">
+					<Skeleton className="h-10 w-20" />
+					<Skeleton className="h-10 w-24" />
+					<Skeleton className="h-10 w-20" />
+				</div>
+				<Skeleton className="h-10 w-32" />
+			</div>
+
+			{/* Skeleton for table content */}
+			<TabsContent
+				value="all"
+				className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+			>
+				<div className="overflow-hidden rounded-lg border">
+					<Table>
+						{/* Skeleton table header */}
+						<TableHeader className="bg-muted">
+							<TableRow>
+								<TableHead className="w-8">
+									<Skeleton className="h-4 w-4" />
+								</TableHead>
+								<TableHead>
+									<Skeleton className="h-4 w-16" />
+								</TableHead>
+								<TableHead>
+									<Skeleton className="h-4 w-20" />
+								</TableHead>
+								<TableHead>
+									<Skeleton className="h-4 w-16" />
+								</TableHead>
+								<TableHead>
+									<Skeleton className="h-4 w-24" />
+								</TableHead>
+								<TableHead>
+									<Skeleton className="h-4 w-20" />
+								</TableHead>
+								<TableHead className="w-8">
+									<Skeleton className="h-4 w-4" />
+								</TableHead>
+							</TableRow>
+						</TableHeader>
+						{/* Skeleton table rows */}
+						<TableBody>
+							{Array.from({ length: 5 }, (_, i) => i).map((rowIndex) => (
+								<TableRow key={`skeleton-row-${rowIndex}`}>
+									<TableCell>
+										<Skeleton className="h-4 w-4" />
+									</TableCell>
+									<TableCell>
+										<Skeleton className="h-4 w-32" />
+									</TableCell>
+									<TableCell>
+										<Skeleton className="h-6 w-16 rounded-full" />
+									</TableCell>
+									<TableCell>
+										<Skeleton className="h-4 w-12" />
+									</TableCell>
+									<TableCell>
+										<Skeleton className="h-4 w-20" />
+									</TableCell>
+									<TableCell>
+										<Skeleton className="h-4 w-16" />
+									</TableCell>
+									<TableCell>
+										<Skeleton className="h-8 w-8 rounded" />
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+				{/* Skeleton for pagination */}
+				<div className="flex items-center justify-between">
+					<Skeleton className="h-4 w-32" />
+					<div className="flex items-center gap-2">
+						<Skeleton className="h-8 w-8" />
+						<Skeleton className="h-8 w-8" />
+						<Skeleton className="h-4 w-20" />
+						<Skeleton className="h-8 w-8" />
+						<Skeleton className="h-8 w-8" />
+					</div>
+				</div>
+			</TabsContent>
+		</Tabs>
+	);
+};

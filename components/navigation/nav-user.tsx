@@ -17,6 +17,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
 	SidebarMenu,
 	SidebarMenuButton,
@@ -31,11 +32,14 @@ import { useRouter } from "next/navigation";
 export function NavUser({
 	user,
 }: {
-	user: {
-		name: string;
-		email: string;
-		avatar: string;
-	};
+	user:
+		| {
+				name: string;
+				email: string;
+				avatar: string;
+		  }
+		| undefined
+		| null;
 }) {
 	const { isMobile } = useSidebar();
 	const { theme, setTheme } = useTheme();
@@ -45,6 +49,10 @@ export function NavUser({
 		void signOut();
 		router.push("/");
 	};
+
+	if (!user) {
+		return <NavUser.Skeleton />;
+	}
 
 	return (
 		<SidebarMenu>
@@ -91,7 +99,7 @@ export function NavUser({
 							{`${theme === "light" ? "Dark" : "Light"} mode`}
 						</DropdownMenuItem>
 						<DropdownMenuItem asChild>
-							<Link href="http://localhost:3000/settings/profile">
+							<Link href="/settings/profile">
 								<Settings2 className="mr-2 h-4 w-4" />
 								Settings
 							</Link>
@@ -110,3 +118,20 @@ export function NavUser({
 		</SidebarMenu>
 	);
 }
+
+NavUser.Skeleton = function NavUserSkeleton() {
+	return (
+		<SidebarMenu>
+			<SidebarMenuItem>
+				<SidebarMenuButton size="lg" disabled>
+					<Skeleton className="h-8 w-8 rounded-lg" /> {/* User avatar */}
+					<div className="grid flex-1 text-left text-sm leading-tight">
+						<Skeleton className="h-4 w-20 mb-1" /> {/* User name */}
+						<Skeleton className="h-3 w-32" /> {/* User email */}
+					</div>
+					<Skeleton className="h-4 w-4 ml-auto" /> {/* Dropdown arrow */}
+				</SidebarMenuButton>
+			</SidebarMenuItem>
+		</SidebarMenu>
+	);
+};

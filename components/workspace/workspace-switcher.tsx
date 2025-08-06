@@ -19,6 +19,7 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspace } from "@/hooks/use-workspace";
 import type { Id } from "@/convex/_generated/dataModel";
 import { UserWorkspace } from "@/components/workspace/user-workspace";
@@ -61,8 +62,8 @@ export function WorkspaceSwitcher({ workspaces }: { workspaces: Workspace[] }) {
 		}
 	};
 
-	if (!workspaces.length || !activeWorkspace) {
-		return null;
+	if (workspaces.length === 0 || !activeWorkspace) {
+		return <WorkspaceSwitcher.Skeleton />;
 	}
 
 	return (
@@ -155,3 +156,21 @@ export function WorkspaceSwitcher({ workspaces }: { workspaces: Workspace[] }) {
 		</>
 	);
 }
+
+WorkspaceSwitcher.Skeleton = function WorkspaceSwitcherSkeleton() {
+	return (
+		<SidebarMenu>
+			<SidebarMenuItem>
+				<SidebarMenuButton size="lg" disabled>
+					<Skeleton className="h-8 w-8 rounded-lg" />{" "}
+					{/* Workspace avatar/icon */}
+					<div className="grid flex-1 text-left text-sm leading-tight">
+						<Skeleton className="h-4 w-24 mb-1" /> {/* Workspace name */}
+						<Skeleton className="h-3 w-16" /> {/* Plan name */}
+					</div>
+					<Skeleton className="h-4 w-4 ml-auto" /> {/* Dropdown arrow */}
+				</SidebarMenuButton>
+			</SidebarMenuItem>
+		</SidebarMenu>
+	);
+};

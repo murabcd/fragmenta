@@ -26,6 +26,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useWorkspace } from "@/hooks/use-workspace";
@@ -87,7 +88,7 @@ export function ChartAreaInteractive() {
 			// Count completed forms (forms with responses) for this date
 			let completedForms = 0;
 			Object.entries(responseStats.responseStats).forEach(
-				([formId, formResponses]) => {
+				([, formResponses]) => {
 					if (formResponses[dateStr] && formResponses[dateStr] > 0) {
 						completedForms++;
 					}
@@ -105,19 +106,7 @@ export function ChartAreaInteractive() {
 	}, [responseStats, timeRange]);
 
 	if (responseStats === undefined) {
-		return (
-			<Card className="@container/card">
-				<CardHeader>
-					<CardTitle>Form submissions</CardTitle>
-					<CardDescription>Loading...</CardDescription>
-				</CardHeader>
-				<CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-					<div className="aspect-auto h-[250px] w-full flex items-center justify-center">
-						<div className="text-muted-foreground">Loading chart data...</div>
-					</div>
-				</CardContent>
-			</Card>
-		);
+		return <ChartAreaInteractive.Skeleton />;
 	}
 
 	return (
@@ -245,3 +234,27 @@ export function ChartAreaInteractive() {
 		</Card>
 	);
 }
+
+ChartAreaInteractive.Skeleton = function ChartAreaInteractiveSkeleton() {
+	return (
+		<Card className="@container/card">
+			<CardHeader>
+				<CardTitle>
+					<Skeleton className="h-6 w-32" />
+				</CardTitle>
+				<CardDescription>
+					<Skeleton className="h-4 w-64 hidden @[540px]/card:block" />
+					<Skeleton className="h-4 w-24 @[540px]/card:hidden" />
+				</CardDescription>
+				<CardAction>
+					<Skeleton className="h-9 w-40" />
+				</CardAction>
+			</CardHeader>
+			<CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+				<div className="aspect-auto h-[250px] w-full">
+					<Skeleton className="h-full w-full rounded-lg" />
+				</div>
+			</CardContent>
+		</Card>
+	);
+};

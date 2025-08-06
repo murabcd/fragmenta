@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import {
 	AlertDialog,
@@ -229,6 +230,10 @@ export function ProfileForm() {
 			setAvatarUrl(user.image || null);
 		}
 	}, [user, profileForm]);
+
+	if (user === undefined) {
+		return <ProfileForm.Skeleton />;
+	}
 
 	return (
 		<div className="space-y-8">
@@ -477,3 +482,88 @@ export function ProfileForm() {
 		</div>
 	);
 }
+
+ProfileForm.Skeleton = function ProfileFormSkeleton() {
+	return (
+		<div className="space-y-8">
+			{/* Profile Card Skeleton */}
+			<div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+				<div className="flex flex-col space-y-1.5 p-6">
+					<Skeleton className="h-6 w-16" /> {/* "Profile" title */}
+					<Skeleton className="h-4 w-80" /> {/* Description */}
+				</div>
+				<div className="p-6 pt-0 space-y-6">
+					{/* Avatar section skeleton */}
+					<div className="col-span-full flex items-center gap-x-8 mb-6">
+						<Skeleton className="h-24 w-24 rounded-full" /> {/* Avatar */}
+						<div className="space-y-2">
+							<Skeleton className="h-4 w-32" /> {/* Upload instructions */}
+							<Skeleton className="h-9 w-28" /> {/* Upload button */}
+						</div>
+					</div>
+
+					{/* Form fields skeleton */}
+					<div className="space-y-6">
+						<div className="space-y-2">
+							<Skeleton className="h-4 w-12" /> {/* Name label */}
+							<Skeleton className="h-10 w-full" /> {/* Name input */}
+							<Skeleton className="h-3 w-96" /> {/* Description */}
+						</div>
+						<div className="space-y-2">
+							<Skeleton className="h-4 w-12" /> {/* Email label */}
+							<Skeleton className="h-10 w-full" /> {/* Email input */}
+							<Skeleton className="h-3 w-80" /> {/* Description */}
+						</div>
+						<div className="space-y-2">
+							<Skeleton className="h-4 w-12" /> {/* Role label */}
+							<Skeleton className="h-10 w-full" /> {/* Role select */}
+							<Skeleton className="h-3 w-72" /> {/* Description */}
+						</div>
+					</div>
+				</div>
+				<div className="flex items-center p-6 pt-0">
+					<Skeleton className="h-10 w-24" /> {/* Save button */}
+				</div>
+			</div>
+
+			{/* Password Card Skeleton */}
+			<div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+				<div className="flex flex-col space-y-1.5 p-6">
+					<Skeleton className="h-6 w-32" /> {/* "Change Password" title */}
+					<Skeleton className="h-4 w-64" /> {/* Description */}
+				</div>
+				<div className="p-6 pt-0 space-y-6">
+					<div className="space-y-2">
+						<Skeleton className="h-4 w-32" /> {/* Current password label */}
+						<Skeleton className="h-10 w-full" /> {/* Current password input */}
+					</div>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div className="space-y-2">
+							<Skeleton className="h-4 w-24" /> {/* New password label */}
+							<Skeleton className="h-10 w-full" /> {/* New password input */}
+						</div>
+						<div className="space-y-2">
+							<Skeleton className="h-4 w-32" /> {/* Confirm password label */}
+							<Skeleton className="h-10 w-full" />{" "}
+							{/* Confirm password input */}
+						</div>
+					</div>
+				</div>
+				<div className="flex items-center p-6 pt-0">
+					<Skeleton className="h-10 w-32" /> {/* Change password button */}
+				</div>
+			</div>
+
+			{/* Delete Account Card Skeleton */}
+			<div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+				<div className="flex flex-col space-y-1.5 p-6">
+					<Skeleton className="h-6 w-32" /> {/* "Delete Account" title */}
+					<Skeleton className="h-4 w-80" /> {/* Warning description */}
+				</div>
+				<div className="p-6 pt-0">
+					<Skeleton className="h-10 w-32" /> {/* Delete button */}
+				</div>
+			</div>
+		</div>
+	);
+};

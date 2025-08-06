@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { ChevronLeft, Eye, Menu } from "lucide-react";
 
@@ -49,7 +50,9 @@ export const Info = ({ formId }: InfoProps) => {
 		formId,
 	}) as Question[];
 
-	if (!data) return;
+	if (data === undefined) {
+		return <Info.Skeleton />;
+	}
 
 	const hasQuestions = questions && questions.length > 0;
 
@@ -153,5 +156,30 @@ export const Info = ({ formId }: InfoProps) => {
 				title={data.title}
 			/>
 		</>
+	);
+};
+
+Info.Skeleton = function InfoSkeleton() {
+	return (
+		<div className="flex flex-row items-center justify-between space-x-2 py-2 px-4 h-16">
+			<div className="flex items-center space-x-2 flex-shrink-0">
+				<Skeleton className="h-9 w-9" /> {/* Back button */}
+				<div className="w-px h-4 bg-border mx-2" />
+				<Skeleton className="h-8 w-32" /> {/* Form title */}
+				<div className="w-px h-4 bg-border mx-2" />
+				<div className="hidden sm:block">
+					<Skeleton className="h-9 w-9" /> {/* Menu button */}
+				</div>
+			</div>
+			<div className="flex items-center space-x-2 flex-shrink-0">
+				<div className="sm:hidden">
+					<Skeleton className="h-9 w-9" /> {/* Mobile menu */}
+				</div>
+				<div className="hidden sm:block">
+					<Skeleton className="h-9 w-9" /> {/* Preview button */}
+				</div>
+				<Skeleton className="h-9 w-20" /> {/* Publish button */}
+			</div>
+		</div>
 	);
 };

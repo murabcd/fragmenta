@@ -13,25 +13,17 @@ import { NewFormButton } from "@/components/buttons/new-form-button";
 import type { Id } from "@/convex/_generated/dataModel";
 
 interface FormItemProps {
-	orgId: Id<"workspaces">;
+	orgId: Id<"workspaces"> | undefined;
 }
 
 export const FormItem = ({ orgId }: FormItemProps) => {
-	const data = useQuery(api.forms.getFormsByWorkspace, { orgId });
+	const data = useQuery(
+		api.forms.getFormsByWorkspace,
+		orgId ? { orgId } : "skip",
+	);
 
 	if (data === undefined) {
-		return (
-			<div>
-				<NewFormButton orgId={orgId} disabled />
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
-					<FormCard.Skeleton />
-					<FormCard.Skeleton />
-					<FormCard.Skeleton />
-					<FormCard.Skeleton />
-					<FormCard.Skeleton />
-				</div>
-			</div>
-		);
+		return <FormItem.Skeleton orgId={orgId} />;
 	}
 
 	if (!data?.length) {
@@ -53,6 +45,23 @@ export const FormItem = ({ orgId }: FormItemProps) => {
 						orgId={form.orgId}
 						isPublished={form.isPublished}
 					/>
+				))}
+			</div>
+		</div>
+	);
+};
+
+FormItem.Skeleton = function FormItemSkeleton({
+	orgId,
+}: {
+	orgId: Id<"workspaces"> | undefined;
+}) {
+	return (
+		<div>
+			<NewFormButton orgId={orgId} disabled />
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
+				{Array.from({ length: 5 }, (_, i) => i).map((cardIndex) => (
+					<FormCard.Skeleton key={`skeleton-form-${cardIndex}`} />
 				))}
 			</div>
 		</div>

@@ -1,8 +1,4 @@
-import { Suspense } from "react";
-
 import { Canvas } from "./_components/canvas";
-
-import Loading from "./loading";
 
 import type { Id } from "@/convex/_generated/dataModel";
 
@@ -15,11 +11,7 @@ interface FormIdPageProps {
 const FormIdPage = async ({ params }: FormIdPageProps) => {
 	const { formId } = await params;
 
-	return (
-		<Suspense fallback={<Loading />}>
-			<Canvas formId={formId} />
-		</Suspense>
-	);
+	return <Canvas formId={formId} />;
 };
 
 export default FormIdPage;
