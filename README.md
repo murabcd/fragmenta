@@ -10,7 +10,7 @@
 - Drag-and-drop form builder with live preview and customization
 - Supports multiple question types, validation, and conditional logic
 - Easy form sharing, embedding, and real-time response collection
-- Organization and team management with roles and permissions
+- Workspace and team management with roles and permissions
 - Secure authentication with OAuth and password protection
 
 <p align="center">

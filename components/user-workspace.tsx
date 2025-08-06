@@ -42,25 +42,25 @@ import { Id } from "@/convex/_generated/dataModel";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
-		message: "Organization name must be at least 2 characters.",
+		message: "Workspace name must be at least 2 characters.",
 	}),
 	slug: z.string().min(2, {
 		message: "Slug must be at least 2 characters.",
 	}),
 });
 
-interface UserOrgProps {
+interface UserWorkspaceProps {
 	isOpen: boolean;
 	onOpenChange: (open: boolean) => void;
 }
 
-export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
-	const { mutate: createOrg } = useApiMutation(
-		api.organizations.createOrganization,
+export const UserWorkspace = ({ isOpen, onOpenChange }: UserWorkspaceProps) => {
+	const { mutate: createWorkspace } = useApiMutation(
+		api.workspaces.createWorkspace,
 	);
 	const { mutate: getImageUrl } = useApiMutation(api.files.getStorageUrl);
 	const { mutate: saveImageUrl } = useApiMutation(
-		api.files.updateOrganizationImage,
+		api.files.updateWorkspaceImage,
 	);
 
 	const generateUploadUrl = useMutation(api.files.generateUploadUrl);
@@ -87,7 +87,7 @@ export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
 		setIsSubmitting(true);
 		const promise = (async () => {
-			const orgId = await createOrg({
+			const orgId = await createWorkspace({
 				name: values.name.trim(),
 				slug: values.slug.trim(),
 				imageUrl: imageUrl || undefined,
@@ -102,8 +102,8 @@ export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
 
 		toast.promise(promise, {
 			loading: "Creating...",
-			success: "Organization created",
-			error: "Failed to create organization",
+			success: "Workspace created",
+			error: "Failed to create workspace",
 		});
 
 		try {
@@ -151,15 +151,15 @@ export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Create organization</DialogTitle>
+					<DialogTitle>Create workspace</DialogTitle>
 					<DialogDescription>
-						Create a new organization to get started.
+						Create a new workspace to get started.
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 						<div className="space-y-2">
-							<FormLabel htmlFor="org-image">Image</FormLabel>
+							<FormLabel htmlFor="workspace-image">Image</FormLabel>
 							<div className="mt-1 flex items-center space-x-4">
 								<div
 									className={cn(
@@ -216,12 +216,12 @@ export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
 							name="name"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel htmlFor="org-name">Name</FormLabel>
+									<FormLabel htmlFor="workspace-name">Name</FormLabel>
 									<FormControl>
 										<Input
-											placeholder="Your organization name"
+											placeholder="Your workspace name"
 											{...field}
-											autoComplete="organization-name"
+											autoComplete="workspace-name"
 											autoFocus
 											onChange={(e) => {
 												field.onChange(e);
@@ -230,9 +230,7 @@ export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
 											}}
 										/>
 									</FormControl>
-									<FormDescription>
-										The name of your organization.
-									</FormDescription>
+									<FormDescription>The name of your workspace.</FormDescription>
 									<FormMessage className="text-xs text-destructive" />
 								</FormItem>
 							)}
@@ -242,19 +240,19 @@ export const UserOrg = ({ isOpen, onOpenChange }: UserOrgProps) => {
 							name="slug"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel htmlFor="org-slug">Slug URL</FormLabel>
+									<FormLabel htmlFor="workspace-slug">Slug URL</FormLabel>
 									<FormControl>
 										<Input
 											{...field}
-											placeholder="organization-slug"
-											autoComplete="organization-slug"
+											placeholder="workspace-slug"
+											autoComplete="workspace-slug"
 											onChange={(e) =>
 												field.onChange(e.target.value.toLowerCase())
 											}
 										/>
 									</FormControl>
 									<FormDescription>
-										The slug of your organization. Must be unique.
+										The slug of your workspace. Must be unique.
 									</FormDescription>
 									<FormMessage className="text-xs text-destructive" />
 								</FormItem>

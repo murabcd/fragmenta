@@ -3,7 +3,7 @@ import { v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
 
-export const createOrganization = mutation({
+export const createWorkspace = mutation({
 	args: {
 		name: v.string(),
 		slug: v.string(),
@@ -16,7 +16,7 @@ export const createOrganization = mutation({
 
 		const defaultImageUrl = `https://avatar.vercel.sh/${encodeURIComponent(args.name)}`;
 
-		const orgId = await ctx.db.insert("organizations", {
+		const orgId = await ctx.db.insert("workspaces", {
 			name: args.name,
 			slug: args.slug,
 			ownerId: userId,
@@ -38,7 +38,7 @@ export const createOrganization = mutation({
 	},
 });
 
-export const getUserOrganizations = query({
+export const getUserWorkspaces = query({
 	handler: async (ctx) => {
 		const userId = await getAuthUserId(ctx);
 
@@ -58,9 +58,9 @@ export const getUserOrganizations = query({
 	},
 });
 
-export const updateOrganization = mutation({
+export const updateWorkspace = mutation({
 	args: {
-		id: v.id("organizations"),
+		id: v.id("workspaces"),
 		name: v.string(),
 		slug: v.string(),
 		imageUrl: v.optional(v.string()),
@@ -72,7 +72,7 @@ export const updateOrganization = mutation({
 
 		const org = await ctx.db.get(args.id);
 
-		if (!org) throw new Error("Organization not found");
+		if (!org) throw new Error("Workspace not found");
 
 		const member = await ctx.db
 			.query("members")
@@ -81,7 +81,7 @@ export const updateOrganization = mutation({
 			.unique();
 
 		if (!member || (member.role !== "owner" && member.role !== "admin")) {
-			throw new Error("Only the owner or admin can update the organization");
+			throw new Error("Only the owner or admin can update the workspace");
 		}
 
 		await ctx.db.patch(args.id, {
@@ -94,8 +94,8 @@ export const updateOrganization = mutation({
 	},
 });
 
-export const deleteOrganization = mutation({
-	args: { id: v.id("organizations") },
+export const deleteWorkspace = mutation({
+	args: { id: v.id("workspaces") },
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserId(ctx);
 
@@ -103,7 +103,7 @@ export const deleteOrganization = mutation({
 
 		const org = await ctx.db.get(args.id);
 
-		if (!org) throw new Error("Organization not found");
+		if (!org) throw new Error("Workspace not found");
 
 		const member = await ctx.db
 			.query("members")
@@ -112,7 +112,7 @@ export const deleteOrganization = mutation({
 			.unique();
 
 		if (!member || member.role !== "owner") {
-			throw new Error("Only the owner can delete the organization");
+			throw new Error("Only the owner can delete the workspace");
 		}
 
 		await ctx.db

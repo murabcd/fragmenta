@@ -15,7 +15,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 
 interface NewFormButtonProps {
-	orgId: Id<"organizations">;
+	orgId: Id<"workspaces">;
 	disabled?: boolean;
 }
 

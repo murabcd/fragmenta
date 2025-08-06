@@ -8,7 +8,7 @@ import { Resend } from "resend";
 
 export const sendEmail = internalAction({
 	args: {
-		orgId: v.id("organizations"),
+		orgId: v.id("workspaces"),
 		name: v.string(),
 		email: v.string(),
 		role: v.union(v.literal("admin"), v.literal("member")),
@@ -22,7 +22,7 @@ export const sendEmail = internalAction({
 		const { error } = await resend.emails.send({
 			from: "Fragmenta, Inc. <murad@fragmenta.ai>",
 			to: [args.email],
-			subject: "Invitation to join organization",
+			subject: "Invitation to join workspace",
 			react: InviteEmail({
 				name: args.name,
 				email: args.email,

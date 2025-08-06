@@ -42,15 +42,15 @@ export function InviteEmail({
 							Hello <strong>{email}</strong>,
 						</Text>
 						<Text className="text-black text-sm leading-6">
-							You've been invited to join <strong>{name}</strong> organization
-							as <strong>{role}</strong>. Click the button below to get started.
+							You've been invited to join <strong>{name}</strong> workspace as{" "}
+							<strong>{role}</strong>. Click the button below to get started.
 						</Text>
 						<Section className="text-center mt-8 mb-8">
 							<Button
 								className="bg-black rounded text-white text-xs font-semibold no-underline text-center px-5 py-3"
 								href={inviteLink}
 							>
-								Join the organization
+								Join the workspace
 							</Button>
 						</Section>
 						<Text className="text-black text-sm leading-6">

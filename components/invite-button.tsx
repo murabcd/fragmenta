@@ -41,7 +41,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { PendingInvites } from "@/components/pending-invites";
 
-import { useOrganization } from "@/hooks/use-organization";
+import { useWorkspace } from "@/hooks/use-workspace";
 
 import { useApiMutation } from "@/hooks/use-api-mutation";
 
@@ -58,7 +58,7 @@ export const InviteButton = () => {
 	const [open, setOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const { organization } = useOrganization();
+	const { workspace } = useWorkspace();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -69,7 +69,7 @@ export const InviteButton = () => {
 	});
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		if (!organization) {
+		if (!workspace) {
 			return;
 		}
 
@@ -78,7 +78,7 @@ export const InviteButton = () => {
 		try {
 			await sendInvite({
 				email: values.email,
-				orgId: organization._id!,
+				orgId: workspace._id!,
 				role: values.role,
 			});
 
@@ -104,7 +104,7 @@ export const InviteButton = () => {
 				<DialogHeader>
 					<DialogTitle>Invite</DialogTitle>
 					<DialogDescription>
-						Invite a new member to your organization.
+						Invite a new member to your workspace.
 					</DialogDescription>
 				</DialogHeader>
 				<Tabs defaultValue="invitations" className="w-full">

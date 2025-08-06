@@ -53,7 +53,7 @@ import { useApiMutation } from "@/hooks/use-api-mutation";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
-import { useOrganization } from "@/hooks/use-organization";
+import { useWorkspace } from "@/hooks/use-workspace";
 
 const formSchema = z.object({
 	email: z.email({ message: "Invalid email address" }),
@@ -61,17 +61,17 @@ const formSchema = z.object({
 });
 
 export const MembersForm = () => {
-	const { organization } = useOrganization();
+	const { workspace } = useWorkspace();
 
 	const [isLoading, setIsLoading] = useState(false);
 
 	const pending = useQuery(
-		api.invitations.getInvitationsByOrganization,
-		organization?._id ? { orgId: organization._id } : "skip",
+		api.invitations.getInvitationsByWorkspace,
+		workspace?._id ? { orgId: workspace._id } : "skip",
 	);
 	const existing = useQuery(
-		api.members.getMembersByOrganization,
-		organization?._id ? { orgId: organization._id } : "skip",
+		api.members.getMembersByWorkspace,
+		workspace?._id ? { orgId: workspace._id } : "skip",
 	);
 
 	const { mutate: sendInvite } = useApiMutation(api.invitations.sendInvitation);
@@ -85,7 +85,7 @@ export const MembersForm = () => {
 	});
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		if (!organization) {
+		if (!workspace) {
 			return;
 		}
 
@@ -94,7 +94,7 @@ export const MembersForm = () => {
 		try {
 			await sendInvite({
 				email: values.email,
-				orgId: organization._id!,
+				orgId: workspace._id!,
 				role: values.role,
 			});
 
@@ -113,7 +113,7 @@ export const MembersForm = () => {
 				<CardHeader>
 					<CardTitle className="text-lg font-medium">Members</CardTitle>
 					<CardDescription>
-						Invite new members to your organization by email.
+						Invite new members to your workspace by email.
 					</CardDescription>
 				</CardHeader>
 				<Form {...form}>

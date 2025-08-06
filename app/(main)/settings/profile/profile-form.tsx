@@ -351,7 +351,7 @@ export const ProfileForm = () => {
 												</SelectTrigger>
 											</FormControl>
 											<FormDescription>
-												This is your role in the organization.
+												This is your role in the workspace.
 											</FormDescription>
 											<SelectContent>
 												<SelectItem value="owner">Owner</SelectItem>

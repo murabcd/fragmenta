@@ -8,8 +8,8 @@ export const generateUploadUrl = mutation({
 	},
 });
 
-export const updateOrganizationImage = mutation({
-	args: { orgId: v.id("organizations"), imageUrl: v.string() },
+export const updateWorkspaceImage = mutation({
+	args: { orgId: v.id("workspaces"), imageUrl: v.string() },
 	handler: async (ctx, { orgId, imageUrl }) => {
 		await ctx.db.patch(orgId, { imageUrl });
 	},

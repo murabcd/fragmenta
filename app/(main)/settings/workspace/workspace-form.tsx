@@ -45,7 +45,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useApiMutation } from "@/hooks/use-api-mutation";
-import { useOrganization } from "@/hooks/use-organization";
+import { useWorkspace } from "@/hooks/use-workspace";
 import { Icons } from "@/components/icons";
 
 import { useMutation } from "convex/react";
@@ -54,7 +54,7 @@ import type { Id } from "@/convex/_generated/dataModel";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
-		message: "Organization name must be at least 2 characters.",
+		message: "Workspace name must be at least 2 characters.",
 	}),
 	slug: z.string().min(2, {
 		message: "Slug must be at least 2 characters.",
@@ -63,19 +63,19 @@ const formSchema = z.object({
 
 type SettingsFormValues = z.infer<typeof formSchema>;
 
-export const OrgForm = () => {
+export const WorkspaceForm = () => {
 	const router = useRouter();
-	const { organization, setCurrentOrganization } = useOrganization();
+	const { workspace, setCurrentWorkspace } = useWorkspace();
 
-	const { mutate: updateOrg } = useApiMutation(
-		api.organizations.updateOrganization,
+	const { mutate: updateWorkspace } = useApiMutation(
+		api.workspaces.updateWorkspace,
 	);
 	const { mutate: getImageUrl } = useApiMutation(api.files.getStorageUrl);
 	const { mutate: saveImageUrl } = useApiMutation(
-		api.files.updateOrganizationImage,
+		api.files.updateWorkspaceImage,
 	);
-	const { mutate: deleteOrg } = useApiMutation(
-		api.organizations.deleteOrganization,
+	const { mutate: deleteWorkspace } = useApiMutation(
+		api.workspaces.deleteWorkspace,
 	);
 
 	const generateUploadUrl = useMutation(api.files.generateUploadUrl);
@@ -100,34 +100,34 @@ export const OrgForm = () => {
 	};
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		if (!organization?._id) {
+		if (!workspace?._id) {
 			return;
 		}
 
 		setIsSubmitting(true);
 		const promise = (async () => {
-			await updateOrg({
-				id: organization._id,
+			await updateWorkspace({
+				id: workspace._id,
 				name: values.name.trim(),
 				slug: values.slug.trim(),
 				imageUrl: imageUrl || undefined,
 			});
 			if (imageUrl) {
-				await saveImageUrl({ orgId: organization._id, imageUrl });
+				await saveImageUrl({ orgId: workspace._id, imageUrl });
 			}
 
-			setCurrentOrganization({
-				...organization,
+			setCurrentWorkspace({
+				...workspace,
 				name: values.name.trim(),
 				slug: values.slug.trim(),
-				imageUrl: imageUrl || organization.imageUrl,
+				imageUrl: imageUrl || workspace.imageUrl,
 			});
 		})();
 
 		toast.promise(promise, {
 			loading: "Updating...",
-			success: "Organization updated",
-			error: "Failed to update organization",
+			success: "Workspace updated",
+			error: "Failed to update workspace",
 		});
 
 		try {
@@ -141,7 +141,7 @@ export const OrgForm = () => {
 		event: React.ChangeEvent<HTMLInputElement>,
 	) => {
 		const file = event.target.files?.[0];
-		if (file && organization) {
+		if (file && workspace) {
 			setIsUploading(true);
 			const promise = (async () => {
 				const uploadUrl = await generateUploadUrl();
@@ -156,8 +156,8 @@ export const OrgForm = () => {
 				});
 				setImageUrl(url);
 
-				setCurrentOrganization({
-					...organization,
+				setCurrentWorkspace({
+					...workspace,
 					imageUrl: url,
 				});
 			})();
@@ -172,42 +172,40 @@ export const OrgForm = () => {
 		}
 	};
 
-	const handleDeleteOrganization = async () => {
-		if (!organization?._id) {
-			toast.error("No organization found");
+	const handleDeleteWorkspace = async () => {
+		if (!workspace?._id) {
+			toast.error("No workspace found");
 			return;
 		}
 
-		const promise = deleteOrg({ id: organization._id }).then(() => {
+		const promise = deleteWorkspace({ id: workspace._id }).then(() => {
 			router.push("/");
 		});
 
 		toast.promise(promise, {
 			loading: "Deleting...",
-			success: "Organization deleted",
-			error: "Failed to delete organization",
+			success: "Workspace deleted",
+			error: "Failed to delete workspace",
 		});
 	};
 
 	useEffect(() => {
-		if (organization) {
+		if (workspace) {
 			form.reset({
-				name: organization.name || "",
-				slug: organization.slug || "",
+				name: workspace.name || "",
+				slug: workspace.slug || "",
 			});
-			setImageUrl(organization.imageUrl || null);
+			setImageUrl(workspace.imageUrl || null);
 		}
-	}, [organization, form]);
+	}, [workspace, form]);
 
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 				<Card>
 					<CardHeader>
-						<CardTitle className="text-lg font-medium">Organization</CardTitle>
-						<CardDescription>
-							Manage your organization settings.
-						</CardDescription>
+						<CardTitle className="text-lg font-medium">Workspace</CardTitle>
+						<CardDescription>Manage your workspace settings.</CardDescription>
 					</CardHeader>
 					<CardContent className="space-y-6">
 						<div className="col-span-full flex items-center gap-x-8 mb-6">
@@ -263,10 +261,10 @@ export const OrgForm = () => {
 							name="name"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel htmlFor="org-name">Name</FormLabel>
+									<FormLabel htmlFor="workspace-name">Name</FormLabel>
 									<FormControl>
 										<Input
-											placeholder="Your organization name"
+											placeholder="Your workspace name"
 											autoComplete="name"
 											{...field}
 											onChange={(e) => {
@@ -288,11 +286,11 @@ export const OrgForm = () => {
 							name="slug"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel htmlFor="org-slug">Slug URL</FormLabel>
+									<FormLabel htmlFor="workspace-slug">Slug URL</FormLabel>
 									<FormControl>
 										<Input
-											placeholder="organization-slug"
-											autoComplete="organization-slug"
+											placeholder="workspace-slug"
+											autoComplete="workspace-slug"
 											{...field}
 											onChange={(e) =>
 												field.onChange(e.target.value.toLowerCase())
@@ -300,7 +298,7 @@ export const OrgForm = () => {
 										/>
 									</FormControl>
 									<FormDescription>
-										The slug of your organization must be unique.
+										The slug of your workspace must be unique.
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
@@ -322,7 +320,7 @@ export const OrgForm = () => {
 							Danger Zone
 						</CardTitle>
 						<CardDescription>
-							Permanently delete your organization and remove access to all
+							Permanently delete your workspace and remove access to all
 							associated data.
 						</CardDescription>
 					</CardHeader>
@@ -330,7 +328,7 @@ export const OrgForm = () => {
 						<div className="flex justify-end">
 							<AlertDialog>
 								<AlertDialogTrigger asChild>
-									<Button variant="destructive">Delete organization</Button>
+									<Button variant="destructive">Delete workspace</Button>
 								</AlertDialogTrigger>
 								<AlertDialogContent>
 									<AlertDialogHeader>
@@ -339,14 +337,14 @@ export const OrgForm = () => {
 										</AlertDialogTitle>
 										<AlertDialogDescription>
 											This action cannot be undone. This will permanently delete
-											your organization and remove your data from our servers.
+											your workspace and remove your data from our servers.
 										</AlertDialogDescription>
 									</AlertDialogHeader>
 									<AlertDialogFooter>
 										<AlertDialogCancel>Cancel</AlertDialogCancel>
 										<Button
 											variant="destructive"
-											onClick={handleDeleteOrganization}
+											onClick={handleDeleteWorkspace}
 										>
 											Delete
 										</Button>

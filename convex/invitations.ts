@@ -9,7 +9,7 @@ import { alphabet, generateRandomString } from "oslo/crypto";
 export const sendInvitation = mutation({
 	args: {
 		email: v.string(),
-		orgId: v.id("organizations"),
+		orgId: v.id("workspaces"),
 		role: v.union(v.literal("admin"), v.literal("member")),
 	},
 	handler: async (ctx, args) => {
@@ -30,7 +30,7 @@ export const sendInvitation = mutation({
 
 		const org = await ctx.db.get(orgId);
 
-		if (!org) throw new Error("Organization not found");
+		if (!org) throw new Error("Workspace not found");
 
 		const token = generateRandomString(32, alphabet("a-z", "A-Z", "0-9"));
 
@@ -54,8 +54,8 @@ export const sendInvitation = mutation({
 	},
 });
 
-export const getInvitationsByOrganization = query({
-	args: { orgId: v.id("organizations") },
+export const getInvitationsByWorkspace = query({
+	args: { orgId: v.id("workspaces") },
 	handler: async (ctx, args) => {
 		const { orgId } = args;
 

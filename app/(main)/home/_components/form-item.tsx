@@ -13,11 +13,11 @@ import { NewFormButton } from "@/components/new-form-button";
 import type { Id } from "@/convex/_generated/dataModel";
 
 interface FormItemProps {
-	orgId: Id<"organizations">;
+	orgId: Id<"workspaces">;
 }
 
 export const FormItem = ({ orgId }: FormItemProps) => {
-	const data = useQuery(api.forms.getFormsByOrganization, { orgId });
+	const data = useQuery(api.forms.getFormsByWorkspace, { orgId });
 
 	if (data === undefined) {
 		return (

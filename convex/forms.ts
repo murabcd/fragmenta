@@ -6,7 +6,7 @@ import { query, mutation } from "./_generated/server";
 export const createForm = mutation({
 	args: {
 		title: v.string(),
-		orgId: v.id("organizations"),
+		orgId: v.id("workspaces"),
 	},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserId(ctx);
@@ -122,9 +122,9 @@ export const updateFormPublishStatus = mutation({
 	},
 });
 
-export const getFormsByOrganization = query({
+export const getFormsByWorkspace = query({
 	args: {
-		orgId: v.id("organizations"),
+		orgId: v.id("workspaces"),
 	},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserId(ctx);

@@ -25,7 +25,7 @@ interface FormCardProps {
 	name: string;
 	createdAt: number;
 	userId: Id<"users">;
-	orgId: Id<"organizations">;
+	orgId: Id<"workspaces">;
 	isPublished: boolean;
 }
 

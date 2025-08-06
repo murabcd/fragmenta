@@ -8,11 +8,11 @@ import { api } from "@/convex/_generated/api";
 import { PartyPopper, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { UserOrg } from "@/components/user-org";
+import { UserWorkspace } from "@/components/user-workspace";
 
-export const EmptyOrgState = () => {
+export const EmptyWorkspaceState = () => {
 	const userData = useQuery(api.users.getCurrentUser);
-	const [isUserOrgOpen, setIsUserOrgOpen] = useState(false);
+	const [isUserWorkspaceOpen, setIsUserWorkspaceOpen] = useState(false);
 
 	if (!userData) return null;
 
@@ -23,15 +23,18 @@ export const EmptyOrgState = () => {
 			</div>
 			<h2 className="text-2xl font-semibold mt-6">Welcome, {userData.name}</h2>
 			<p className="text-muted-foreground text-sm mt-2">
-				Create a new organization to get started.
+				Create a new workspace to get started.
 			</p>
 			<div className="mt-6">
-				<Button onClick={() => setIsUserOrgOpen(true)}>
+				<Button onClick={() => setIsUserWorkspaceOpen(true)}>
 					<Plus className="w-4 h-4 mr-2" />
-					Create organization
+					Create workspace
 				</Button>
 			</div>
-			<UserOrg isOpen={isUserOrgOpen} onOpenChange={setIsUserOrgOpen} />
+			<UserWorkspace
+				isOpen={isUserWorkspaceOpen}
+				onOpenChange={setIsUserWorkspaceOpen}
+			/>
 		</div>
 	);
 };

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 import { Plus, LoaderCircle, Home } from "lucide-react";
 
-import { useOrganization } from "@/hooks/use-organization";
+import { useWorkspace } from "@/hooks/use-workspace";
 
 import { useApiMutation } from "@/hooks/use-api-mutation";
 
@@ -15,14 +15,14 @@ import { api } from "@/convex/_generated/api";
 
 export const EmptyHomeState = () => {
 	const router = useRouter();
-	const { organization } = useOrganization();
+	const { workspace } = useWorkspace();
 	const { mutate, pending } = useApiMutation(api.forms.createForm);
 
 	const onClick = () => {
-		if (!organization) return;
+		if (!workspace) return;
 
 		mutate({
-			orgId: organization._id,
+			orgId: workspace._id,
 			title: "Untitled",
 		})
 			.then((id) => {

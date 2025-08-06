@@ -14,7 +14,7 @@ export default defineSchema({
 		),
 	}).index("email", ["email"]),
 
-	organizations: defineTable({
+	workspaces: defineTable({
 		name: v.string(),
 		slug: v.string(),
 		ownerId: v.id("users"),
@@ -23,7 +23,7 @@ export default defineSchema({
 
 	members: defineTable({
 		userId: v.id("users"),
-		orgId: v.id("organizations"),
+		orgId: v.id("workspaces"),
 		role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
 		name: v.string(),
 		email: v.string(),
@@ -34,7 +34,7 @@ export default defineSchema({
 
 	invitations: defineTable({
 		email: v.string(),
-		orgId: v.id("organizations"),
+		orgId: v.id("workspaces"),
 		role: v.string(),
 		status: v.string(),
 		token: v.string(),
@@ -47,7 +47,7 @@ export default defineSchema({
 		title: v.string(),
 		userId: v.id("users"),
 		name: v.string(),
-		orgId: v.id("organizations"),
+		orgId: v.id("workspaces"),
 		isPublished: v.boolean(),
 	})
 		.index("by_org", ["orgId"])

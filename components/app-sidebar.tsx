@@ -4,7 +4,7 @@ import { Home, Workflow, History, FolderOpen } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
-import { OrganizationSwitcher } from "@/components/org-switcher";
+import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { SearchToggleCommand } from "@/components/search-command";
 import {
 	Sidebar,
@@ -13,21 +13,21 @@ import {
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
-import { useOrganization } from "@/hooks/use-organization";
+import { useWorkspace } from "@/hooks/use-workspace";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	const { userMemberships } = useOrganization();
+	const { userMemberships } = useWorkspace();
 	const userData = useQuery(api.users.getCurrentUser);
 
-	const organizations =
-		userMemberships.data?.map((org: any) => ({
-			name: org.name,
+	const workspaces =
+		userMemberships.data?.map((ws: any) => ({
+			name: ws.name,
 			logo: FolderOpen,
-			plan: org.role === "owner" ? "Pro" : "Free",
-			id: org._id,
-			imageUrl: org.imageUrl,
+			plan: ws.role === "owner" ? "Pro" : "Free",
+			id: ws._id,
+			imageUrl: ws.imageUrl,
 		})) || [];
 
 	const navMain = [
@@ -51,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
-				<OrganizationSwitcher organizations={organizations} />
+				<WorkspaceSwitcher workspaces={workspaces} />
 			</SidebarHeader>
 			<SidebarContent>
 				<SearchToggleCommand />

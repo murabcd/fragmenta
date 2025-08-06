@@ -7,7 +7,7 @@ import { Icons } from "@/components/icons";
 
 export const metadata: Metadata = {
 	title: "Welcome to Fragmenta",
-	description: "Create an account to join the organization",
+	description: "Create an account to join the workspace",
 };
 
 export default async function InviteRegisterPage({
@@ -26,7 +26,7 @@ export default async function InviteRegisterPage({
 						Welcome to Fragmenta
 					</h1>
 					<p className="text-sm text-muted-foreground">
-						Create an account to join the organization
+						Create an account to join the workspace
 					</p>
 				</div>
 				<UserAuthForm mode="register" inviteToken={token} />

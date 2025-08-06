@@ -2,8 +2,8 @@ import { v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
 
-export const getMembersByOrganization = query({
-	args: { orgId: v.id("organizations") },
+export const getMembersByWorkspace = query({
+	args: { orgId: v.id("workspaces") },
 	handler: async (ctx, args) => {
 		const { orgId } = args;
 
@@ -17,7 +17,7 @@ export const getMembersByOrganization = query({
 export const addMember = mutation({
 	args: {
 		userId: v.id("users"),
-		orgId: v.id("organizations"),
+		orgId: v.id("workspaces"),
 		role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
 		name: v.string(),
 		email: v.string(),

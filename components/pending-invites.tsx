@@ -1,6 +1,6 @@
 "use client";
 
-import { useOrganization } from "@/hooks/use-organization";
+import { useWorkspace } from "@/hooks/use-workspace";
 
 import { MoreHorizontal } from "lucide-react";
 
@@ -20,9 +20,9 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export const PendingInvites = () => {
-	const { organization } = useOrganization();
-	const pending = useQuery(api.invitations.getInvitationsByOrganization, {
-		orgId: organization?._id!,
+	const { workspace } = useWorkspace();
+	const pending = useQuery(api.invitations.getInvitationsByWorkspace, {
+		orgId: workspace?._id!,
 	});
 
 	if (!pending || pending.length === 0) {

@@ -57,7 +57,7 @@ const tiers = [
 		id: "tier-enterprise",
 		href: "/register",
 		featured: false,
-		description: "For large teams and organizations.",
+		description: "For large teams and workspaces.",
 		price: { monthly: "$99", annually: "$990" },
 		highlights: [
 			"Everything in Pro",
