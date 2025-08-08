@@ -4,8 +4,6 @@ import { Plus, MessageCircleQuestion } from "lucide-react";
 
 import { toast } from "sonner";
 
-import { QuestionType } from "@/types/canvas";
-
 import { useApiMutation } from "@/hooks/use-api-mutation";
 
 import { api } from "@/convex/_generated/api";
@@ -25,7 +23,7 @@ export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
 			formId,
 			title: "Untitled",
 			description: "",
-			type: QuestionType.Short,
+			type: "Short text",
 			choices: [],
 			position: 0,
 			isRequired: false,
@@ -45,19 +43,21 @@ export const EmptyQuestionState = ({ formId }: EmptyQuestionStateProps) => {
 			</div>
 			<h2 className="text-2xl font-semibold mt-6">Add your first question</h2>
 			<p className="text-muted-foreground text-sm mt-2">
-				You haven&apos;t created any questions yet.
+				You haven't created any questions yet.
 			</p>
-			<div className="flex gap-4 mt-6">
-				<button
-					type="button"
-					onClick={onClick}
-					disabled={pending}
-					className="w-40 h-40 border rounded-lg hover:bg-accent flex flex-col items-center justify-center py-6"
-				>
-					<Plus className="w-6 h-6 mb-2" />
-					<p className="text-sm font-light">Start from scratch</p>
-				</button>
-				<GenerateQuestions formId={formId} />
+			<div className="mt-6">
+				<div className="flex gap-4">
+					<button
+						type="button"
+						onClick={onClick}
+						disabled={pending}
+						className="w-40 h-40 border rounded-lg hover:bg-accent flex flex-col items-center justify-center py-6"
+					>
+						<Plus className="w-6 h-6 mb-2" />
+						<p className="text-sm font-light">Start from scratch</p>
+					</button>
+					<GenerateQuestions formId={formId} />
+				</div>
 			</div>
 		</div>
 	);

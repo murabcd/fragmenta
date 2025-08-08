@@ -4,7 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL ?? "");
 
 export async function POST(request: NextRequest) {
 	try {

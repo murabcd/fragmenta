@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { LoaderCircle, ImagePlus, Upload } from "lucide-react";
+import { LoaderCircle, Upload } from "lucide-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -113,7 +114,7 @@ export function WorkspaceForm() {
 				imageUrl: imageUrl || undefined,
 			});
 			if (imageUrl) {
-				await saveImageUrl({ orgId: workspace._id, imageUrl });
+				await saveImageUrl({ wsId: workspace._id, imageUrl });
 			}
 
 			setCurrentWorkspace({
@@ -218,7 +219,7 @@ export function WorkspaceForm() {
 								)}
 							>
 								{imageUrl ? (
-									<img
+									<Image
 										src={imageUrl}
 										alt="Logo"
 										className="h-24 w-24 object-cover"

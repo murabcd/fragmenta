@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -9,10 +10,21 @@ import { MainNav } from "@/components/navigation/main-nav";
 import { MobileMainNav } from "@/components/navigation/mobile-main-nav";
 import { Icons } from "@/components/icons";
 
-import { useScroll } from "@/hooks/use-scroll";
-
 export function HeaderSection() {
-	const scrolled = useScroll();
+	const [scrolled, setScrolled] = useState(false);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			if (window.scrollY > 10) {
+				setScrolled(true);
+			} else {
+				setScrolled(false);
+			}
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
 
 	return (
 		<header

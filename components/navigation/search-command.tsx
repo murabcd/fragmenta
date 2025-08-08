@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "convex/react";
-import { useSearch } from "@/hooks/use-search";
+import { create } from "zustand";
 import { api } from "@/convex/_generated/api";
 import { Circle, Search } from "lucide-react";
 
@@ -28,7 +28,20 @@ import {
 	SidebarGroupContent,
 	SidebarInput,
 } from "@/components/ui/sidebar";
-import { Label } from "@/components/ui/label";
+
+type SearchStore = {
+	isOpen: boolean;
+	onOpen: () => void;
+	onClose: () => void;
+	toggle: () => void;
+};
+
+const useSearch = create<SearchStore>((set, get) => ({
+	isOpen: false,
+	onOpen: () => set({ isOpen: true }),
+	onClose: () => set({ isOpen: false }),
+	toggle: () => set({ isOpen: !get().isOpen }),
+}));
 
 // The main search dialog component
 export function SearchCommand() {
@@ -125,11 +138,8 @@ export function SearchToggleCommand() {
 	}
 
 	return (
-		<SidebarGroup className="py-0 mb-2">
+		<SidebarGroup className="py-2 mb-2">
 			<SidebarGroupContent className="relative">
-				<Label htmlFor="search" className="sr-only">
-					Search
-				</Label>
 				<SidebarInput
 					id="search"
 					placeholder="Search..."

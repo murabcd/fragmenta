@@ -7,6 +7,7 @@ import { CheckboxCard, CheckboxCardItem } from "@/components/ui/checkbox-card";
 import { X } from "lucide-react";
 
 import { toast } from "sonner";
+import { useFormEditor } from "@/hooks/use-form-editor";
 import type { Id } from "@/convex/_generated/dataModel";
 
 interface MultipleChoiceProps {
@@ -14,10 +15,7 @@ interface MultipleChoiceProps {
 	values: string[];
 	options: { label: string; value: string }[];
 	onChange: (value: string[]) => void;
-	updateChoices: (choices: {
-		id: Id<"questions">;
-		choices: string[];
-	}) => Promise<void>;
+	updateChoices?: (choices: { id: Id<"questions">; choices: string[]; }) => Promise<void>;
 	isPublished: boolean;
 }
 
@@ -26,7 +24,7 @@ export const MultipleChoice = ({
 	values,
 	options: initialOptions,
 	onChange,
-	updateChoices,
+	updateChoices: propsUpdateChoices,
 	isPublished,
 }: MultipleChoiceProps) => {
 	const defaultOptions =
@@ -43,14 +41,17 @@ export const MultipleChoice = ({
 	const [isOverflowing, setIsOverflowing] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
+	
+	const { handleUpdateChoices: storeHandleUpdateChoices } = useFormEditor();
+	const handleUpdateChoices = propsUpdateChoices || storeHandleUpdateChoices;
 
 	const handleLabelChange = (value: string, index: number) => {
 		setOptions((currentOptions) => {
 			const newOptions = [...currentOptions];
 			newOptions[index].label = value;
 
-			// Call updateChoices immediately for optimistic updates
-			updateChoices({
+			// Call handleUpdateChoices immediately for optimistic updates
+			handleUpdateChoices({
 				id,
 				choices: newOptions.map((option) => option.label),
 			});
@@ -89,7 +90,7 @@ export const MultipleChoice = ({
 		const updatedOptions = [...options, newChoice];
 
 		setOptions(updatedOptions);
-		updateChoices({
+		handleUpdateChoices({
 			id,
 			choices: updatedOptions.map((option) => option.label),
 		})
@@ -106,7 +107,7 @@ export const MultipleChoice = ({
 
 		const updatedOptions = options.filter((_, i) => i !== index);
 		setOptions(updatedOptions);
-		updateChoices({
+		handleUpdateChoices({
 			id,
 			choices: updatedOptions.map((option) => option.label),
 		})

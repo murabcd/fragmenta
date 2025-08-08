@@ -7,7 +7,7 @@ import { ChevronDown, Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { type Question, QuestionType } from "@/types/canvas";
+import type { Doc } from "@/convex/_generated/dataModel";
 
 import {
 	Command,
@@ -25,9 +25,9 @@ import {
 } from "@/components/ui/popover";
 
 interface TypeSelectorProps {
-	question: Question;
-	type: QuestionType;
-	onTypeChange: (id: string, newType: QuestionType) => void;
+	question: Doc<"questions">;
+	type: string;
+	onTypeChange: (id: string, newType: string) => void;
 	className?: string;
 }
 
@@ -37,14 +37,19 @@ export const TypeSelector = ({
 	onTypeChange,
 	className,
 }: TypeSelectorProps) => {
-	const handleTypeSelect = (type: QuestionType) => {
+	const handleTypeSelect = (type: string) => {
 		onTypeChange(question._id, type);
 	};
 
-	const screenTypes = [QuestionType.Start, QuestionType.End];
-	const questionTypes = Object.values(QuestionType).filter(
-		(t) => !screenTypes.includes(t),
-	);
+	const screenTypes = ["Start screen", "End screen"];
+	const questionTypes = [
+		"Short text",
+		"Long text", 
+		"Yes/no choice",
+		"Single choice",
+		"Multiple choice",
+		"Rating"
+	];
 
 	return (
 		<div className="grid gap-2">

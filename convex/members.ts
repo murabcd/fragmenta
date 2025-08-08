@@ -3,13 +3,13 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 export const getMembersByWorkspace = query({
-	args: { orgId: v.id("workspaces") },
+	args: { wsId: v.id("workspaces") },
 	handler: async (ctx, args) => {
-		const { orgId } = args;
+		const { wsId } = args;
 
 		return await ctx.db
 			.query("members")
-			.withIndex("by_org", (q) => q.eq("orgId", orgId))
+			.withIndex("by_ws", (q) => q.eq("wsId", wsId))
 			.collect();
 	},
 });
@@ -17,17 +17,17 @@ export const getMembersByWorkspace = query({
 export const addMember = mutation({
 	args: {
 		userId: v.id("users"),
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 		role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
 		name: v.string(),
 		email: v.string(),
 	},
 	handler: async (ctx, args) => {
-		const { userId, orgId, role, name, email } = args;
+		const { userId, wsId, role, name, email } = args;
 
 		return await ctx.db.insert("members", {
 			userId,
-			orgId,
+			wsId,
 			role,
 			name,
 			email,

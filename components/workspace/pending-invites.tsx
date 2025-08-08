@@ -22,7 +22,7 @@ import { api } from "@/convex/_generated/api";
 export function PendingInvites() {
 	const { workspace } = useWorkspace();
 	const pending = useQuery(api.invitations.getInvitationsByWorkspace, {
-		orgId: workspace?._id!,
+		wsId: workspace?._id!,
 	});
 
 	if (!pending || pending.length === 0) {

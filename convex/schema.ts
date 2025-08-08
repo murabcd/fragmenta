@@ -23,23 +23,23 @@ export default defineSchema({
 
 	members: defineTable({
 		userId: v.id("users"),
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 		role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member")),
 		name: v.string(),
 		email: v.string(),
 	})
 		.index("by_user", ["userId"])
-		.index("by_org", ["orgId"])
+		.index("by_ws", ["wsId"])
 		.index("by_email", ["email"]),
 
 	invitations: defineTable({
 		email: v.string(),
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 		role: v.string(),
 		status: v.string(),
 		token: v.string(),
 	})
-		.index("by_org", ["orgId"])
+		.index("by_ws", ["wsId"])
 		.index("by_email", ["email"])
 		.index("by_token", ["token"]),
 
@@ -47,10 +47,10 @@ export default defineSchema({
 		title: v.string(),
 		userId: v.id("users"),
 		name: v.string(),
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 		isPublished: v.boolean(),
 	})
-		.index("by_org", ["orgId"])
+		.index("by_ws", ["wsId"])
 		.index("by_user", ["userId"]),
 
 	questions: defineTable({
@@ -61,6 +61,29 @@ export default defineSchema({
 		position: v.number(),
 		formId: v.id("forms"),
 		isRequired: v.boolean(),
+		image: v.optional(v.string()),
+		imageFocalPoint: v.optional(
+			v.object({
+				x: v.number(), // percentage 0..100
+				y: v.number(), // percentage 0..100
+			}),
+		),
+		imageLayout: v.optional(
+			v.object({
+				mobile: v.union(
+					v.literal("center"),
+					v.literal("top"),
+					v.literal("fill-top"),
+				),
+				desktop: v.union(
+					v.literal("left"),
+					v.literal("center"),
+					v.literal("right"),
+					v.literal("fill-left"),
+					v.literal("fill-right"),
+				),
+			}),
+		),
 	}).index("by_form", ["formId", "position"]),
 
 	responses: defineTable({

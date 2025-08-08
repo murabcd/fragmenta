@@ -16,7 +16,7 @@ export const createWorkspace = mutation({
 
 		const defaultImageUrl = `https://avatar.vercel.sh/${encodeURIComponent(args.name)}`;
 
-		const orgId = await ctx.db.insert("workspaces", {
+		const wsId = await ctx.db.insert("workspaces", {
 			name: args.name,
 			slug: args.slug,
 			ownerId: userId,
@@ -29,12 +29,12 @@ export const createWorkspace = mutation({
 
 		await ctx.db.insert("members", {
 			userId,
-			orgId,
+			wsId,
 			role: "owner",
 			name: user.name || "",
 			email: user.email || "",
 		});
-		return orgId;
+		return wsId;
 	},
 });
 
@@ -51,7 +51,7 @@ export const getUserWorkspaces = query({
 
 		return Promise.all(
 			userOrgs.map(async (userOrg) => {
-				const org = await ctx.db.get(userOrg.orgId);
+				const org = await ctx.db.get(userOrg.wsId);
 				return { ...org, role: userOrg.role };
 			}),
 		);
@@ -77,7 +77,7 @@ export const updateWorkspace = mutation({
 		const member = await ctx.db
 			.query("members")
 			.withIndex("by_user", (q) => q.eq("userId", userId))
-			.filter((q) => q.eq(q.field("orgId"), args.id))
+			.filter((q) => q.eq(q.field("wsId"), args.id))
 			.unique();
 
 		if (!member || (member.role !== "owner" && member.role !== "admin")) {
@@ -108,7 +108,7 @@ export const deleteWorkspace = mutation({
 		const member = await ctx.db
 			.query("members")
 			.withIndex("by_user", (q) => q.eq("userId", userId))
-			.filter((q) => q.eq(q.field("orgId"), args.id))
+			.filter((q) => q.eq(q.field("wsId"), args.id))
 			.unique();
 
 		if (!member || member.role !== "owner") {
@@ -117,7 +117,7 @@ export const deleteWorkspace = mutation({
 
 		await ctx.db
 			.query("members")
-			.withIndex("by_org", (q) => q.eq("orgId", args.id))
+			.withIndex("by_ws", (q) => q.eq("wsId", args.id))
 			.collect()
 			.then((members) => {
 				members.forEach((member) => ctx.db.delete(member._id));
@@ -125,7 +125,7 @@ export const deleteWorkspace = mutation({
 
 		await ctx.db
 			.query("forms")
-			.withIndex("by_org", (q) => q.eq("orgId", args.id))
+			.withIndex("by_ws", (q) => q.eq("wsId", args.id))
 			.collect()
 			.then((forms) => {
 				forms.forEach((form) => ctx.db.delete(form._id));

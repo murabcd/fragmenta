@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { toast } from "sonner";
 
 import { Check, Copy, Globe, GlobeLock, Send } from "lucide-react";
-
-import { useOrigin } from "@/hooks/use-origin";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +18,7 @@ import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
+	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
 import { useQuery, useMutation } from "convex/react";
@@ -54,11 +53,20 @@ export const Publish = ({ formId }: PublishProps) => {
 		}
 	});
 
-	const origin = useOrigin();
+	const [isMounted, setIsMounted] = useState(false);
+
+	const origin =
+		typeof window !== "undefined" && window.location.origin
+			? window.location.origin
+			: "";
+
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
 
 	const [copied, setCopied] = useState(false);
 
-	const url = `${origin}/published/${formId}`;
+	const url = `${isMounted ? origin : ""}/published/${formId}`;
 
 	const onPublish = () => {
 		const promise = publish({
@@ -97,62 +105,59 @@ export const Publish = ({ formId }: PublishProps) => {
 
 	return (
 		<TooltipProvider>
-			<Tooltip delayDuration={0}>
-				<Popover>
-					<PopoverTrigger asChild>
-						<Button variant={data?.isPublished ? "outline" : "default"}>
-							{data?.isPublished ? "Published" : "Publish"}
-						</Button>
-					</PopoverTrigger>
+			<Popover>
+				<Tooltip delayDuration={0}>
+					<TooltipTrigger asChild>
+						<PopoverTrigger asChild>
+							<Button variant={data?.isPublished ? "outline" : "default"}>
+								{data?.isPublished ? "Published" : "Publish"}
+							</Button>
+						</PopoverTrigger>
+					</TooltipTrigger>
 					<TooltipContent side="bottom" sideOffset={10}>
 						Make accessible
 					</TooltipContent>
-					<PopoverContent
-						className="w-80"
-						align="end"
-						sideOffset={10}
-						forceMount
-					>
-						{data?.isPublished ? (
-							<div className="space-y-4">
-								<div className="flex items-center gap-x-2">
-									<Globe className="text-sky-500 animate-pulse h-6 w-6" />
-									<p className="text-sm text-balance leading-relaxed">
-										Your form is live and accessible online.
-									</p>
-								</div>
-								<div className="flex items-center space-x-2">
-									<div className="grid flex-1 gap-2">
-										<Input id="publish-link" type="url" value={url} disabled />
-									</div>
-									<Button onClick={onCopy} disabled={copied} className="px-3">
-										{copied ? (
-											<Check className="h-4 w-4" />
-										) : (
-											<Copy className="h-4 w-4" />
-										)}
-									</Button>
-								</div>
-								<Button className="w-full" onClick={onUnpublish}>
-									Unpublish
-								</Button>
-							</div>
-						) : (
-							<div className="flex flex-col items-center justify-center">
-								<GlobeLock className="h-6 w-6 text-muted-foreground mb-2" />
-								<h3 className="text-lg font-semibold">Publish form</h3>
-								<p className="text-sm text-muted-foreground mb-4">
-									Make your form accessible to others online.
+				</Tooltip>
+				<PopoverContent className="w-80" align="end" sideOffset={10} forceMount>
+					{data?.isPublished ? (
+						<div className="space-y-4">
+							<div className="flex items-center gap-x-2">
+								<Globe className="text-sky-500 animate-pulse h-6 w-6" />
+								<p className="text-sm text-balance leading-relaxed">
+									Your form is live and accessible online.
 								</p>
-								<Button onClick={onPublish} className="w-full">
-									<Send className="h-4 w-4 mr-2" />
-									Publish
+							</div>
+							<div className="flex items-center space-x-2">
+								<div className="grid flex-1 gap-2">
+									<Input id="publish-link" type="url" value={url} disabled />
+								</div>
+								<Button onClick={onCopy} disabled={copied} className="px-3">
+									{copied ? (
+										<Check className="h-4 w-4" />
+									) : (
+										<Copy className="h-4 w-4" />
+									)}
 								</Button>
 							</div>
-						)}
-					</PopoverContent>
-				</Popover>
-			</Tooltip>
+							<Button className="w-full" onClick={onUnpublish}>
+								Unpublish
+							</Button>
+						</div>
+					) : (
+						<div className="flex flex-col items-center justify-center">
+							<GlobeLock className="h-6 w-6 text-muted-foreground mb-2" />
+							<h3 className="text-lg font-semibold">Publish form</h3>
+							<p className="text-sm text-muted-foreground mb-4">
+								Make your form accessible to others online.
+							</p>
+							<Button onClick={onPublish} className="w-full">
+								<Send className="h-4 w-4 mr-2" />
+								Publish
+							</Button>
+						</div>
+					)}
+				</PopoverContent>
+			</Popover>
 		</TooltipProvider>
 	);
 };

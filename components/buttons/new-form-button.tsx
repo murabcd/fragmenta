@@ -3,55 +3,50 @@
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
+
+import { Plus } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
-import { Plus, LoaderCircle } from "lucide-react";
-
-import { useApiMutation } from "@/hooks/use-api-mutation";
-
+import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-
 import type { Id } from "@/convex/_generated/dataModel";
-import { cn } from "@/lib/utils";
 
 interface NewFormButtonProps {
-	orgId: Id<"workspaces"> | undefined;
+	wsId: Id<"workspaces"> | undefined;
 	disabled?: boolean;
 }
 
-export const NewFormButton = ({ orgId, disabled }: NewFormButtonProps) => {
+export const NewFormButton = ({ wsId, disabled }: NewFormButtonProps) => {
+	const create = useMutation(api.forms.createForm);
 	const router = useRouter();
-	const { mutate, pending } = useApiMutation(api.forms.createForm);
 
-	const onClick = () => {
-		if (!orgId) return;
+	const handleCreate = async () => {
+		if (!wsId) return;
 
-		mutate({
-			orgId,
-			title: "Untitled",
-		})
-			.then((id) => {
-				router.push(`/form/${id}`);
-				toast.success("Form created");
-			})
-			.catch(() => toast.error("Failed to create form"));
+		try {
+			const formId = await create({
+				title: "Untitled Form",
+				wsId,
+			});
+
+			toast.success("Form created");
+
+			router.push(`/form/${formId}`);
+		} catch (error) {
+			toast.error("Failed to create form");
+		}
 	};
 
 	return (
 		<Button
-			onClick={onClick}
-			disabled={pending || disabled || !orgId}
-			className={cn(
-				(pending || disabled || !orgId) &&
-					"opacity-75 hover:bg-gray-600 cursor-not-allowed",
-			)}
+			onClick={handleCreate}
+			disabled={disabled || !wsId}
+			size="sm"
+			className="h-8"
 		>
-			{pending ? (
-				<LoaderCircle className="animate-spin w-4 h-4 mr-2" />
-			) : (
-				<Plus className="w-4 h-4 mr-2" />
-			)}
-			New form
+			<Plus className="mr-2 h-4 w-4" />
+			New Form
 		</Button>
 	);
 };

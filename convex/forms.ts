@@ -6,7 +6,7 @@ import { query, mutation } from "./_generated/server";
 export const createForm = mutation({
 	args: {
 		title: v.string(),
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 	},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserId(ctx);
@@ -25,7 +25,7 @@ export const createForm = mutation({
 			title: args.title,
 			userId,
 			name: user.name || "",
-			orgId: args.orgId,
+			wsId: args.wsId,
 			isPublished: false,
 		});
 
@@ -124,7 +124,7 @@ export const updateFormPublishStatus = mutation({
 
 export const getFormsByWorkspace = query({
 	args: {
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 	},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserId(ctx);
@@ -135,7 +135,7 @@ export const getFormsByWorkspace = query({
 
 		const forms = await ctx.db
 			.query("forms")
-			.withIndex("by_org", (query) => query.eq("orgId", args.orgId))
+			.withIndex("by_ws", (query) => query.eq("wsId", args.wsId))
 			.order("desc")
 			.collect();
 
@@ -190,7 +190,7 @@ export const search = query({
 
 export const getFormResponseStats = query({
 	args: {
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 	},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserId(ctx);
@@ -202,7 +202,7 @@ export const getFormResponseStats = query({
 		// Get all forms for this workspace
 		const forms = await ctx.db
 			.query("forms")
-			.withIndex("by_org", (query) => query.eq("orgId", args.orgId))
+			.withIndex("by_ws", (query) => query.eq("wsId", args.wsId))
 			.collect();
 
 		const responseStats: Record<string, Record<string, number>> = {};

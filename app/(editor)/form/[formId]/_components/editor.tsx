@@ -22,7 +22,8 @@ import { NewQuestionButton } from "@/components/buttons/new-question-button";
 
 import { QuestionItem } from "@/components/questions/question-item";
 
-import type { Question } from "@/types/canvas";
+import type { Doc } from "@/convex/_generated/dataModel";
+import { useFormEditor } from "@/hooks/use-form-editor";
 
 import { cn } from "@/lib/utils";
 
@@ -35,17 +36,12 @@ import type { Id } from "@/convex/_generated/dataModel";
 
 interface EditorProps {
 	formId: Id<"forms">;
-	questions: Question[];
-	onQuestionSelect: (question: Question) => void;
-	selectedQuestion: Question | null;
+	onQuestionSelect: (question: Doc<"questions">) => void;
 }
 
-export const Editor = ({
-	formId,
-	questions,
-	onQuestionSelect,
-	selectedQuestion,
-}: EditorProps) => {
+export const Editor = ({ formId, onQuestionSelect }: EditorProps) => {
+	// Get state from Zustand store
+	const { questions, selectedQuestion } = useFormEditor();
 	const reorderQuestion = useMutation(
 		api.questions.updateQuestionPosition,
 	).withOptimisticUpdate((localStore, { id, formId, position }) => {
@@ -79,7 +75,7 @@ export const Editor = ({
 	const handleDragEnd = async (event: DragEndEvent) => {
 		const { active, over } = event;
 
-		if (!over || active.id === over.id) {
+		if (!over || active.id === over.id || !questions) {
 			return;
 		}
 
@@ -108,13 +104,13 @@ export const Editor = ({
 	};
 
 	useEffect(() => {
-		if (questions.length > 0 && !selectedQuestion) {
+		if (questions && questions.length > 0 && !selectedQuestion) {
 			onQuestionSelect(questions[0]);
 		}
 	}, [questions, selectedQuestion, onQuestionSelect]);
 
 	return (
-		<div className="flex flex-col h-full w-64 border rounded-tr-md bg-sidebar">
+		<div className="flex flex-col h-full w-64 border rounded-xl bg-sidebar">
 			<div className="flex items-center justify-between p-2">
 				<div className="font-semibold">Questions</div>
 				<NewQuestionButton formId={formId} />
@@ -126,15 +122,14 @@ export const Editor = ({
 					onDragEnd={handleDragEnd}
 				>
 					<SortableContext
-						items={questions.map((q) => q._id)}
+						items={questions?.map((q) => q._id) || []}
 						strategy={verticalListSortingStrategy}
 					>
 						<ol>
-							{questions.map((question) => (
+							{questions?.map((question) => (
 								<QuestionItem
 									key={question._id}
 									question={question}
-									formId={formId}
 									onClick={() => onQuestionSelect(question)}
 									className={cn({
 										"text-foreground bg-primary/10":

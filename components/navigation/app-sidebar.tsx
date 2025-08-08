@@ -23,7 +23,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 	const workspaces =
 		userMemberships.data?.map((ws) => ({
-			name: ws.name,
+			name: ws.name || "Untitled Workspace",
 			logo: FolderOpen,
 			plan: ws.role === "owner" ? "Pro" : "Free",
 			id: ws._id,

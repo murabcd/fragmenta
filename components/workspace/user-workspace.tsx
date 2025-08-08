@@ -87,13 +87,13 @@ export const UserWorkspace = ({ isOpen, onOpenChange }: UserWorkspaceProps) => {
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
 		setIsSubmitting(true);
 		const promise = (async () => {
-			const orgId = await createWorkspace({
+			const wsId = await createWorkspace({
 				name: values.name.trim(),
 				slug: values.slug.trim(),
 				imageUrl: imageUrl || undefined,
 			});
 			if (imageUrl) {
-				await saveImageUrl({ orgId, imageUrl });
+				await saveImageUrl({ wsId, imageUrl });
 			}
 			form.reset();
 			setImageUrl(null);

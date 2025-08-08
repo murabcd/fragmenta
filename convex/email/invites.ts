@@ -8,7 +8,7 @@ import { Resend } from "resend";
 
 export const sendEmail = internalAction({
 	args: {
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 		name: v.string(),
 		email: v.string(),
 		role: v.union(v.literal("admin"), v.literal("member")),

@@ -29,12 +29,12 @@ export function SectionCards() {
 	// Fetch real data for marketing metrics
 	const forms = useQuery(
 		api.forms.getFormsByWorkspace,
-		workspace?._id ? { orgId: workspace._id } : "skip",
+		workspace?._id ? { wsId: workspace._id } : "skip",
 	);
 
 	const responseStats = useQuery(
 		api.forms.getFormResponseStats,
-		workspace?._id ? { orgId: workspace._id } : "skip",
+		workspace?._id ? { wsId: workspace._id } : "skip",
 	);
 
 	// Calculate marketing metrics

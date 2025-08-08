@@ -65,13 +65,14 @@ export function MembersForm() {
 
 	const [isLoading, setIsLoading] = useState(false);
 
-	const pending = useQuery(
-		api.invitations.getInvitationsByWorkspace,
-		workspace?._id ? { orgId: workspace._id } : "skip",
-	);
-	const existing = useQuery(
+	const members = useQuery(
 		api.members.getMembersByWorkspace,
-		workspace?._id ? { orgId: workspace._id } : "skip",
+		workspace?._id ? { wsId: workspace._id } : "skip",
+	);
+
+	const invitations = useQuery(
+		api.invitations.getInvitationsByWorkspace,
+		workspace?._id ? { wsId: workspace._id } : "skip",
 	);
 
 	const { mutate: sendInvite } = useApiMutation(api.invitations.sendInvitation);
@@ -94,7 +95,7 @@ export function MembersForm() {
 		try {
 			await sendInvite({
 				email: values.email,
-				orgId: workspace._id!,
+				wsId: workspace._id!,
 				role: values.role,
 			});
 
@@ -188,7 +189,7 @@ export function MembersForm() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{existing?.map((member) => (
+							{members?.map((member) => (
 								<TableRow key={member._id}>
 									<TableCell className="font-medium truncate">
 										{member.name}
@@ -223,7 +224,7 @@ export function MembersForm() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{pending?.map((invite) => (
+							{invitations?.map((invite) => (
 								<TableRow key={invite._id}>
 									<TableCell className="font-medium truncate">
 										{invite.email}

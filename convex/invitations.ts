@@ -9,11 +9,11 @@ import { alphabet, generateRandomString } from "oslo/crypto";
 export const sendInvitation = mutation({
 	args: {
 		email: v.string(),
-		orgId: v.id("workspaces"),
+		wsId: v.id("workspaces"),
 		role: v.union(v.literal("admin"), v.literal("member")),
 	},
 	handler: async (ctx, args) => {
-		const { email, orgId, role } = args;
+		const { email, wsId, role } = args;
 
 		const userId = await getAuthUserId(ctx);
 		if (!userId) throw new Error("Unauthorized");
@@ -21,14 +21,14 @@ export const sendInvitation = mutation({
 		const existingInvitation = await ctx.db
 			.query("invitations")
 			.withIndex("by_email", (q) => q.eq("email", email))
-			.filter((q) => q.eq(q.field("orgId"), orgId))
+			.filter((q) => q.eq(q.field("wsId"), wsId))
 			.first();
 
 		if (existingInvitation) {
 			throw new Error("Invitation already exists");
 		}
 
-		const org = await ctx.db.get(orgId);
+		const org = await ctx.db.get(wsId);
 
 		if (!org) throw new Error("Workspace not found");
 
@@ -36,7 +36,7 @@ export const sendInvitation = mutation({
 
 		const invitation = await ctx.db.insert("invitations", {
 			email,
-			orgId,
+			wsId,
 			role,
 			status: "pending",
 			token,
@@ -44,7 +44,7 @@ export const sendInvitation = mutation({
 
 		await ctx.scheduler.runAfter(0, internal.email.invites.sendEmail, {
 			email,
-			orgId,
+			wsId,
 			role,
 			token,
 			name: org.name,
@@ -55,13 +55,13 @@ export const sendInvitation = mutation({
 });
 
 export const getInvitationsByWorkspace = query({
-	args: { orgId: v.id("workspaces") },
+	args: { wsId: v.id("workspaces") },
 	handler: async (ctx, args) => {
-		const { orgId } = args;
+		const { wsId } = args;
 
 		return await ctx.db
 			.query("invitations")
-			.withIndex("by_org", (q) => q.eq("orgId", orgId))
+			.withIndex("by_ws", (q) => q.eq("wsId", wsId))
 			.filter((q) => q.eq(q.field("status"), "pending"))
 			.collect();
 	},

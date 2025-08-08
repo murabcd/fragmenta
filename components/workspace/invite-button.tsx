@@ -78,7 +78,7 @@ export function InviteButton() {
 		try {
 			await sendInvite({
 				email: values.email,
-				orgId: workspace._id!,
+				wsId: workspace._id!,
 				role: values.role,
 			});
 

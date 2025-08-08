@@ -20,30 +20,30 @@ import {
 
 import { QuestionActions } from "./question-actions";
 
-import { type Question, QuestionType } from "@/types/canvas";
-import type { Id } from "@/convex/_generated/dataModel";
+import type { Doc } from "@/convex/_generated/dataModel";
 
 interface QuestionItemProps {
-	question: Question;
-	formId: Id<"forms">;
+	question: Doc<"questions">;
 	className?: string;
 	onClick: () => void;
 }
 
-const questionTypelcons = {
-	[QuestionType.Start]: ListStart,
-	[QuestionType.End]: ListEnd,
-	[QuestionType.Short]: Text,
-	[QuestionType.Long]: ListMinus,
-	[QuestionType.YesNo]: CheckCheck,
-	[QuestionType.Single]: ListTodo,
-	[QuestionType.Multiple]: ListChecks,
-	[QuestionType.Rating]: BarChart,
+const questionTypelcons: Record<
+	string,
+	React.ComponentType<{ className?: string }>
+> = {
+	"Start screen": ListStart,
+	"End screen": ListEnd,
+	"Short text": Text,
+	"Long text": ListMinus,
+	"Yes/no choice": CheckCheck,
+	"Single choice": ListTodo,
+	"Multiple choice": ListChecks,
+	Rating: BarChart,
 };
 
 export const QuestionItem = ({
 	question,
-	formId,
 	className,
 	onClick,
 }: QuestionItemProps) => {
@@ -80,7 +80,7 @@ export const QuestionItem = ({
 					<button
 						type="button"
 						onClick={onClick}
-						className="flex items-center truncate cursor-pointer text-left bg-transparent border-none p-0 hover:text-foreground focus:outline-none"
+						className="flex w-full items-center truncate-flex-1 cursor-pointer border-none bg-transparent p-0 text-left hover:text-foreground focus:outline-none"
 					>
 						{Icon && <Icon className="h-4 w-4 mr-2 flex-shrink-0" />}
 						<span className="truncate">{question.title}</span>
@@ -89,14 +89,13 @@ export const QuestionItem = ({
 				<QuestionActions
 					id={question._id}
 					title={question.title}
-					formId={formId}
 					align="end"
 					side="right"
 				>
 					<Button
 						variant="ghost"
 						size="icon"
-						className="opacity-0 group-hover:opacity-100 transition-opacity"
+						className="opacity-0 group-hover:opacity-100 transition-opacity hover:bg-transparent"
 						onClick={(e) => e.stopPropagation()}
 					>
 						<MoreHorizontal className="h-4 w-4" />

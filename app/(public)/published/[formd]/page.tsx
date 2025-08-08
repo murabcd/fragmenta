@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { QuestionContent } from "@/components/questions/question-content";
 
-import type { Question } from "@/types/canvas";
+import type { Doc } from "@/convex/_generated/dataModel";
 
 import { cn } from "@/lib/utils";
 
@@ -46,7 +46,7 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
 	const questions = useQuery(
 		api.questions.getPublishedQuestions,
 		formId ? { formId: formId as Id<"forms"> } : "skip",
-	) as Question[];
+	) as Doc<"questions">[];
 
 	if (!formId) {
 		return null;
@@ -56,7 +56,7 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
 		notFound();
 	}
 
-	const isQuestionAnswered = (question: Question) => {
+	const isQuestionAnswered = (question: Doc<"questions">) => {
 		const response = responses[question._id];
 		if (question.isRequired) {
 			if (Array.isArray(response)) {
@@ -121,7 +121,7 @@ const FormIdPagePublished = ({ params }: FormIdPagePublishedProps) => {
 				<div className="w-full h-full flex items-center justify-center px-8">
 					<div
 						className={cn(
-							"transition-opacity duration-300 w-full max-w-4xl",
+							"transition-opacity duration-300 w-full max-w-5xl",
 							"opacity-100",
 						)}
 					>

@@ -55,7 +55,7 @@ export function ChartAreaInteractive() {
 	// Fetch real form response data
 	const responseStats = useQuery(
 		api.forms.getFormResponseStats,
-		workspace?._id ? { orgId: workspace._id } : "skip",
+		workspace?._id ? { wsId: workspace._id } : "skip",
 	);
 
 	React.useEffect(() => {

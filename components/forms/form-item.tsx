@@ -1,38 +1,42 @@
 "use client";
 
-import { useQuery } from "convex/react";
-
-import { api } from "@/convex/_generated/api";
-
 import { FormCard } from "@/components/forms/form-card";
-
-import { EmptyHomeState } from "./empty-home-state";
-
+import { EmptyFormsState } from "@/components/forms/empty-forms-state";
 import { NewFormButton } from "@/components/buttons/new-form-button";
 
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 
 interface FormItemProps {
-	orgId: Id<"workspaces"> | undefined;
+	wsId: Id<"workspaces">;
 }
 
-export const FormItem = ({ orgId }: FormItemProps) => {
-	const data = useQuery(
-		api.forms.getFormsByWorkspace,
-		orgId ? { orgId } : "skip",
-	);
+export const FormItem = ({ wsId }: FormItemProps) => {
+	const data = useQuery(api.forms.getFormsByWorkspace, { wsId });
 
 	if (data === undefined) {
-		return <FormItem.Skeleton orgId={orgId} />;
+		return (
+			<div>
+				<NewFormButton wsId={wsId} disabled />
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
+					<FormCard.Skeleton />
+					<FormCard.Skeleton />
+					<FormCard.Skeleton />
+					<FormCard.Skeleton />
+					<FormCard.Skeleton />
+				</div>
+			</div>
+		);
 	}
 
 	if (!data?.length) {
-		return <EmptyHomeState />;
+		return <EmptyFormsState />;
 	}
 
 	return (
 		<div>
-			<NewFormButton orgId={orgId} />
+			<NewFormButton wsId={wsId} />
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
 				{data?.map((form) => (
 					<FormCard
@@ -42,26 +46,9 @@ export const FormItem = ({ orgId }: FormItemProps) => {
 						userId={form.userId as Id<"users">}
 						name={form.name}
 						createdAt={form._creationTime}
-						orgId={form.orgId}
+						wsId={form.wsId}
 						isPublished={form.isPublished}
 					/>
-				))}
-			</div>
-		</div>
-	);
-};
-
-FormItem.Skeleton = function FormItemSkeleton({
-	orgId,
-}: {
-	orgId: Id<"workspaces"> | undefined;
-}) {
-	return (
-		<div>
-			<NewFormButton orgId={orgId} disabled />
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 mt-8 pb-10">
-				{Array.from({ length: 5 }, (_, i) => i).map((cardIndex) => (
-					<FormCard.Skeleton key={`skeleton-form-${cardIndex}`} />
 				))}
 			</div>
 		</div>

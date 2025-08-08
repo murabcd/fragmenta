@@ -2,7 +2,6 @@
 
 import { StartScreen } from "@/components/forms/form-elements/start-screen";
 import { EndScreen } from "@/components/forms/form-elements/end-screen";
-
 import { ShortText } from "@/components/forms/form-elements/short-text";
 import { LongText } from "@/components/forms/form-elements/long-text";
 import { YesNoChoice } from "@/components/forms/form-elements/yes-no-choice";
@@ -10,31 +9,33 @@ import { SingleChoice } from "@/components/forms/form-elements/single-choice";
 import { MultipleChoice } from "@/components/forms/form-elements/multiple-choice";
 import { RatingScore } from "@/components/forms/form-elements/rating-score";
 
-import { StartButton } from "@/components/buttons/start-button";
-import { CompleteButton } from "@/components/buttons/complete-button";
+import { Button } from "@/components/ui/button";
 import { NavigationButtons } from "@/components/navigation/nav-buttons";
+import { QuestionLayout } from "./question-layout";
+import { QuestionMedia } from "./question-media";
+import { useImageLayout } from "@/hooks/use-image-layout";
 
-import { usePreviewSize } from "@/hooks/use-preview";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize";
+import { useFormEditor } from "@/hooks/use-form-editor";
 
 import { cn } from "@/lib/utils";
 import type { Id } from "@/convex/_generated/dataModel";
-
-import { type Question, QuestionType } from "@/types/canvas";
-import { Card } from "@/components/ui/card";
+import type { Doc } from "@/convex/_generated/dataModel";
 
 interface QuestionContentProps {
-	question: Question;
-	newTitle: string;
-	newDescription: string;
-	newResponse: string | string[];
-	onTitleChange: (id: string, title: string) => void;
-	onDescriptionChange: (id: string, description: string) => void;
-	onResponseChange: (id: string, response: string | string[]) => void;
-	updateChoices: (choices: {
+	question: Doc<"questions">;
+	// For published/preview contexts - override form editor state
+	newTitle?: string;
+	newDescription?: string;
+	newResponse?: string | string[];
+	onTitleChange?: (id: string, title: string) => void;
+	onDescriptionChange?: (id: string, description: string) => void;
+	onResponseChange?: (id: string, response: string | string[]) => void;
+	updateChoices?: (choices: {
 		id: Id<"questions">;
 		choices: string[];
 	}) => Promise<void>;
+	// Navigation and state
 	onStart?: () => void;
 	onComplete?: () => void;
 	onBack?: () => void;
@@ -43,19 +44,19 @@ interface QuestionContentProps {
 	isForwardDisabled?: boolean;
 	isPreview?: boolean;
 	isPublished?: boolean;
-	isRequired?: boolean;
 	error?: string | null;
+	previewSize?: string;
 }
 
 export const QuestionContent = ({
 	question,
-	newTitle,
-	newDescription,
-	newResponse,
-	onTitleChange,
-	onDescriptionChange,
-	onResponseChange,
-	updateChoices,
+	newTitle: propsNewTitle,
+	newDescription: propsNewDescription,
+	newResponse: propsNewResponse,
+	onTitleChange: propsOnTitleChange,
+	onDescriptionChange: propsOnDescriptionChange,
+	onResponseChange: propsOnResponseChange,
+	updateChoices: propsUpdateChoices,
 	onStart,
 	onComplete,
 	onBack,
@@ -64,10 +65,39 @@ export const QuestionContent = ({
 	isForwardDisabled,
 	isPreview = false,
 	isPublished,
-	isRequired,
 	error,
+	previewSize = "max-w-[720px]",
 }: QuestionContentProps) => {
-	const { previewSize } = usePreviewSize();
+	const {
+		newTitle: storeNewTitle,
+		newDescription: storeNewDescription,
+		newResponse: storeNewResponse,
+		handleTitleChange: storeHandleTitleChange,
+		handleDescriptionChange: storeHandleDescriptionChange,
+		handleResponseChange: storeHandleResponseChange,
+		handleUpdateChoices: storeHandleUpdateChoices,
+	} = useFormEditor();
+
+	// Decide where to place the image for mobile/desktop
+	const { effectiveMobileLayout, shouldShowMobileImage } = useImageLayout({
+		imageLayout: question.imageLayout,
+		previewSize,
+		isPreview: !!isPreview,
+	});
+
+	// Use props if provided (published context), otherwise use store (editor context)
+	const newTitle = propsNewTitle !== undefined ? propsNewTitle : storeNewTitle;
+	const newDescription =
+		propsNewDescription !== undefined
+			? propsNewDescription
+			: storeNewDescription;
+	const newResponse =
+		propsNewResponse !== undefined ? propsNewResponse : storeNewResponse;
+	const onTitleChange = propsOnTitleChange || storeHandleTitleChange;
+	const onDescriptionChange =
+		propsOnDescriptionChange || storeHandleDescriptionChange;
+	const onResponseChange = propsOnResponseChange || storeHandleResponseChange;
+	const updateChoices = propsUpdateChoices || storeHandleUpdateChoices;
 
 	const titleRef = useAutoResizeTextarea(newTitle, "32px", previewSize);
 	const descriptionRef = useAutoResizeTextarea(
@@ -92,11 +122,11 @@ export const QuestionContent = ({
 
 	const renderQuestionContent = () => {
 		switch (question.type) {
-			case QuestionType.Start:
+			case "Start screen":
 				return <StartScreen />;
-			case QuestionType.End:
+			case "End screen":
 				return <EndScreen />;
-			case QuestionType.Short:
+			case "Short text":
 				return (
 					<ShortText
 						value={newResponse as string}
@@ -105,7 +135,7 @@ export const QuestionContent = ({
 						isPublished={isPublished || false}
 					/>
 				);
-			case QuestionType.Long:
+			case "Long text":
 				return (
 					<LongText
 						value={newResponse as string}
@@ -114,52 +144,52 @@ export const QuestionContent = ({
 						isPublished={isPublished || false}
 					/>
 				);
-			case QuestionType.YesNo:
+			case "Yes/no choice":
 				return (
 					<YesNoChoice
 						id={question._id}
 						key={question._id}
 						value={newResponse as string}
 						onChange={handleResponseChange}
-						options={question.choices.map((choice) => ({
+						updateChoices={updateChoices}
+						options={(question.choices || []).map((choice) => ({
 							label: choice,
 							value: choice,
 						}))}
-						updateChoices={updateChoices}
 						isPublished={isPublished || false}
 					/>
 				);
-			case QuestionType.Single:
+			case "Single choice":
 				return (
 					<SingleChoice
 						id={question._id}
 						key={question._id}
 						value={newResponse as string}
 						onChange={handleResponseChange}
-						options={question.choices.map((choice) => ({
+						updateChoices={updateChoices}
+						options={(question.choices || []).map((choice) => ({
 							label: choice,
 							value: choice,
 						}))}
-						updateChoices={updateChoices}
 						isPublished={isPublished || false}
 					/>
 				);
-			case QuestionType.Multiple:
+			case "Multiple choice":
 				return (
 					<MultipleChoice
 						id={question._id}
 						key={question._id}
 						values={newResponse as string[]}
 						onChange={handleResponseChange}
-						options={question.choices.map((choice) => ({
+						updateChoices={updateChoices}
+						options={(question.choices || []).map((choice) => ({
 							label: choice,
 							value: choice,
 						}))}
-						updateChoices={updateChoices}
 						isPublished={isPublished || false}
 					/>
 				);
-			case QuestionType.Rating:
+			case "Rating":
 				return (
 					<RatingScore
 						value={newResponse as string}
@@ -173,11 +203,21 @@ export const QuestionContent = ({
 	};
 
 	const renderButtons = () => {
-		if (question.type === QuestionType.Start && onStart) {
-			return <StartButton onClick={onStart} />;
-		} else if (question.type === QuestionType.End && onComplete) {
-			return <CompleteButton onClick={onComplete} />;
-		} else if (onBack && onForward) {
+		if (question.type === "Start screen" && onStart) {
+			return (
+				<Button size="lg" onClick={onStart}>
+					Start
+				</Button>
+			);
+		}
+		if (question.type === "End screen" && onComplete) {
+			return (
+				<Button size="lg" onClick={onComplete}>
+					Complete
+				</Button>
+			);
+		}
+		if (onBack && onForward) {
 			return (
 				<NavigationButtons
 					onBack={onBack}
@@ -191,54 +231,58 @@ export const QuestionContent = ({
 	};
 
 	const isScreen =
-		question.type === QuestionType.Start || question.type === QuestionType.End;
+		question.type === "Start screen" || question.type === "End screen";
 
-	return (
-		<Card
-			className={cn(
-				"flex flex-col items-center justify-center w-full min-h-[calc(100vh-120px)] space-y-4",
-				isPreview ? previewSize : "",
-				isPublished
-					? "border-none shadow-none bg-transparent rounded-none px-0 py-0 w-full max-w-2xl"
-					: "border shadow-sm bg-muted/40 px-4",
+	const questionContent = (
+		<>
+			<div className="flex items-center">
+				<textarea
+					id="question-title"
+					name="question-title"
+					ref={titleRef}
+					className={cn(
+						"bg-transparent w-full focus-visible:outline-none resize-none",
+						isScreen
+							? "text-center text-4xl font-bold"
+							: "text-3xl font-semibold",
+						isPublished ? "text-4xl font-bold" : "text-2xl",
+					)}
+					value={newTitle}
+					placeholder="Title"
+					onChange={handleTitleChange}
+					readOnly={isPublished}
+				/>
+				{question.isRequired && <span className="text-red-500 ml-1">*</span>}
+			</div>
+			{(!isPublished || newDescription) && (
+				<textarea
+					id="question-description"
+					name="question-description"
+					ref={descriptionRef}
+					className={cn(
+						"bg-transparent w-full text-sm text-muted-foreground focus-visible:outline-none resize-none",
+						isScreen ? "text-center max-w-md" : "",
+					)}
+					value={newDescription}
+					placeholder="Description (optional)"
+					onChange={handleDescriptionChange}
+					readOnly={isPublished}
+				/>
 			)}
-		>
-			<div className={cn("w-full", isScreen && "flex flex-col items-center")}>
-				<div className="flex items-center">
-					<textarea
-						id="question-title"
-						name="question-title"
-						ref={titleRef}
-						className={cn(
-							"bg-transparent w-full focus-visible:outline-none resize-none",
-							isScreen
-								? "text-center text-4xl font-bold"
-								: "text-3xl font-semibold",
-							isPublished ? "text-4xl font-bold" : "text-2xl",
-						)}
-						value={newTitle}
-						placeholder="Title"
-						onChange={handleTitleChange}
-						readOnly={isPublished}
-					/>
-					{isRequired && <span className="text-red-500 ml-1">*</span>}
-				</div>
-				{(!isPublished || newDescription) && (
-					<textarea
-						id="question-description"
-						name="question-description"
-						ref={descriptionRef}
-						className={cn(
-							"bg-transparent w-full text-sm text-muted-foreground focus-visible:outline-none resize-none",
-							isScreen ? "text-center max-w-md" : "",
-						)}
-						value={newDescription}
-						placeholder="Description (optional)"
-						onChange={handleDescriptionChange}
-						readOnly={isPublished}
+			{/* Mobile center image should appear between description and input */}
+			{shouldShowMobileImage("center") &&
+				effectiveMobileLayout !== "fill-top" && (
+					<QuestionMedia
+						imageUrl={question.image}
+						layout="center"
+						focalPoint={
+							question.imageFocalPoint as { x: number; y: number } | undefined
+						}
+						isMobilePreview={previewSize === "w-2/5"}
+						className={previewSize === "w-2/5" ? "mb-4" : "sm:hidden mb-4"}
 					/>
 				)}
-			</div>
+
 			{renderQuestionContent()}
 			{error && (
 				<div className="text-red-500 text-xs mt-2 w-full text-left">
@@ -246,6 +290,24 @@ export const QuestionContent = ({
 				</div>
 			)}
 			{renderButtons()}
-		</Card>
+		</>
+	);
+
+	return (
+		<QuestionLayout
+			question={question}
+			previewSize={previewSize}
+			isPreview={isPreview}
+			isPublished={isPublished}
+		>
+			<div
+				className={cn(
+					"flex flex-col justify-center w-full",
+					isScreen ? "items-center" : "items-start",
+				)}
+			>
+				{questionContent}
+			</div>
+		</QuestionLayout>
 	);
 };

@@ -36,6 +36,8 @@ export const createQuestion = mutation({
 			position: newPosition,
 			formId: args.formId,
 			isRequired: args.isRequired,
+			image: undefined,
+			imageLayout: undefined,
 		});
 
 		return question;
@@ -77,6 +79,9 @@ export const duplicateQuestion = mutation({
 			position: question.position,
 			formId: question.formId,
 			isRequired: question.isRequired,
+			image: question.image,
+			imageLayout: question.imageLayout,
+			imageFocalPoint: question.imageFocalPoint,
 		});
 
 		return duplicate;
@@ -247,6 +252,86 @@ export const updateQuestionRequired = mutation({
 	},
 });
 
+export const updateQuestionImage = mutation({
+	args: {
+		id: v.id("questions"),
+		image: v.optional(v.string()),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("Unauthorized");
+		}
+
+		const question = await ctx.db.patch(args.id, {
+			image: args.image,
+		});
+
+		return question;
+	},
+});
+
+export const updateQuestionImageFocalPoint = mutation({
+	args: {
+		id: v.id("questions"),
+		focalPoint: v.optional(
+			v.object({
+				x: v.number(),
+				y: v.number(),
+			}),
+		),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("Unauthorized");
+		}
+
+		const question = await ctx.db.patch(args.id, {
+			imageFocalPoint: args.focalPoint,
+		});
+
+		return question;
+	},
+});
+
+export const updateQuestionImageLayout = mutation({
+	args: {
+		id: v.id("questions"),
+		imageLayout: v.optional(
+			v.object({
+				mobile: v.union(
+					v.literal("center"),
+					v.literal("top"),
+					v.literal("fill-top"),
+				),
+				desktop: v.union(
+					v.literal("left"),
+					v.literal("center"),
+					v.literal("right"),
+					v.literal("fill-left"),
+					v.literal("fill-right"),
+				),
+			}),
+		),
+	},
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("Unauthorized");
+		}
+
+		const question = await ctx.db.patch(args.id, {
+			imageLayout: args.imageLayout,
+		});
+
+		return question;
+	},
+});
+
 export const getQuestionsByForm = query({
 	args: {
 		formId: v.id("forms"),
@@ -324,6 +409,8 @@ export const generateQuestions = mutation({
 			await ctx.db.insert("questions", {
 				...question,
 				isRequired: false,
+				image: undefined,
+				imageLayout: undefined,
 			});
 		}
 

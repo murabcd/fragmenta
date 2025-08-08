@@ -2,18 +2,17 @@
 
 import { useRouter } from "next/navigation";
 
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-
 import { Plus, LoaderCircle, Home } from "lucide-react";
 
 import { useWorkspace } from "@/hooks/use-workspace";
-
 import { useApiMutation } from "@/hooks/use-api-mutation";
+
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 import { api } from "@/convex/_generated/api";
 
-export function EmptyHomeState() {
+export function EmptyFormsState() {
 	const router = useRouter();
 	const { workspace } = useWorkspace();
 	const { mutate, pending } = useApiMutation(api.forms.createForm);
@@ -22,7 +21,7 @@ export function EmptyHomeState() {
 		if (!workspace) return;
 
 		mutate({
-			orgId: workspace._id,
+			wsId: workspace._id,
 			title: "Untitled",
 		})
 			.then((id) => {
@@ -41,7 +40,7 @@ export function EmptyHomeState() {
 			</div>
 			<h2 className="text-2xl font-semibold mt-6">Create your first form</h2>
 			<p className="text-muted-foreground text-sm mt-2">
-				You haven&apos;t created any forms yet.
+				You haven't created any forms yet.
 			</p>
 			<div className="mt-6">
 				<Button onClick={onClick} disabled={pending}>

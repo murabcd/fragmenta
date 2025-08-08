@@ -16,6 +16,7 @@ import { useMutation } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
+import { useFormEditor } from "@/hooks/use-form-editor";
 
 interface QuestionActionsProps {
 	children: React.ReactNode;
@@ -24,7 +25,6 @@ interface QuestionActionsProps {
 	sideOffset?: DropdownMenuContentProps["sideOffset"];
 	id: Id<"questions">;
 	title: string;
-	formId: Id<"forms">;
 }
 
 export const QuestionActions = ({
@@ -33,34 +33,34 @@ export const QuestionActions = ({
 	side,
 	sideOffset,
 	id,
-	formId,
 }: QuestionActionsProps) => {
+	const { formId } = useFormEditor();
 	const removeQuestion = useMutation(
 		api.questions.deleteQuestion,
 	).withOptimisticUpdate((localStore, args) => {
-		const currentQuestions = localStore.getQuery(
-			api.questions.getQuestionsByForm,
-			{ formId },
-		);
+		const currentQuestions = formId
+			? localStore.getQuery(api.questions.getQuestionsByForm, { formId })
+			: undefined;
 		if (currentQuestions !== undefined) {
 			const updatedQuestions = currentQuestions.filter(
 				(question) => question._id !== args.id,
 			);
-			localStore.setQuery(
-				api.questions.getQuestionsByForm,
-				{ formId },
-				updatedQuestions,
-			);
+			if (formId) {
+				localStore.setQuery(
+					api.questions.getQuestionsByForm,
+					{ formId },
+					updatedQuestions,
+				);
+			}
 		}
 	});
 
 	const duplicateQuestion = useMutation(
 		api.questions.duplicateQuestion,
 	).withOptimisticUpdate((localStore, _args) => {
-		const currentQuestions = localStore.getQuery(
-			api.questions.getQuestionsByForm,
-			{ formId },
-		);
+		const currentQuestions = formId
+			? localStore.getQuery(api.questions.getQuestionsByForm, { formId })
+			: undefined;
 		if (currentQuestions !== undefined) {
 			// We can't create the exact duplicate optimistically since we don't have the new ID
 			// But we can show that something is happening
@@ -72,10 +72,12 @@ export const QuestionActions = ({
 					title: `${lastQuestion.title} (copy)`,
 					position: lastQuestion.position + 1,
 				};
-				localStore.setQuery(api.questions.getQuestionsByForm, { formId }, [
-					...currentQuestions,
-					optimisticDuplicate,
-				]);
+				if (formId) {
+					localStore.setQuery(api.questions.getQuestionsByForm, { formId }, [
+						...currentQuestions,
+						optimisticDuplicate,
+					]);
+				}
 			}
 		}
 	});
@@ -106,11 +108,15 @@ export const QuestionActions = ({
 				align={align}
 				side={side}
 				sideOffset={sideOffset}
-				className="w-[160px]"
+				className="w-[160px] bg-background border-border"
 			>
-				<DropdownMenuItem onClick={onDuplicate}>Duplicate</DropdownMenuItem>
+				<DropdownMenuItem onClick={onDuplicate} className="hover:bg-accent/50">
+					Duplicate
+				</DropdownMenuItem>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+				<DropdownMenuItem variant="destructive" onClick={onDelete}>
+					Delete
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

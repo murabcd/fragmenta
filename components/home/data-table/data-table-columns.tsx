@@ -35,7 +35,7 @@ export const schema = z.object({
 	_id: z.string(),
 	title: z.string(),
 	name: z.string(),
-	orgId: z.string(),
+	wsId: z.string(),
 	isPublished: z.boolean(),
 	_creationTime: z.number(),
 	responseCount: z.number().optional(),

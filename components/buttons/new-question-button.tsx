@@ -12,13 +12,14 @@ import {
 
 import { Plus } from "lucide-react";
 
-import { QuestionType } from "@/types/canvas";
+
 
 import { useQuery, useMutation } from "convex/react";
 
 import { api } from "@/convex/_generated/api";
 
 import type { Id } from "@/convex/_generated/dataModel";
+import { useFormEditor } from "@/hooks/use-form-editor";
 
 interface NewQuestionButtonProps {
 	formId: Id<"forms">;
@@ -26,6 +27,7 @@ interface NewQuestionButtonProps {
 
 export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
 	const data = useQuery(api.questions.getQuestionCount, { formId });
+	const { selectQuestion, questions } = useFormEditor();
 	const createQuestion = useMutation(
 		api.questions.createQuestion,
 	).withOptimisticUpdate((localStore, args) => {
@@ -59,12 +61,26 @@ export const NewQuestionButton = ({ formId }: NewQuestionButtonProps) => {
 			formId,
 			title: "Untitled",
 			description: "",
-			type: QuestionType.Short,
+			type: "Short text",
 			choices: [],
 			position,
 			isRequired: false,
 		})
-			.then(() => {
+			.then((result) => {
+				if (result && (!questions || questions.length === 0)) {
+					// Only select the newly created question if it's the first one
+					selectQuestion({
+						_id: result,
+						_creationTime: Date.now(),
+						title: "Untitled",
+						description: "",
+						type: "Short text",
+						choices: [],
+						position,
+						isRequired: false,
+						formId,
+					});
+				}
 				toast.success("Question created");
 			})
 			.catch(() => toast.error("Failed to create question"));

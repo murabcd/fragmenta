@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { RadioCard, RadioCardItem } from "@/components/ui/radio-card";
+import { useFormEditor } from "@/hooks/use-form-editor";
 import type { Id } from "@/convex/_generated/dataModel";
 
 interface YesNoChoiceProps {
@@ -10,7 +11,7 @@ interface YesNoChoiceProps {
 	value: string;
 	options: { label: string; value: string }[];
 	onChange: (value: string) => void;
-	updateChoices: (choices: {
+	updateChoices?: (choices: {
 		id: Id<"questions">;
 		choices: string[];
 	}) => Promise<void>;
@@ -22,9 +23,11 @@ export const YesNoChoice = ({
 	value,
 	options: initialOptions,
 	onChange,
-	updateChoices,
+	updateChoices: propsUpdateChoices,
 	isPublished,
 }: YesNoChoiceProps) => {
+	const { handleUpdateChoices: storeHandleUpdateChoices } = useFormEditor();
+	const updateChoices = propsUpdateChoices || storeHandleUpdateChoices;
 	const defaultOptions =
 		initialOptions.length > 0
 			? initialOptions

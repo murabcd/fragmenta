@@ -87,7 +87,7 @@ export const Info = ({ formId }: InfoProps) => {
 									className="text-base font-medium px-1 max-w-[150px] sm:max-w-[300px] cursor-text"
 									onClick={() => setIsRenameModalOpen(true)}
 								>
-									<span className="truncate">{data.title}</span>
+									<span className="truncate">{data?.title}</span>
 								</Button>
 							</TooltipTrigger>
 							<TooltipContent side="bottom" sideOffset={10}>
@@ -97,31 +97,33 @@ export const Info = ({ formId }: InfoProps) => {
 					</TooltipProvider>
 					<TabSeparator />
 					<div className="hidden sm:block">
-						<FormActions
-							id={data._id}
-							title={data.title}
-							side="bottom"
-							sideOffset={10}
-						>
-							<div>
-								<TooltipProvider>
-									<Tooltip delayDuration={0}>
-										<TooltipTrigger asChild>
-											<Button
-												variant="outline"
-												size="icon"
-												className="cursor-pointer"
-											>
-												<Menu className="h-4 w-4" />
-											</Button>
-										</TooltipTrigger>
-										<TooltipContent align="end" side="bottom" sideOffset={10}>
-											Main menu
-										</TooltipContent>
-									</Tooltip>
-								</TooltipProvider>
-							</div>
-						</FormActions>
+						{data?._id && (
+							<FormActions
+								id={data._id}
+								title={data?.title}
+								side="bottom"
+								sideOffset={10}
+							>
+								<div>
+									<TooltipProvider>
+										<Tooltip delayDuration={0}>
+											<TooltipTrigger asChild>
+												<Button
+													variant="outline"
+													size="icon"
+													className="cursor-pointer"
+												>
+													<Menu className="h-4 w-4" />
+												</Button>
+											</TooltipTrigger>
+											<TooltipContent align="end" side="bottom" sideOffset={10}>
+												Main menu
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								</div>
+							</FormActions>
+						)}
 					</div>
 				</div>
 				<div className="flex items-center space-x-2 flex-shrink-0">
@@ -146,15 +148,17 @@ export const Info = ({ formId }: InfoProps) => {
 							</TooltipProvider>
 						)}
 					</div>
-					<Publish formId={data._id} />
+					{data?._id && <Publish formId={data._id} />}
 				</div>
 			</div>
-			<RenameModal
-				isOpen={isRenameModalOpen}
-				onClose={() => setIsRenameModalOpen(false)}
-				id={data._id}
-				title={data.title}
-			/>
+			{data?._id && (
+				<RenameModal
+					isOpen={isRenameModalOpen}
+					onClose={() => setIsRenameModalOpen(false)}
+					id={data._id}
+					title={data?.title}
+				/>
+			)}
 		</>
 	);
 };

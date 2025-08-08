@@ -1,10 +1,23 @@
-import React from "react";
+"use client";
 
 import { ChartAreaInteractive } from "@/components/home/chart-area-interactive";
 import { DataTable } from "@/components/home/data-table";
 import { SectionCards } from "@/components/home/section-cards";
+import { EmptyWorkspaceState } from "@/components/workspace/empty-workspace-state";
+import { useWorkspace } from "@/hooks/use-workspace";
 
 export default function Page() {
+	const { workspace, isLoading } = useWorkspace();
+
+	// Show workspace empty state if no workspace exists
+	if (!isLoading && !workspace) {
+		return (
+			<div className="flex-1 h-[calc(100vh-80px)] p-6">
+				<EmptyWorkspaceState />
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex flex-1 flex-col">
 			<div className="@container/main flex flex-1 flex-col gap-2">

@@ -55,13 +55,13 @@ export function DataTable() {
 	// Fetch real forms data
 	const forms = useQuery(
 		api.forms.getFormsByWorkspace,
-		workspace?._id ? { orgId: workspace._id } : "skip",
+		workspace?._id ? { wsId: workspace._id } : "skip",
 	);
 
 	// Fetch response stats for each form
 	const responseStats = useQuery(
 		api.forms.getFormResponseStats,
-		workspace?._id ? { orgId: workspace._id } : "skip",
+		workspace?._id ? { wsId: workspace._id } : "skip",
 	);
 
 	// Transform the data to match our schema
@@ -89,7 +89,7 @@ export function DataTable() {
 				_id: form._id,
 				title: form.title,
 				name: form.name,
-				orgId: form.orgId,
+				wsId: form.wsId,
 				isPublished: form.isPublished,
 				_creationTime: form._creationTime,
 				responseCount,

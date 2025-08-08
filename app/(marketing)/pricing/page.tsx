@@ -285,16 +285,12 @@ export default function PricingPage() {
 																	]
 																}
 															</span>
+														) : feature.tiers[
+																tier.name as keyof typeof feature.tiers
+															] === true ? (
+															<Check className="mx-auto h-4 w-4 text-primary" />
 														) : (
-															<>
-																{feature.tiers[
-																	tier.name as keyof typeof feature.tiers
-																] === true ? (
-																	<Check className="mx-auto h-4 w-4 text-primary" />
-																) : (
-																	<X className="mx-auto h-4 w-4 text-muted-foreground" />
-																)}
-															</>
+															<X className="mx-auto h-4 w-4 text-muted-foreground" />
 														)}
 													</div>
 												))}

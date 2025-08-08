@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 
 import { MoreHorizontal } from "lucide-react";
 
-import { FormCardOverlay } from "./overlay";
 import { FormCardFooter } from "./footer";
 
 import { FormActions } from "@/components/forms/form-actions";
@@ -25,7 +24,7 @@ interface FormCardProps {
 	name: string;
 	createdAt: number;
 	userId: Id<"users">;
-	orgId: Id<"workspaces">;
+	wsId: Id<"workspaces">;
 	isPublished: boolean;
 }
 
@@ -35,7 +34,7 @@ export const FormCard = ({
 	userId,
 	name,
 	createdAt,
-	orgId,
+	wsId,
 	isPublished,
 }: FormCardProps) => {
 	const userData = useQuery(api.users.getCurrentUser);
@@ -50,7 +49,7 @@ export const FormCard = ({
 		<div className="group aspect-[100/127] border shadow-sm rounded-lg flex flex-col justify-between overflow-hidden relative">
 			<Link href={`/form/${id}`} className="flex-1 bg-background">
 				<div className="relative flex-1 bg-background">
-					<FormCardOverlay />
+					<div className="opacity-0 group-hover:opacity-50 transition-opacity h-full w-full" />
 				</div>
 			</Link>
 			<FormActions id={id} title={title} align="end" side="right">
