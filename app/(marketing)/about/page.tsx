@@ -78,7 +78,7 @@ export default function AboutPage() {
 							<Link href="mailto:murad@fragmenta.ai">Talk to us</Link>
 						</Button>
 						<Button variant="outline" asChild>
-							<Link href="https://github.com/muradpm/fragmenta" target="_blank">
+							<Link href="https://github.com/murabcd/fragmenta" target="_blank">
 								<Icons.github className="mr-2 h-4 w-4" />
 								View on GitHub
 							</Link>

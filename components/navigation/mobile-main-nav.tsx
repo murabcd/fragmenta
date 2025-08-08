@@ -18,7 +18,7 @@ const solutions = {
 	items: [
 		{
 			title: "Open source",
-			href: "https://github.com/muradpm/fragmenta",
+			href: "https://github.com/murabcd/fragmenta",
 		},
 		{
 			title: "Discord community",

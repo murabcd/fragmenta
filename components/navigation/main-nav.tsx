@@ -21,7 +21,7 @@ import {
 const menu: { title: string; href: string; description: string }[] = [
 	{
 		title: "Open source",
-		href: "https://github.com/muradpm/fragmenta",
+		href: "https://github.com/murabcd/fragmenta",
 		description:
 			"Fragmenta is an open-source form builder, built with love and care",
 	},

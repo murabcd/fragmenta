@@ -12,7 +12,7 @@ export function Footer() {
 					</p>
 					<div className="flex justify-center gap-x-6 md:order-2 md:ml-8 mt-4 md:mt-0">
 						<a
-							href="https://github.com/muradpm/fragmenta"
+							href="https://github.com/murabcd/fragmenta"
 							className="text-muted-foreground hover:text-foreground transition-colors"
 							target="_blank"
 							rel="noopener noreferrer"
