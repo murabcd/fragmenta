@@ -98,7 +98,7 @@ export function Hero() {
 				<div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:mt-0 lg:mr-0 lg:ml-10 lg:max-w-none lg:flex-none xl:ml-32">
 					<div className="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
 						<Image
-							src="https://giddy-ladybug-159.convex.cloud/api/storage/a2fefe0b-19e2-4fab-8837-15e51059c83f"
+							src="https://giddy-ladybug-159.convex.cloud/api/storage/817eced1-e65a-4e6d-b017-d758ea9f44cc"
 							alt="Fragmenta app preview"
 							width={2432}
 							height={1442}
