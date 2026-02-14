@@ -9,9 +9,9 @@
  */
 
 import type {
-  ApiFromModules,
-  FilterApi,
-  FunctionReference,
+	ApiFromModules,
+	FilterApi,
+	FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as email_invites from "../email/invites.js";
@@ -35,24 +35,24 @@ import type * as workspaces from "../workspaces.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  auth: typeof auth;
-  "email/invites": typeof email_invites;
-  "email/magiclink": typeof email_magiclink;
-  "email/userinvite": typeof email_userinvite;
-  files: typeof files;
-  forms: typeof forms;
-  http: typeof http;
-  invitations: typeof invitations;
-  members: typeof members;
-  questions: typeof questions;
-  users: typeof users;
-  workspaces: typeof workspaces;
+	auth: typeof auth;
+	"email/invites": typeof email_invites;
+	"email/magiclink": typeof email_magiclink;
+	"email/userinvite": typeof email_userinvite;
+	files: typeof files;
+	forms: typeof forms;
+	http: typeof http;
+	invitations: typeof invitations;
+	members: typeof members;
+	questions: typeof questions;
+	users: typeof users;
+	workspaces: typeof workspaces;
 }>;
 export declare const api: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "public">
+	typeof fullApi,
+	FunctionReference<any, "public">
 >;
 export declare const internal: FilterApi<
-  typeof fullApi,
-  FunctionReference<any, "internal">
+	typeof fullApi,
+	FunctionReference<any, "internal">
 >;

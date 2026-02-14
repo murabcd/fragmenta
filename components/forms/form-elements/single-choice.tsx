@@ -15,7 +15,10 @@ interface SingleChoiceProps {
 	value: string;
 	options: { label: string; value: string }[];
 	onChange: (value: string) => void;
-	updateChoices?: (choices: { id: Id<"questions">; choices: string[]; }) => Promise<void>;
+	updateChoices?: (choices: {
+		id: Id<"questions">;
+		choices: string[];
+	}) => Promise<void>;
 	isPublished: boolean;
 }
 
@@ -39,7 +42,7 @@ export const SingleChoice = ({
 	const [options, setOptions] = useState(defaultOptions);
 	const [isOverflowing, setIsOverflowing] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
-	
+
 	const { handleUpdateChoices: storeHandleUpdateChoices } = useFormEditor();
 	const handleUpdateChoices = propsUpdateChoices || storeHandleUpdateChoices;
 

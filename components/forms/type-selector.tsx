@@ -44,11 +44,11 @@ export const TypeSelector = ({
 	const screenTypes = ["Start screen", "End screen"];
 	const questionTypes = [
 		"Short text",
-		"Long text", 
+		"Long text",
 		"Yes/no choice",
 		"Single choice",
 		"Multiple choice",
-		"Rating"
+		"Rating",
 	];
 
 	return (

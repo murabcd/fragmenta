@@ -1,8 +1,7 @@
 "use client";
 
-import { LoaderCircle, SquareArrowOutUpRight, Info } from "lucide-react";
+import { SquareArrowOutUpRight, Info } from "lucide-react";
 
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -14,9 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-interface BillingFormProps extends React.HTMLAttributes<HTMLFormElement> {
-	// You can add any necessary props here
-}
+interface BillingFormProps extends React.HTMLAttributes<HTMLFormElement> {}
 
 export const BillingForm = ({ className, ...props }: BillingFormProps) => {
 	return (
